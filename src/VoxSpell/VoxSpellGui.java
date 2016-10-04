@@ -27,6 +27,8 @@ import VoxSpell.VoxSpellGui.LEVEL;
 
 public class VoxSpellGui implements Card,ActionListener{
 
+	private static VoxSpellGui _voxSpellGui;
+
 	private static JFrame _frame;
 
 	private JPanel _welcomePanel;
@@ -35,15 +37,15 @@ public class VoxSpellGui implements Card,ActionListener{
 	private JButton _btnNewQuiz;
 	private JButton _btnReview;
 	private JButton _btnScoreHistory;
-	
+
 	private static JPanel _cardsPanel = new JPanel();
 	private static CardLayout _cardLayout = new CardLayout();
-/*	private static FlowLayout _flowLayout = new FlowLayout();*/
+	/*	private static FlowLayout _flowLayout = new FlowLayout();*/
 	private static HiddenFilesModel _hiddenFilesModel = HiddenFilesModel.getInstance();
 	private static QuizModel quiz;
 	protected static FestivalModel _festivalModel;
 	private static String _currentCard;
-	
+
 	//public final fields for determining quizMode for the game
 	public static final String NEW = "New";
 	public static final String REVIEW = "Review";
@@ -64,25 +66,29 @@ public class VoxSpellGui implements Card,ActionListener{
 		}
 	}
 
-
-	public VoxSpellGui() {
+	/**
+	 * Singleton class, deals with card handling
+	 */
+	private VoxSpellGui() {
 		_frame = new JFrame("VoxSpell");
 		buildGUI(); //Instantiate GUI objects and build GUI;
 	}
 
 	private void buildGUI() {
-		//Create the cards
+		//Create the static cards
 		JPanel cardMainMenu = createAndGetPanel();
-
+		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
+		
 		//header session that stays throughout all menus
 		_welcomePanel = new JPanel();
 		_welcomeLabel = new JLabel("SOME WELCOME MESSAGE HERE");
 		_welcomePanel.add(_welcomeLabel);
 		_frame.getContentPane().add(_welcomePanel, BorderLayout.NORTH);
-		
+
 		//Build the GUI section that has interchangeable components (cards)
 		_cardsPanel.setLayout(_cardLayout);
 		_cardsPanel.add( cardMainMenu, "Main Menu");
+		_cardsPanel.add(cardChooseCourse, "Choose Course");
 
 		_frame.getContentPane().add(_cardsPanel, BorderLayout.SOUTH);
 
@@ -91,6 +97,9 @@ public class VoxSpellGui implements Card,ActionListener{
 	}
 
 
+	public static synchronized VoxSpellGui getInstance(){
+		return _voxSpellGui;
+	}
 
 	@Override
 	public JPanel createAndGetPanel() {
@@ -107,7 +116,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		_btnNewQuiz = new JButton("New Quiz");
 		_btnReview = new JButton("Review Mistakes");
 		_btnScoreHistory = new JButton("Score History");
-		
+
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE
@@ -115,7 +124,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		 */
 		mainPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-/*
+		/*
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -124,7 +133,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.ipady = 100;
 		c.insets = new Insets(5,5,5,5);
 		mainPanel.add(_welcomePanel, c);	*/
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -136,7 +145,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.insets = new Insets(40,10,5,5);
 		mainPanel.add(_btnNewQuiz, c);
 		_btnNewQuiz.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 0;
@@ -146,7 +155,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.insets = new Insets(40,0,5,10);
 		mainPanel.add(_btnReview, c);
 		_btnReview.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
 		c.gridx = 0;
@@ -169,7 +178,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		_btnHowItWorks.addActionListener(this);
 
 
-/*
+		/*
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 4;
@@ -194,79 +203,29 @@ public class VoxSpellGui implements Card,ActionListener{
 		return mainPanel;
 	}
 
+
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnScoreHistory) {
+
 			new FullStatsView(_frame);
+		}else if (e.getSource() == _btnNewQuiz){
+
+			//show choose course card
+			showCourseChooser();
+
+		}else if (e.getSource() == _btnReview){
+
 		}
-		else if (e.getSource() == _btnNewQuiz || e.getSource() == _btnReview){
+	}
+	
 
-			String quizMode = null;
-			String cardName = null;
-			if (e.getSource() == _btnNewQuiz) {
+	public void showCard (JPanel cardPanel, String cardName){
+		//show non static card object
+		_cardsPanel.add(cardPanel, cardName);
+		_cardLayout.show(_cardsPanel, cardName);
+		_currentCard = cardName;
 
-				//show choose course card
-				
-				
-				/*quizMode = VoxSpellGui.NEW;  
-				cardName = "New Quiz";
-
-				if (_hiddenFilesModel.allEmpty(VoxSpellGui.NEW)){	
-					showNoAvailableWordsPopUp(VoxSpellGui.NEW,true,0);
-					return;
-				}*/
-			} else {
-
-				quizMode = VoxSpellGui.REVIEW; 
-				cardName = "Review Mistakes";
-
-				if (_hiddenFilesModel.allEmpty(VoxSpellGui.REVIEW)){
-					showNoAvailableWordsPopUp(VoxSpellGui.REVIEW,true,0);
-					return;
-				}
-			}
-
-			//string variable indicating quiz mode
-			int level = createAndShowLevelPopUp(quizMode); //get level value from the pop up window
-
-			if (level != 0){
-
-				if (e.getSource() == _btnNewQuiz) {
-
-					quiz = new NewQuizModel();
-				} else {
-
-					quiz = new ReviewQuizModel();
-				}
-
-				if (_hiddenFilesModel.levelEmpty(level,quizMode)){
-					showNoAvailableWordsPopUp(quizMode,false,level);
-					return;
-				}
-				
-
-				//create a new quiz card
-				Card cardNewOrReviewQuiz = new QuizView(level); 
-
-				//Set their model, view relationship using setters
-				//Model and View share the same Festival Model
-				quiz.setView((QuizView) cardNewOrReviewQuiz);
-				quiz.setInitialLevel(level);
-				((QuizView)cardNewOrReviewQuiz).setModel(quiz);
-				_festivalModel = FestivalModel.getInstance();
-				quiz.setFestivalModel(_festivalModel);
-				((QuizView)cardNewOrReviewQuiz).setFestivalModel(_festivalModel);
-
-				//Show quiz panel accordingly
-				_cardsPanel.add(cardNewOrReviewQuiz.createAndGetPanel(), cardName);
-				_cardLayout.show(_cardsPanel, e.getActionCommand());
-				_currentCard = e.getActionCommand();
-
-				//Generate quiz words using hiddenFilesModel, start quiz
-				ArrayList<ArrayList<String>> allWords = _hiddenFilesModel.readFileToArray(quizMode);
-				quiz.setAllWords(allWords);
-				quiz.getRandomWords();
-			}
-		}
 	}
 
 	/**
@@ -357,88 +316,15 @@ public class VoxSpellGui implements Card,ActionListener{
 	}
 
 
-	
-	/**
-	 * Shows a pop up telling user that the selected game/level has no possible quiz words
-	 * @param quizMode
-	 * @param allEmpty
-	 * @param level
-	 */
-	public void noAvailableWordsPopUp(String quizMode, boolean allEmpty, int level){
-
-		String message;
-		if(allEmpty){
-			if (quizMode.equals(VoxSpellGui.REVIEW)){
-
-				message = "There is no word to review at all levels!\n"+
-						"What about starting a New Quiz :)";
-			}else {
-				message = "No wordlist found. Please ensure that the \n"+
-						"'wordlist' file is in the working directory!";
-			}
-
-		}else{
-			//level empty
-			message = "There is no word to review for Level " + level + " !\n" +
-					"Please select another level to review.";
-		}
-
-		JOptionPane.showMessageDialog(_frame, message, 
-				"No Available Words", JOptionPane.INFORMATION_MESSAGE);
-
-		showMainMenu();
-	}
-
-	/** shows the pop up window that allows user to select window
-	 ** returns an integer that represents the level user has selected
-	 ** 0 means the user has chosen to cancel
-	 *
-	 * Reference URL : http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#input
-	 */
-	public int levelPopUp(String quizMode){
-
-		JPanel popUpPanel = new JPanel();
-		JPanel cbPanel = new JPanel();
-
-		popUpPanel.setLayout(new BorderLayout());
-		cbPanel.setLayout(new BorderLayout());
-
-
-		DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<Integer>();
-
-		//add all ENUM elements to drop down menu for combo box
-		for (LEVEL i : LEVEL.values()){
-			model.addElement(i.getLevel());
-		}
-
-		JComboBox<Integer> comboBox = new JComboBox<Integer>(model);
-
-		cbPanel.add(new JLabel("Start your " + quizMode +" quiz at level :     "),BorderLayout.BEFORE_LINE_BEGINS);
-		cbPanel.add(comboBox,BorderLayout.CENTER);
-
-		//add comboBox panel to popup window
-		popUpPanel.add(cbPanel,BorderLayout.AFTER_LAST_LINE);
-
-		int result = JOptionPane.showConfirmDialog(_frame, popUpPanel, "Choose level", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-		switch (result) {
-		case JOptionPane.OK_OPTION:
-			for (LEVEL i : LEVEL.values()){
-
-				//compare value of selected item to int values of LEVEL items
-				if (comboBox.getSelectedItem().equals(i.getLevel())){
-					return i.getLevel();
-				}
-			}
-		}
-		return 0;
-	}
-	
-	
-
 	public static void showMainMenu(){
 		_cardLayout.show(_cardsPanel, "Main Menu");
-		_currentCard = "Main Mennu";
+		_currentCard = "Main Menu";
+	}
+	
+
+	public static void showCourseChooser(){
+		_cardLayout.show(_cardsPanel, "Choose Course");
+		_currentCard = "Choose Course";
 	}
 
 	//freeze the frame so that user cannot interact while video is playing
@@ -465,10 +351,14 @@ public class VoxSpellGui implements Card,ActionListener{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new VoxSpellGui();
+				_voxSpellGui = new VoxSpellGui();
 				createAndShowGUI();
 			}
 		});
+	}
+
+	public static JFrame getFrame() {
+		return _frame;
 	}
 
 
