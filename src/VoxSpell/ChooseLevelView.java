@@ -8,12 +8,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import VoxSpell.VoxSpellGui.LEVEL;
 
@@ -24,17 +26,42 @@ public class ChooseLevelView implements Card, ActionListener{
 	private JLabel _labelChooseLevel;
 	private DefaultComboBoxModel<Integer> _model;
 	private JComboBox<Integer> _comboBox;
+	private JLabel _labelChooseNumWords;
+	private JRadioButton _btnTenWords;
+	private JRadioButton _btnTwentyWords;
+	private JRadioButton _btnFortyWords;
+	private JRadioButton _btnFiftyWords;
+	
 	private JButton _btnBackToMain;
 	private String _courseName;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
 		_courseName = courseName;
+		
 		_labelHeading = new JLabel("VIEW AND CHOOSE YOUR GOAL FOR " + _courseName);
 		_btnViewWordList = new JButton("VIEW WORDS IN THIS COURSE");
+		
 		_labelChooseLevel = new JLabel("Please select the level");
+		
 		_model = new DefaultComboBoxModel<Integer>();
 		_comboBox = new JComboBox<Integer>(_model);
+		
+		_labelChooseNumWords = new JLabel("How many words you would like to be tested on:");
+		_btnTenWords = new JRadioButton("10 Random Words");
+        _btnTenWords.setSelected(true);
+        
+        _btnTwentyWords = new JRadioButton("20 Random Words");
+        _btnFortyWords = new JRadioButton("40 Random Words");
+        _btnFiftyWords = new JRadioButton("50 Random Words");
+        
+        //only allow one radio button selection at a time
+        ButtonGroup group = new ButtonGroup();
+        group.add(_btnTenWords);
+        group.add(_btnTwentyWords);
+        group.add(_btnFortyWords);
+        group.add(_btnFiftyWords);
+		
 		_btnBackToMain = new JButton("Back");
 	}
 
@@ -42,12 +69,12 @@ public class ChooseLevelView implements Card, ActionListener{
 	public JPanel createAndGetPanel() {
 		JPanel mainPanel = new JPanel();
 
+		mainPanel.setBackground(new Color(47,145,195));
+		
 		//add all ENUM elements to drop down menu for combo box
 		for (LEVEL i : LEVEL.values()){
 			_model.addElement(i.getLevel());
 		}
-
-
 
 
 		int level;
@@ -79,7 +106,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(20,10,20,10);
 		mainPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -90,7 +117,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,10,20,10);
 		mainPanel.add(_btnViewWordList, c);
 		_btnViewWordList.addActionListener(this);
 
@@ -103,7 +130,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,10,20,10);
 		mainPanel.add(_labelChooseLevel, c);
 		//	_btnViewWordList.addActionListener(this);
 
@@ -115,10 +142,11 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,10,20,10);
 		mainPanel.add(_comboBox, c);
 		//	_btnViewWordList.addActionListener(this);
 
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 4;
@@ -127,9 +155,70 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,10,20,10);
+		mainPanel.add(_labelChooseNumWords, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,10,10);
+		mainPanel.add(_btnTenWords, c);
+		_btnTenWords.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 6;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,10,10);
+		mainPanel.add(_btnTwentyWords, c);
+		_btnTwentyWords.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 7;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,10,10);
+		mainPanel.add(_btnFortyWords, c);
+		_btnFortyWords.addActionListener(this);
+		 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 8;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,20,10);
+		mainPanel.add(_btnFiftyWords, c);
+		_btnFiftyWords.addActionListener(this);
+		
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 9;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,20,10);
 		mainPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
+		 
 
 		return mainPanel;
 	}
