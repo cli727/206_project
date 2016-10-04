@@ -82,8 +82,6 @@ public class ChooseCourseView implements Card, ActionListener{
 		JPanel mainPanel = new JPanel();
 
 		mainPanel.setBackground(new Color(47,145,195));
-
-
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE

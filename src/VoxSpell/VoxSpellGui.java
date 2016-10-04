@@ -31,7 +31,7 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	private static JFrame _frame;
 
-	private JPanel _welcomePanel;
+	private static JPanel _welcomePanel;
 	private JLabel _welcomeLabel;
 	private JButton _btnHowItWorks;
 	private JButton _btnNewQuiz;
@@ -353,6 +353,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			public void run() {
 				_voxSpellGui = new VoxSpellGui();
 				createAndShowGUI();
+				System.out.println("size: " + _welcomePanel.getSize());
 			}
 		});
 	}
