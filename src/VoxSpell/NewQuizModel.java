@@ -139,7 +139,7 @@ public class NewQuizModel extends QuizModel{
 					mediaPlayer = new VideoPlayer(this, true);	
 				}
 				
-				MainMenuView.disableMain();
+				VoxSpellGui.disableMain();
 				mediaPlayer.playVideo("big_buck_bunny_1_minute.avi");
 	
 			}else{

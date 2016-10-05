@@ -23,7 +23,6 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 
 import VoxSpell.HiddenFilesModel;
-import VoxSpell.MainMenuView;
 import VoxSpell.NewQuizModel;
 import VoxSpell.VoxSpellGui;
 import uk.co.caprica.vlcj.binding.LibVlc;
@@ -98,7 +97,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 				video.stop();
 				_hiddenFilesModel.deleteVideoFile(videoOutput);
 				frame.dispose();
-				MainMenuView.enableMain();
+				VoxSpellGui.enableMain();
 				quizModel.ifLevelUp();
 			}
 		});

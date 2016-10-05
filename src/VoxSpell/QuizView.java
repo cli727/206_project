@@ -469,7 +469,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	}
 
 	public void showMainMenu(){
-		MainMenuView.showMainMenu();
+		VoxSpellGui.showMainMenu();
 	}
 
 	@Override
