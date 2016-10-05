@@ -172,7 +172,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		//c.weightx = 0.3;
 		c.ipady = 250;
 		c.ipadx = 350;
-		c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,10,5,5);
 		mainPanel.add(_btnNewQuiz, c);
 		_btnNewQuiz.addActionListener(this);
 
@@ -182,7 +182,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(40,0,5,10);
+		c.insets = new Insets(0,0,5,10);
 		mainPanel.add(_btnReview, c);
 		_btnReview.addActionListener(this);
 
