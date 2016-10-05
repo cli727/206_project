@@ -69,7 +69,7 @@ public class ChooseLevelView implements Card, ActionListener{
 	public JPanel createAndGetPanel() {
 		JPanel mainPanel = new JPanel();
 
-		mainPanel.setBackground(new Color(47,145,195));
+		mainPanel.setBackground(new Color(6,149,255));
 		
 		//add all ENUM elements to drop down menu for combo box
 		for (LEVEL i : LEVEL.values()){

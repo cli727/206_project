@@ -5,14 +5,20 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +36,8 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static VoxSpellGui _voxSpellGui;
 
 	private static JFrame _frame;
+
+	private BufferedImage _banner;
 
 	private static JPanel _welcomePanel;
 	private JLabel _welcomeLabel;
@@ -78,19 +86,50 @@ public class VoxSpellGui implements Card,ActionListener{
 		//Create the static cards
 		JPanel cardMainMenu = createAndGetPanel();
 		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
-		
+
 		//header session that stays throughout all menus
-		_welcomePanel = new JPanel();
-		_welcomeLabel = new JLabel("SOME WELCOME MESSAGE HERE");
-		_welcomePanel.add(_welcomeLabel);
-		_frame.getContentPane().add(_welcomePanel, BorderLayout.NORTH);
+		try {
+			_banner = ImageIO.read(new File("./banner-01.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		_welcomePanel = new JPanel(){
+			@Override
+			protected void paintComponent(Graphics g){
+				super.paintComponent(g);
+				g.drawImage(_banner, 0, 0, 1019, 110,this);
+			}
+		};
+
+		/*ImageIcon banner = new ImageIcon("./banner.jpg");
+		_welcomeLabel = new JLabel(banner);
+		Dimension size = new Dimension(banner.getIconWidth(), banner.getIconHeight());
+		_welcomeLabel.setPreferredSize(size);
+
+		_welcomePanel.add(_welcomeLabel);*/
+		
+		_frame.getContentPane().setBackground(Color.white);
+		_frame.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipady = 100;
+		_frame.add(_welcomePanel, c);	
+
 
 		//Build the GUI section that has interchangeable components (cards)
 		_cardsPanel.setLayout(_cardLayout);
 		_cardsPanel.add( cardMainMenu, "Main Menu");
 		_cardsPanel.add(cardChooseCourse, "Choose Course");
 
-		_frame.getContentPane().add(_cardsPanel, BorderLayout.SOUTH);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.insets = new Insets(0,0,0,0);
+		_frame.add(_cardsPanel,c);	
 
 		//begin with showing the main menu screen	
 		showMainMenu(); 
@@ -109,9 +148,9 @@ public class VoxSpellGui implements Card,ActionListener{
 				JLabel.CENTER),BorderLayout.NORTH);*/
 		JPanel mainPanel = new JPanel();
 
-		mainPanel.setBackground(new Color(47,145,195));
+		mainPanel.setBackground(Color.white);
 
-		ImageIcon water = new ImageIcon("image.png");
+
 		_btnHowItWorks = new JButton("How It Works");
 		_btnNewQuiz = new JButton("New Quiz");
 		_btnReview = new JButton("Review Mistakes");
@@ -124,15 +163,6 @@ public class VoxSpellGui implements Card,ActionListener{
 		 */
 		mainPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		/*
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 6;
-		c.gridheight = 2;
-		c.ipady = 100;
-		c.insets = new Insets(5,5,5,5);
-		mainPanel.add(_welcomePanel, c);	*/
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -218,7 +248,7 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		}
 	}
-	
+
 
 	public void showCard (JPanel cardPanel, String cardName){
 		//show non static card object
@@ -320,7 +350,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		_cardLayout.show(_cardsPanel, "Main Menu");
 		_currentCard = "Main Menu";
 	}
-	
+
 
 	public static void showCourseChooser(){
 		_cardLayout.show(_cardsPanel, "Choose Course");
