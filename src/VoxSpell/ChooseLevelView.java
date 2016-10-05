@@ -32,8 +32,11 @@ public class ChooseLevelView implements Card, ActionListener{
 	private JRadioButton _btnFortyWords;
 	private JRadioButton _btnFiftyWords;
 	
+	private JButton _btnStartQuiz;
 	private JButton _btnBackToMain;
+	
 	private String _courseName;
+	private int _numWordsToQuiz;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
@@ -42,7 +45,9 @@ public class ChooseLevelView implements Card, ActionListener{
 		_labelHeading = new JLabel("VIEW AND CHOOSE YOUR GOAL FOR " + _courseName);
 		_btnViewWordList = new JButton("VIEW WORDS IN THIS COURSE");
 		
-		_labelChooseLevel = new JLabel("Please select the level");
+		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+				"<font color='white'>"
+				+ " Choose Level Below!</font></html>");
 		
 		_model = new DefaultComboBoxModel<Integer>();
 		_comboBox = new JComboBox<Integer>(_model);
@@ -61,6 +66,8 @@ public class ChooseLevelView implements Card, ActionListener{
         group.add(_btnTwentyWords);
         group.add(_btnFortyWords);
         group.add(_btnFiftyWords);
+        
+        _btnStartQuiz = new JButton("Start!");
 		
 		_btnBackToMain = new JButton("Back");
 	}
@@ -76,19 +83,6 @@ public class ChooseLevelView implements Card, ActionListener{
 			_model.addElement(i.getLevel());
 		}
 
-
-		int level;
-
-		/*switch (result) {
-		case JOptionPane.OK_OPTION:
-			for (LEVEL i : LEVEL.values()){
-
-				//compare value of selected item to int values of LEVEL items
-				if (_comboBox.getSelectedItem().equals(i.getLevel())){
-					level = i.getLevel();
-				}
-			}
-		}*/
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -208,8 +202,20 @@ public class ChooseLevelView implements Card, ActionListener{
 		
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
+		c.gridx = 1;
 		c.gridy = 9;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		//c.ipady = 200;
+		//c.ipadx = 190;
+		c.insets = new Insets(0,10,20,10);
+		mainPanel.add(_btnStartQuiz, c);
+		_btnStartQuiz.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 10;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
@@ -219,15 +225,35 @@ public class ChooseLevelView implements Card, ActionListener{
 		mainPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
 		 
+		
 
 		return mainPanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		if (e.getSource() == _btnBackToMain){
 
 			VoxSpellGui.showCourseChooser();
+			
+		}else if (e.getSource() == _btnTenWords){
+			
+			_numWordsToQuiz = 10;
+		}else if (e.getSource() == _btnTwentyWords){
+			
+			_numWordsToQuiz = 20;
+		}else if (e.getSource() == _btnFortyWords){
+			
+			_numWordsToQuiz = 40;
+		}else if (e.getSource() == _btnFiftyWords){
+			
+			_numWordsToQuiz = 50;
+		}else if (e.getSource() == _btnStartQuiz){
+			
+			Object level =  _comboBox.getSelectedItem();
+			System.out.println("level "+level);
+			System.out.println("words " + _numWordsToQuiz);
 		}
 
 	}
