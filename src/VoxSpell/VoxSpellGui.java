@@ -29,8 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import VoxSpell.VoxSpellGui.LEVEL;
-
 public class VoxSpellGui implements Card,ActionListener{
 
 	private static VoxSpellGui _voxSpellGui;
@@ -41,8 +39,8 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	private static JPanel _welcomePanel;
 	private JLabel _welcomeLabel;
-	private JButton _btnHowItWorks;
-	private JButton _btnNewQuiz;
+	private JButton _btnPracticeQuiz;
+	private JButton _btnTimerQuiz;
 	private JButton _btnReview;
 	private JButton _btnScoreHistory;
 
@@ -55,25 +53,10 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static String _currentCard;
 
 	//public final fields for determining quizMode for the game
+	public static String STATUS = null;
 	public static final String NEW = "New";
 	public static final String REVIEW = "Review";
-/*
-	*//**
-	 * public enum class representing all possible levels
-	 *//*
-	public static enum LEVEL {
-		ONE(1), TWO(2), THREE(3),FOUR(4),FIVE(5),SIX(6),SEVEN(7),EIGHT(8),NINE(9),TEN(10),ELEVEN(11);
 
-		private final int _level;
-		private LEVEL(int level) {
-			_level = level;
-		}
-
-		public int getLevel() {
-			return _level;
-		}
-	}
-*/
 	/**
 	 * Singleton class, deals with card handling
 	 */
@@ -150,8 +133,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		mainPanel.setBackground(Color.white);
 
 
-		_btnHowItWorks = new JButton("How It Works");
-		_btnNewQuiz = new JButton("New Quiz");
+		_btnPracticeQuiz = new JButton("Practice Words");
+		_btnTimerQuiz = new JButton("Timer Mode");
 		_btnReview = new JButton("Review Mistakes");
 		_btnScoreHistory = new JButton("Score History");
 
@@ -172,41 +155,42 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.ipady = 250;
 		c.ipadx = 350;
 		c.insets = new Insets(0,10,5,5);
-		mainPanel.add(_btnNewQuiz, c);
-		_btnNewQuiz.addActionListener(this);
+		mainPanel.add(_btnPracticeQuiz, c);
+		_btnPracticeQuiz.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 0;
+		c.gridheight = 2;
+		c.gridwidth = 3;
+		//c.weightx = 0.3;
+		c.insets = new Insets(0,0,5,10);
+		mainPanel.add(_btnTimerQuiz, c);
+		_btnTimerQuiz.addActionListener(this);
+
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(0,0,5,10);
+		c.insets = new Insets(0,10,5,5);
 		mainPanel.add(_btnReview, c);
 		_btnReview.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
-		c.gridx = 0;
+		c.gridx = 3;
 		c.gridy = 2;
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,10,10,5);
+		c.insets = new Insets(0,0,10,10);
 		mainPanel.add(_btnScoreHistory, c);
 		_btnScoreHistory.addActionListener(this);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 3;
-		c.gridy = 2;
-		c.gridheight = 2;
-		c.gridwidth = 3;
-		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,10,10);
-		mainPanel.add(_btnHowItWorks, c);
-		_btnHowItWorks.addActionListener(this);
-
-
+		
+		
 		/*
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -238,11 +222,11 @@ public class VoxSpellGui implements Card,ActionListener{
 		if (e.getSource() == _btnScoreHistory) {
 
 			new FullStatsView(_frame);
-		}else if (e.getSource() == _btnNewQuiz){
+		}else if (e.getSource() == _btnPracticeQuiz){
 
 			//show choose course card
 			showCourseChooser();
-
+			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
 
 		}

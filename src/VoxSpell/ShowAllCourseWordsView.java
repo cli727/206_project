@@ -10,7 +10,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
 
 public class ShowAllCourseWordsView extends JFrame {
 
@@ -20,28 +22,33 @@ public class ShowAllCourseWordsView extends JFrame {
 	 * Create the frame.
 	 */
 	public ShowAllCourseWordsView(String courseName, final ArrayList<String> allWords, final JPanel parentPanel) {
+		
+		setLocationRelativeTo(VoxSpellGui.getFrame());
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-
+		setBounds(300, 100, 700, 600);
+	    setBackground(Color.WHITE);
+		
 		//set the frame to re-enable the chooseLevelView panel when closed
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				System.out.println("Im closed ");
 				VoxSpellGui.getFrame().setEnabled(true);
 			}
 		});
+		
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setLayout(new BorderLayout(5,5));
+		
+		JLabel lblNewLabel = new JLabel(courseName);
+		contentPane.add(lblNewLabel,BorderLayout.NORTH);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(30, 30, 403, 162);
-		contentPane.add(scrollPane);
-
+	
 		JList list = new JList();
 		list.setModel(new AbstractListModel() {
 
@@ -53,10 +60,7 @@ public class ShowAllCourseWordsView extends JFrame {
 			}
 		});
 		scrollPane.setViewportView(list);
-
-		JLabel lblNewLabel = new JLabel(courseName);
-		lblNewLabel.setBounds(10, 10, 242, 15);
-		contentPane.add(lblNewLabel);
+		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		JButton btnOkay = new JButton("Okay");
 		btnOkay.addActionListener(new ActionListener() {
@@ -65,8 +69,9 @@ public class ShowAllCourseWordsView extends JFrame {
 				dispose();
 			}
 		});
-		btnOkay.setBounds(120, 210, 117, 25);
 
-		contentPane.add(btnOkay);
+		contentPane.add(btnOkay, BorderLayout.SOUTH);
+		
+		setVisible(true);
 	}
 }

@@ -23,25 +23,13 @@ abstract public class QuizModel {
 	protected HiddenFilesModel _hiddenFilesModel;
 	protected FestivalModel _festivalModel;
 
-	//arraylist that only stores the words that should be quizzed on for the current level
+	//arraylist that only stores the words that should be quizzed for this game
 	protected List<String> _randomWords;
 
-	//one arrayList for all words in each level
-	//words can be from either wordlist or failed word file
-	private ArrayList<String> _lvlOneWords;
-	private ArrayList<String> _lvlTwoWords;
-	private ArrayList<String> _lvlThreeWords;
-	private ArrayList<String> _lvlFourWords;
-	private ArrayList<String> _lvlFiveWords;
-	private ArrayList<String> _lvlSixWords;
-	private ArrayList<String> _lvlSevenWords;
-	private ArrayList<String> _lvlEightWords;
-	private ArrayList<String> _lvlNineWords;
-	private ArrayList<String> _lvlTenWords;
-	private ArrayList<String> _lvlElevenWords;
+	//list of list structure for all words of this level
+	private static ArrayList<String> _allWords;
 
-	//list of list structure for all words of all levels
-	private static ArrayList<ArrayList<String>> _allWords;
+	private int _numWordsToQuiz;
 
 	//a word in the randomWord list that is currently being compared
 	protected String _currentWord;
@@ -67,34 +55,9 @@ abstract public class QuizModel {
 	public QuizModel(){
 		//initialise fields		
 		_randomWords = new ArrayList<String>();
-		_allWords = new ArrayList<ArrayList<String>>();
-
-		_lvlOneWords = new ArrayList<String>();
-		_lvlTwoWords = new ArrayList<String>();
-		_lvlThreeWords = new ArrayList<String>();
-		_lvlFourWords = new ArrayList<String>();
-		_lvlFiveWords = new ArrayList<String>();
-		_lvlSixWords = new ArrayList<String>();
-		_lvlSevenWords = new ArrayList<String>();
-		_lvlEightWords = new ArrayList<String>();
-		_lvlNineWords = new ArrayList<String>();
-		_lvlTenWords = new ArrayList<String>();
-		_lvlElevenWords = new ArrayList<String>();
-
-		//set up the list of list structure
-		_allWords.add(_lvlOneWords);
-		_allWords.add(_lvlTwoWords);
-		_allWords.add(_lvlThreeWords);
-		_allWords.add(_lvlFourWords);
-		_allWords.add(_lvlFiveWords);
-		_allWords.add(_lvlSixWords);
-		_allWords.add(_lvlSevenWords);
-		_allWords.add(_lvlEightWords);
-		_allWords.add(_lvlNineWords);
-		_allWords.add(_lvlTenWords);
-		_allWords.add(_lvlElevenWords);
 
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
+		_festivalModel = FestivalModel.getInstance();
 
 		_currentIndex = -1;
 
@@ -116,9 +79,9 @@ abstract public class QuizModel {
 		_level = level;
 	}
 
-	public void setAllWords(ArrayList<ArrayList<String>> allWords){
+	public void setAllWords(ArrayList<String> allWords, int numWordsToQuiz){
 		_allWords = allWords;
-
+		_numWordsToQuiz = numWordsToQuiz;
 	}
 
 	/**
@@ -132,18 +95,18 @@ abstract public class QuizModel {
 	 */
 	protected void getRandomWords(){
 
-		if ((_allWords.get(_level-1).size() < 10) && (_allWords.get(_level-1).size() > 0)){
+		if ((_allWords.size() < _numWordsToQuiz) && (_allWords.size() > 0)){
 
-			//less than 10 words, just get all of them 
-			_randomWords = _allWords.get(_level-1);
+			//less than wanted words, just get all of them 
+			_randomWords.addAll(_allWords);
 
 
-		}else if (_allWords.get(_level-1).size() >= 10){
+		}else if (_allWords.size() >= 10){
 
-			//chooses 10 random words from list from current level array list
-			while (_randomWords.size() < 10){
+			//chooses _numWordsToQuiz number of random words from allWords
+			while (_randomWords.size() < _numWordsToQuiz){
 				Random r = new Random();
-				String randomWord = _allWords.get(_level-1).get(r.nextInt(_allWords.get(_level-1).size()));//generate a random word
+				String randomWord = _allWords.get(r.nextInt(_allWords.size()));//generate a random word
 
 				if (! _randomWords.contains(randomWord)){
 					//only add randomWord if it is not already in the list, avoid repetition
@@ -152,9 +115,9 @@ abstract public class QuizModel {
 			}
 		}
 
-		//for (int j = 0; j < _randomWords.size(); j ++){
-		//System.out.println("Rndome word " + _randomWords.get(j));
-		//}
+		for (int j = 0; j < _randomWords.size(); j ++){
+			System.out.println("Rndome word " + _randomWords.get(j));
+		}
 
 		//start spelling the FIRST word
 		moveOnToNextWord();
