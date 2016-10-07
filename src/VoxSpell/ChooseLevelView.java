@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class ChooseLevelView implements Card, ActionListener{
+	
+	private JPanel _chooseLevelPanel;
 
 	private JLabel _labelHeading;
 	private JButton _btnViewWordList;
@@ -89,9 +91,9 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	@Override
 	public JPanel createAndGetPanel() {
-		JPanel mainPanel = new JPanel();
+		_chooseLevelPanel = new JPanel();
 
-		mainPanel.setBackground(new Color(6,149,255));
+		_chooseLevelPanel.setBackground(new Color(6,149,255));
 		
 	/*	//add all ENUM elements to drop down menu for combo box
 		for (int i = 0; i < _allWordsFromCourse.size(); i ++){
@@ -105,7 +107,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE
 		 * URL: https://docs.oracle.com/javase/tutorial/uiswing/layout/grid.html
 		 */
-		mainPanel.setLayout(new GridBagLayout());
+		_chooseLevelPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -117,7 +119,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(20,10,20,10);
-		mainPanel.add(_labelHeading, c);
+		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -128,7 +130,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_btnViewWordList, c);
+		_chooseLevelPanel.add(_btnViewWordList, c);
 		_btnViewWordList.addActionListener(this);
 
 
@@ -141,7 +143,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_labelChooseLevel, c);
+		_chooseLevelPanel.add(_labelChooseLevel, c);
 		//	_btnViewWordList.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -153,7 +155,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_comboBox, c);
+		_chooseLevelPanel.add(_comboBox, c);
 		//	_btnViewWordList.addActionListener(this);
 
 		
@@ -166,7 +168,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_labelChooseNumWords, c);
+		_chooseLevelPanel.add(_labelChooseNumWords, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -177,7 +179,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,10,10);
-		mainPanel.add(_btnTenWords, c);
+		_chooseLevelPanel.add(_btnTenWords, c);
 		_btnTenWords.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -189,7 +191,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,10,10);
-		mainPanel.add(_btnTwentyWords, c);
+		_chooseLevelPanel.add(_btnTwentyWords, c);
 		_btnTwentyWords.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -201,7 +203,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,10,10);
-		mainPanel.add(_btnFortyWords, c);
+		_chooseLevelPanel.add(_btnFortyWords, c);
 		_btnFortyWords.addActionListener(this);
 		 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -213,7 +215,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_btnFiftyWords, c);
+		_chooseLevelPanel.add(_btnFiftyWords, c);
 		_btnFiftyWords.addActionListener(this);
 		
 
@@ -226,7 +228,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_btnStartQuiz, c);
+		_chooseLevelPanel.add(_btnStartQuiz, c);
 		_btnStartQuiz.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -238,12 +240,12 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		c.insets = new Insets(0,10,20,10);
-		mainPanel.add(_btnBackToMain, c);
+		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
 		 
 		
 
-		return mainPanel;
+		return _chooseLevelPanel;
 	}
 
 	@Override
@@ -255,9 +257,13 @@ public class ChooseLevelView implements Card, ActionListener{
 			
 		}else if(e.getSource() == _btnViewWordList) {
 			
-			for (int i = 0 ; i < _allWordsFromCourse.size(); i ++){
-				System.out.println(_allWordsFromCourse.get(i));
-			}
+			//create frame to show all words in the selected course
+			ShowAllCourseWordsView showWordFrame = new ShowAllCourseWordsView(_courseName, _allWordsFromCourse, _chooseLevelPanel);
+			showWordFrame.setLocationRelativeTo(_chooseLevelPanel);
+			showWordFrame.setVisible(true);
+			
+			//disable this frame
+			VoxSpellGui.getFrame().setEnabled(false);
 			
 		}else if (e.getSource() == _btnTenWords){
 			
@@ -362,7 +368,6 @@ public class ChooseLevelView implements Card, ActionListener{
 		if(_courseName.equals("wordlistOne")){
 			_coursePath = "./.course/wordlist";
 		}
-		
 	}
 	
 	private void setAllWordsFromCourse(){
