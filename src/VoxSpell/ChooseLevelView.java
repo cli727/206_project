@@ -7,8 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,15 +20,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import VoxSpell.VoxSpellGui.LEVEL;
-
 public class ChooseLevelView implements Card, ActionListener{
 
 	private JLabel _labelHeading;
 	private JButton _btnViewWordList;
 	private JLabel _labelChooseLevel;
-	private DefaultComboBoxModel<Integer> _model;
-	private JComboBox<Integer> _comboBox;
+	
+	//private ComboBoxModel<String> _model;
+	private JComboBox<String> _comboBox;
+	
 	private JLabel _labelChooseNumWords;
 	private JRadioButton _btnTenWords;
 	private JRadioButton _btnTwentyWords;
@@ -36,12 +39,24 @@ public class ChooseLevelView implements Card, ActionListener{
 	private JButton _btnBackToMain;
 	
 	private String _courseName;
+	private String _coursePath;
+	
+	private static HiddenFilesModel _hiddenFilesModel ;
+	private ArrayList<String> _allWordsFromCourse;
+	private Vector<String> _allLevelsFromCourse;
+	
 	private int _numWordsToQuiz;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
-		_courseName = courseName;
+		_hiddenFilesModel = HiddenFilesModel.getInstance();
 		
+		_courseName = courseName;
+		setCoursePath();
+		setAllWordsFromCourse();
+		setAllLevelsFromCourse();
+		
+		//===========================JComponent inistialisation=========================
 		_labelHeading = new JLabel("VIEW AND CHOOSE YOUR GOAL FOR " + _courseName);
 		_btnViewWordList = new JButton("VIEW WORDS IN THIS COURSE");
 		
@@ -49,8 +64,8 @@ public class ChooseLevelView implements Card, ActionListener{
 				"<font color='white'>"
 				+ " Choose Level Below!</font></html>");
 		
-		_model = new DefaultComboBoxModel<Integer>();
-		_comboBox = new JComboBox<Integer>(_model);
+		//items in combo box are all levels 
+		_comboBox = new JComboBox<String>(_allLevelsFromCourse);
 		
 		_labelChooseNumWords = new JLabel("How many words you would like to be tested on:");
 		_btnTenWords = new JRadioButton("10 Random Words");
@@ -78,10 +93,11 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		mainPanel.setBackground(new Color(6,149,255));
 		
-		//add all ENUM elements to drop down menu for combo box
-		for (LEVEL i : LEVEL.values()){
-			_model.addElement(i.getLevel());
-		}
+	/*	//add all ENUM elements to drop down menu for combo box
+		for (int i = 0; i < _allWordsFromCourse.size(); i ++){
+			
+			_model.addElement(_allWordsFromCourse.get(i));
+		}*/
 
 
 		/**
@@ -237,6 +253,12 @@ public class ChooseLevelView implements Card, ActionListener{
 
 			VoxSpellGui.showCourseChooser();
 			
+		}else if(e.getSource() == _btnViewWordList) {
+			
+			for (int i = 0 ; i < _allWordsFromCourse.size(); i ++){
+				System.out.println(_allWordsFromCourse.get(i));
+			}
+			
 		}else if (e.getSource() == _btnTenWords){
 			
 			_numWordsToQuiz = 10;
@@ -254,6 +276,9 @@ public class ChooseLevelView implements Card, ActionListener{
 			Object level =  _comboBox.getSelectedItem();
 			System.out.println("level "+level);
 			System.out.println("words " + _numWordsToQuiz);
+			
+			QuizView quizView = new QuizView((int)level);
+			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "New Quiz");
 		}
 
 	}
@@ -268,7 +293,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		String message;
 		if(allEmpty){
-			if (quizMode.equals(REVIEW)){
+			if (quizMode.equals(VoxSpellGui.REVIEW)){
 
 				message = "There is no word to review at all levels!\n"+
 						"What about starting a New Quiz :)";
@@ -283,10 +308,10 @@ public class ChooseLevelView implements Card, ActionListener{
 					"Please select another level to review.";
 		}
 
-		JOptionPane.showMessageDialog(_frame, message, 
+		JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
 				"No Available Words", JOptionPane.INFORMATION_MESSAGE);
 
-		showMainMenu();
+		VoxSpellGui.showMainMenu();
 	}
 
 	/** shows the pop up window that allows user to select window
@@ -331,5 +356,28 @@ public class ChooseLevelView implements Card, ActionListener{
 			}
 		}
 		return 0;
+	}
+	
+	private void setCoursePath() {
+		if(_courseName.equals("wordlistOne")){
+			_coursePath = "./.course/wordlist";
+		}
+		
+	}
+	
+	private void setAllWordsFromCourse(){
+		_allWordsFromCourse = _hiddenFilesModel.readFileToArray(VoxSpellGui.NEW, _coursePath);
+	}
+	
+	private void setAllLevelsFromCourse(){
+		_allLevelsFromCourse = new Vector<String>();
+		for (int i = 0; i < _allWordsFromCourse.size(); i ++){
+		
+			if (Character.toString(_allWordsFromCourse.get(i).charAt(0)).equals("%")){
+				//if the first char of this string is %, this is a new level
+				//add the level name in without the % sign
+				_allLevelsFromCourse.add(_allWordsFromCourse.get(i).substring(1));
+			}
+		}
 	}
 }

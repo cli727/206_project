@@ -57,10 +57,10 @@ public class VoxSpellGui implements Card,ActionListener{
 	//public final fields for determining quizMode for the game
 	public static final String NEW = "New";
 	public static final String REVIEW = "Review";
-
-	/**
+/*
+	*//**
 	 * public enum class representing all possible levels
-	 */
+	 *//*
 	public static enum LEVEL {
 		ONE(1), TWO(2), THREE(3),FOUR(4),FIVE(5),SIX(6),SEVEN(7),EIGHT(8),NINE(9),TEN(10),ELEVEN(11);
 
@@ -73,7 +73,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			return _level;
 		}
 	}
-
+*/
 	/**
 	 * Singleton class, deals with card handling
 	 */
@@ -248,15 +248,6 @@ public class VoxSpellGui implements Card,ActionListener{
 		}
 	}
 
-
-	public void showCard (JPanel cardPanel, String cardName){
-		//show non static card object
-		_cardsPanel.add(cardPanel, cardName);
-		_cardLayout.show(_cardsPanel, cardName);
-		_currentCard = cardName;
-
-	}
-
 	/**
 	 * Shows a pop up telling user that the selected game/level has no possible quiz words
 	 * @param quizMode
@@ -344,6 +335,13 @@ public class VoxSpellGui implements Card,ActionListener{
 		return 0;
 	}
 
+	public void showCard (JPanel cardPanel, String cardName){
+		//show non static card object
+		_cardsPanel.add(cardPanel, cardName);
+		_cardLayout.show(_cardsPanel, cardName);
+		_currentCard = cardName;
+
+	}
 
 	public static void showMainMenu(){
 		_cardLayout.show(_cardsPanel, "Main Menu");
@@ -363,6 +361,10 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	public static void enableMain(){
 		_frame.setEnabled(true);
+	}
+	
+	public static JFrame getFrame() {
+		return _frame;
 	}
 
 	/**
@@ -386,10 +388,4 @@ public class VoxSpellGui implements Card,ActionListener{
 			}
 		});
 	}
-
-	public static JFrame getFrame() {
-		return _frame;
-	}
-
-
 }
