@@ -93,19 +93,20 @@ public class VoxSpellGui implements Card,ActionListener{
 		_welcomePanel.add(_welcomeLabel);*/
 		
 		_frame.getContentPane().setBackground(Color.white);
+
+		//Build the GUI section that has interchangeable components (cards)
+		_cardsPanel.setLayout(_cardLayout);
+		_cardsPanel.add( cardMainMenu, "Main Menu");
+		_cardsPanel.add(cardChooseCourse, "Choose Course");
+		
 		_frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.ipady = 110;
+		c.ipady = 90;
 		_frame.add(_welcomePanel, c);	
-
-		//Build the GUI section that has interchangeable components (cards)
-		_cardsPanel.setLayout(_cardLayout);
-		_cardsPanel.add( cardMainMenu, "Main Menu");
-		_cardsPanel.add(cardChooseCourse, "Choose Course");
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -152,8 +153,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 250;
-		c.ipadx = 350;
+		c.ipady = 220;
+		c.ipadx = 320;
 		c.insets = new Insets(0,10,5,5);
 		mainPanel.add(_btnPracticeQuiz, c);
 		_btnPracticeQuiz.addActionListener(this);
@@ -224,8 +225,12 @@ public class VoxSpellGui implements Card,ActionListener{
 			new FullStatsView(_frame);
 		}else if (e.getSource() == _btnPracticeQuiz){
 
-			//show choose course card
-			showCourseChooser();
+			//show card to select number of words / levels(headings)
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne"); //wordListOne is the default course
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			
 			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
 
@@ -261,62 +266,6 @@ public class VoxSpellGui implements Card,ActionListener{
 				"No Available Words", JOptionPane.INFORMATION_MESSAGE);
 
 		showMainMenu();
-	}
-
-	/** shows the pop up window that allows user to select window
-	 ** returns an integer that represents the level user has selected
-	 ** 0 means the user has chosen to cancel
-	 *
-	 * Reference URL : http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#input
-	 */
-	private int createAndShowLevelPopUp(String quizMode){
-
-		JPanel popUpPanel = new JPanel();
-		JPanel cbPanel = new JPanel();
-
-		popUpPanel.setLayout(new BorderLayout());
-		cbPanel.setLayout(new BorderLayout());
-
-		if (_currentCard.equals("New Spelling Quiz") || _currentCard.equals("Review Mistakes")){
-
-			popUpPanel.add(new JLabel("<html>Warning: <BR>" + "<BR>" +
-					"You have another quiz in progress. <BR>" + 
-					"If you proceed, all of its progress <BR> will be lost! <BR>" + 
-					"<BR>"+" Or <BR><BR> Press 'Cancel' to go back. <BR>" + "   </html>")
-					,BorderLayout.NORTH);
-
-			popUpPanel.add(new JLabel("-------------------------------------------------------- "),BorderLayout.CENTER);
-
-		}
-
-		DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<Integer>();
-
-		//add all ENUM elements to drop down menu for combo box
-		for (LEVEL i : LEVEL.values()){
-			model.addElement(i.getLevel());
-		}
-
-		JComboBox<Integer> comboBox = new JComboBox<Integer>(model);
-
-		cbPanel.add(new JLabel("Start your " + quizMode +" quiz at level :     "),BorderLayout.BEFORE_LINE_BEGINS);
-		cbPanel.add(comboBox,BorderLayout.CENTER);
-
-		//add comboBox panel to popup window
-		popUpPanel.add(cbPanel,BorderLayout.AFTER_LAST_LINE);
-
-		int result = JOptionPane.showConfirmDialog(_frame, popUpPanel, "Choose level", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-		switch (result) {
-		case JOptionPane.OK_OPTION:
-			for (LEVEL i : LEVEL.values()){
-
-				//compare value of selected item to int values of LEVEL items
-				if (comboBox.getSelectedItem().equals(i.getLevel())){
-					return i.getLevel();
-				}
-			}
-		}
-		return 0;
 	}
 
 	public void showCard (JPanel cardPanel, String cardName){

@@ -123,6 +123,22 @@ abstract public class QuizModel {
 		moveOnToNextWord();
 
 	}
+	/**
+	 * helper method for view to get the number of words, so that it can be shown on the GUI
+	 * @return
+	 */
+	protected int getTotalWordNum(){
+		return _randomWords.size();
+	}
+	
+
+	/**
+	 * Helper method for the view to update GUI with correct word spelling when the user chooses "show answer"
+	 * @return
+	 */
+	protected String getCorrectSpelling(){
+		return _currentWord;
+	}
 
 	/**
 	 * Update JLabel on its registered view to show the updated accuracy rate once a word is determined
