@@ -348,7 +348,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			//create model of quizView according to quiz mode
 			if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 				//words from course wordlist
-				quizModel = new NewQuizModel();
+				quizModel = new PracticeQuizModel();
 				quizModel.setView(quizView);
 				quizModel.setAllWords(_model.getLevelWordsFromCourse(level), _numWordsToQuiz);
 			}else{

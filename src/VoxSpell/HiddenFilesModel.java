@@ -385,7 +385,7 @@ public class HiddenFilesModel {
 	protected boolean allEmpty(String quizMode){
 		int nonEmptyLevel = 0;
 
-		ArrayList<ArrayList<String>> allWords = _hiddenFilesModel.readFileToArray(quizMode);
+		ArrayList<String> allWords = _hiddenFilesModel.readFileToArray(quizMode);
 
 		for (int i = 0; i < allWords.size();i++){
 
