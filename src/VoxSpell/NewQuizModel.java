@@ -93,6 +93,8 @@ public class NewQuizModel extends QuizModel{
 			_currentIndex ++;
 			_attemptedCount ++;
 			_currentWord = _randomWords.get(_currentIndex);
+			
+			System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
 
 			//updates word progress on the gui, clears input area
 			_quizView.updateWordLabel("Spell ", _currentIndex+1, _randomWords.size(),_level);

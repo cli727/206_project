@@ -187,7 +187,9 @@ public class ChooseCourseView implements Card, ActionListener{
 			VoxSpellGui.showMainMenu();
 		}else if (e.getSource() == _btnWordListOne){
 			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("WordListOne");
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne");
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 		}
 	}

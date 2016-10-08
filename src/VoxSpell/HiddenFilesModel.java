@@ -26,6 +26,8 @@ public class HiddenFilesModel {
 
 	private static HiddenFilesModel _hiddenFilesModel;
 
+	protected static Path _courseFolderPath;
+
 	protected static Path _reviewFolderPath;
 	protected static Path _reviewWordsLevel01FilePath;
 	protected static Path _reviewWordsLevel02FilePath;
@@ -83,17 +85,20 @@ public class HiddenFilesModel {
 			_reviewWordsLevel09FilePath = Paths.get("./.review/ReviewWordsLevel09");
 			_reviewWordsLevel10FilePath = Paths.get("./.review/ReviewWordsLevel10");
 			_reviewWordsLevel11FilePath = Paths.get("./.review/ReviewWordsLevel11");
-			
+
 			_statsFolderPath = Paths.get("./.stats");
 			_masteredWordsFilePath = Paths.get("./.stats/MasteredWords");
 			_faultedWordsFilePath = Paths.get("./.stats/FaultedWords");
 			_failedWordsFilePath = Paths.get("./.stats/FailedWords");
-			
+
 			_festivalFolderPath = Paths.get("./.festival");
 			_slowPacedVoiceFilePath = Paths.get("./.festival/slowPacedVoice.scm");
 			_americanVoiceFilePath = Paths.get("./.festival/americanVoice.scm");
 			_newZealandVoiceFilePath = Paths.get("./.festival/newZealandVoice.scm");
-			
+
+			//ACTUALLY THIS ISNT NEEDED
+			_courseFolderPath = Paths.get("./.course");
+
 			//Create stats folder and mastered/faulted/failed words files only if it doesn't already exists. 
 			//Assumption: if stats folder already exists, then mastered/faulted/failed words file already exists within stats folder too
 			if (Files.notExists(_statsFolderPath)) {
@@ -127,6 +132,11 @@ public class HiddenFilesModel {
 				Files.createFile(_americanVoiceFilePath);
 				Files.createFile(_newZealandVoiceFilePath);
 				writeSCMCodeToVoiceFiles();
+			}
+
+			//Course folder which contains different wordlists for different courses
+			if (Files.notExists(_courseFolderPath)){
+				Files.createDirectory(_courseFolderPath);
 			}
 
 		} catch (IOException e) {
@@ -294,7 +304,7 @@ public class HiddenFilesModel {
 	protected static Path getFestivalFolderPath() {
 		return _festivalFolderPath;
 	}
-	
+
 	/**
 	 * Read the contents of a file according to quizMode, into a list of list of strings
 	 * array structure
@@ -303,35 +313,11 @@ public class HiddenFilesModel {
 	 * @param quizMode
 	 * @return
 	 */
-	protected ArrayList<ArrayList<String>> readFileToArray(String quizMode){ 
-		
-		BufferedReader reader;
-		
-		//Create list of list of strings data structure
-		ArrayList<ArrayList<String>> allWords = new ArrayList<ArrayList<String>>();
-		ArrayList<String> lvlOneWords = new ArrayList<String>();
-		ArrayList<String> lvlTwoWords = new ArrayList<String>();
-		ArrayList<String> lvlThreeWords = new ArrayList<String>();
-		ArrayList<String> lvlFourWords = new ArrayList<String>();
-		ArrayList<String> lvlFiveWords = new ArrayList<String>();
-		ArrayList<String> lvlSixWords = new ArrayList<String>();
-		ArrayList<String> lvlSevenWords = new ArrayList<String>();
-		ArrayList<String> lvlEightWords = new ArrayList<String>();
-		ArrayList<String> lvlNineWords = new ArrayList<String>();
-		ArrayList<String> lvlTenWords = new ArrayList<String>();
-		ArrayList<String> lvlElevenWords = new ArrayList<String>();
+	protected ArrayList<String> readFileToArray(String quizMode, String coursePath){ 
 
-		allWords.add(lvlOneWords);
-		allWords.add(lvlTwoWords);
-		allWords.add(lvlThreeWords);
-		allWords.add(lvlFourWords);
-		allWords.add(lvlFiveWords);
-		allWords.add(lvlSixWords);
-		allWords.add(lvlSevenWords);
-		allWords.add(lvlEightWords);
-		allWords.add(lvlNineWords);
-		allWords.add(lvlTenWords);
-		allWords.add(lvlElevenWords);
+		BufferedReader reader;
+
+		ArrayList<String> allWords = new ArrayList<String>();
 
 		if ( quizMode.equals(VoxSpellGui.NEW)){
 
@@ -340,15 +326,13 @@ public class HiddenFilesModel {
 
 			//fills allWords
 			try {
-				reader = new BufferedReader(new FileReader("wordlist")); 
+				reader = new BufferedReader(new FileReader(coursePath)); 
 				String line = reader.readLine();
 
 				while (line != null) {
-					if (Character.toString(line.charAt(0)).equals("%")){
-						wordListIndex ++;
-					}else{
-						allWords.get(wordListIndex).add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
-					}
+
+					allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
+
 					line = reader.readLine();
 				}
 
@@ -367,11 +351,11 @@ public class HiddenFilesModel {
 					String line;
 					//add lists of words at each level in corresponding position in allWords (e.g. position 0 of allWords list is review words for level 1
 					while ((line = br.readLine()) != null) {
-						if (allWords.get(i).contains(line)) { //if the word read has already been recorded in allWords previously
+						if (allWords.contains(line)) { //if the word read has already been recorded in allWords previously
 							continue;
 						}
 						else {
-							allWords.get(i).add(line);
+							allWords.add(line);
 						}						
 					}
 					br.close();
@@ -384,6 +368,12 @@ public class HiddenFilesModel {
 		}
 
 		return allWords;
+	}
+
+	protected ArrayList<String> readLevelOfFile(String filepath){
+		ArrayList<String> allLevels = new ArrayList<String>();
+		return allLevels;
+
 	}
 
 	/**
@@ -442,22 +432,22 @@ public class HiddenFilesModel {
 			ArrayList<String> slowCommand = new ArrayList<String>();
 			slowCommand.add("(Parameter.set 'Duration_Stretch 1.5)");
 			Files.write(_slowPacedVoiceFilePath, slowCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 			//For American voice
 			ArrayList<String> americanVoiceCommand = new ArrayList<String>();
 			americanVoiceCommand.add("(voice_kal_diphone)");
 			Files.write(_americanVoiceFilePath, americanVoiceCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 			//For NZ Voice
 			ArrayList<String> newZealandVoiceCommand = new ArrayList<String>();
 			newZealandVoiceCommand.add("(voice_akl_nz_jdt_diphone)");
 			Files.write(_newZealandVoiceFilePath, newZealandVoiceCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Delete a temporary video output file generated for ffmpeg in the VideoPlayer
 	 * @param videoPath

@@ -1,5 +1,7 @@
 package VoxSpell;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -16,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import VoxSpell.FestivalModel.Voice;
-import VoxSpell.VoxSpellGui.LEVEL;
 
 /**
  * QuizView that is registered for a new or review quiz; offers methods that updates the GUI accoridng
@@ -27,74 +28,55 @@ import VoxSpell.VoxSpellGui.LEVEL;
 @SuppressWarnings("serial")
 public class QuizView extends JPanel implements Card, ActionListener {
 
-	private LEVEL _level = null;
+	private String _level = null;
 	private QuizModel _quizModel;
 	private FestivalModel _festivalModel;
 
-	private JButton btnRelisten = new JButton("Relisten");
-	private JButton btnCheckWord = new JButton("Check spelling");
+	private JLabel _labelSpellWord;
+	private JLabel _spellHere;
+	private JTextField _inputArea ;
 
-	private JTextField inputArea = new JTextField();
+	private JLabel _labelDefinition;
 
-	private JLabel spellHere = new JLabel("Enter here: ");
-	private JLabel labelSpellWord;
-
-	private JLabel labelFesVoice = new JLabel("Choose your preferred voice below :");
-	private JLabel labelAccuracy = new JLabel("Accuracy Rates:     ");
-
-	private List<JLabel> _accuracyLabels = new ArrayList<JLabel>();
-
-	private JLabel labelLvlOne = new JLabel();
-	private JLabel labelLvlTwo = new JLabel();
-	private JLabel labelLvlThree = new JLabel();
-	private JLabel labelLvlFour = new JLabel();
-	private JLabel labelLvlFive = new JLabel();
-	private JLabel labelLvlSix = new JLabel();
-	private JLabel labelLvlSeven = new JLabel();
-	private JLabel labelLvlEight = new JLabel();
-	private JLabel labelLvlNine = new JLabel();
-	private JLabel labelLvlTen = new JLabel();
-	private JLabel labelLvlEleven = new JLabel();
+	private JButton _btnRelisten;
 	
-	private JLabel tipsLabel = new JLabel();
+	private JButton _btnCheckWord;
+	private JButton _btnSkipWord;
+	private JButton _btnShowAnswer;
 
-	final protected String comboBoxItems[] = {"American (default)", "New Zealand"};
-	final protected JComboBox<String> cb = new JComboBox<String>(comboBoxItems);
+	private JLabel _labelFesVoice ;
+	private JLabel _labelAccuracy;
+
+	private JLabel _tipsLabel;
+	
+	private JButton _btnBack;
+
+	final protected String _comboBoxItems[] = {"American (default)", "New Zealand"};
+	final protected JComboBox<String> _cb;
+	
 
 
-	public QuizView (int level){
-		//set up labels that need the level information
-		for (LEVEL i : LEVEL.values()){
+	public QuizView (String level, String courseName){
+		//set up fields
+		_level = level;
 
-			if (i.getLevel() == level){
-				_level = i;
-				break;
-			}
-		}
+		_labelSpellWord = new JLabel("Spell Word 1 of 10 on Level " + _level + ": " + "in course : " + courseName);
+		_spellHere = new JLabel("Enter here: ");
+		_inputArea = new JTextField();
 
-		labelSpellWord = new JLabel("Spell Word 1 of 10 on Level " + _level + ": ");
+		_labelDefinition = new JLabel("I am defi");
 
-		//add all accuracy labels to arraylist
-		_accuracyLabels.add(labelLvlOne);
-		_accuracyLabels.add(labelLvlTwo);
-		_accuracyLabels.add(labelLvlThree);
-		_accuracyLabels.add(labelLvlFour);
-		_accuracyLabels.add(labelLvlFive);
-		_accuracyLabels.add(labelLvlSix);
-		_accuracyLabels.add(labelLvlSeven);
-		_accuracyLabels.add(labelLvlEight);
-		_accuracyLabels.add(labelLvlNine);
-		_accuracyLabels.add(labelLvlTen);
-		_accuracyLabels.add(labelLvlEleven);
+		_btnRelisten = new JButton("Relisten");
+		_btnCheckWord = new JButton("Check spelling");
+		_btnSkipWord = new JButton("Skip");
+		_btnShowAnswer = new JButton ("Answer");
+		/*
+ _labelFesVoice = new JLabel("Choose your preferred voice below :");
+	 _labelAccuracy = new JLabel("Accuracy Rates:     ");*/
 
-		for (int i = 0; i < _accuracyLabels.size(); i++){
-			if (i == (level - 1)){
-				//start with 100% accuracy on the current level
-				_accuracyLabels.get(i).setText("* Level "+ _level.getLevel() +": -- ");
-			}else{
-				_accuracyLabels.get(i).setText("* Level "+ (i+1) +": NA     ");
-			}
-		}
+		_tipsLabel = new JLabel();
+		_cb = new JComboBox<String>(_comboBoxItems);
+		_btnBack = new JButton("FUCK MY LIFE");
 	}
 
 	/**
@@ -103,16 +85,18 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	@Override
 	public JPanel createAndGetPanel() {
 
-		cb.setEditable(false);
+		setBackground(Color.white);
+
+		_cb.setEditable(false);
 		//If it's the very first game in the session, default voice is American voice
 		//Otherwise (e.g. selected a new level in the middle of a game), selected voice remains the same as the previous game's voice selection.
 		if (FestivalModel._currentVoice == Voice.AMERICAN) {
-			cb.setSelectedItem("American (default)");
+			_cb.setSelectedItem("American (default)");
 		}
 		else {
-			cb.setSelectedItem("New Zealand");
+			_cb.setSelectedItem("New Zealand");
 		}
-		cb.addItemListener(_festivalModel);
+		_cb.addItemListener(_festivalModel);
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -125,70 +109,58 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
+		c.gridwidth = 6;
 		c.gridheight = 1;
-		
-		c.insets = new Insets(10,45,6,0);
-		add(labelSpellWord, c);	
+		//	c.insets = new Insets(10,45,6,0);
+		add(_labelSpellWord, c);	
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridheight = 1;
-		c.gridwidth = 1;
+		c.gridwidth = 4;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,55,6,0);
-		add(spellHere, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		//c.weightx = 0.3;
-		c.insets = new Insets(5,0,6,10);
-		add(inputArea, c);
-		inputArea.addActionListener(this);
+		//c.insets = new Insets(5,55,6,0);
+		add(_spellHere, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
+		c.gridwidth = 4;
+		c.gridheight = 2;
+		//c.weightx = 0.3;
+		//c.insets = new Insets(5,0,6,10);
+		add(_labelDefinition, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 4;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,55,3,0);
-		add(btnRelisten, c);
-		btnRelisten.addActionListener(this);
+		//c.insets = new Insets(10,55,3,0);
+		add(_btnRelisten, c);
+		_btnRelisten.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 2;
-		c.gridwidth = 1;
+		c.gridy = 4;
+		c.gridwidth = 3;
 		c.gridheight = 1;
 		//c.weightx = 0.5;
-		c.insets = new Insets(10,15,3,10);
-		add(btnCheckWord, c);
-		btnCheckWord.addActionListener(this);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.weightx = 0.33;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 2;
-		c.gridheight = 1;
-		//c.weightx = 0.7;
-		c.insets = new Insets(15,55,60,0);
-		add(tipsLabel, c);
+		//c.insets = new Insets(10,15,3,10);
+		add(_inputArea, c);
+		_inputArea.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
-		c.gridx = 0;
+		c.gridx = 4;
 		c.gridy = 4;
 		c.gridwidth = 2;
 		c.gridheight = 1;
 		//c.weightx = 0.7;
-		c.insets = new Insets(15,45,3,0);
-		add(labelFesVoice, c);
+		//c.insets = new Insets(15,55,60,0);
+		add(_tipsLabel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -196,14 +168,54 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(11,55,3,5);
-		add(cb, c);
+		//c.insets = new Insets(11,55,3,5);
+		add(_cb, c);
 		//add item listener
 
-		// a new panel for the accuracy rate labels
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.2;
+		//c.insets = new Insets(10,55,3,0);
+		add(_btnCheckWord, c);
+		_btnCheckWord.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.2;
+		//c.insets = new Insets(10,55,3,0);
+		add(_btnSkipWord, c);
+		_btnSkipWord.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 3;
+		c.gridy = 5;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.2;
+		//c.insets = new Insets(10,55,3,0);
+		add(_btnShowAnswer, c);
+		_btnShowAnswer.addActionListener(this);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 4;
+		c.gridy = 6;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.2;
+		//c.insets = new Insets(10,55,3,0);
+		add(_btnBack, c);
+		_btnBack.addActionListener(this);
+		
+		/*// a new panel for the accuracy rate labels
 		JPanel accuracyPanel = new JPanel();
 		accuracyPanel.setLayout(new GridBagLayout());
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 0;
@@ -212,115 +224,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridheight = 7;
 		//c.weightx = 1;
 		c.insets = new Insets(10,5,3,20);
-		add(accuracyPanel, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0.5;
-		c.insets = new Insets(0,14,3,10);
-		accuracyPanel.add(labelAccuracy, c);	
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(10,5,3,10);
-		accuracyPanel.add(labelLvlOne, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlTwo, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlThree, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlFour, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 5;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlFive, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlSix, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 7;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0.3;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlSeven, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 8;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlEight, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 9;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlNine, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 10;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlTen, c);
-
-		c.fill = GridBagConstraints.VERTICAL;
-		c.gridx = 0;
-		c.gridy = 11;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 1;
-		c.insets = new Insets(5,5,3,10);
-		accuracyPanel.add(labelLvlEleven, c);
+		add(accuracyPanel, c);*/
 
 		return this;
 	}
@@ -424,7 +328,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		return levelUp;
 	}
-	
+
 	public void showReviewEndPopUp(int correct, int incorrect){
 
 		String message = "Level " + _level +" Review Completed: \n" + "\n" +
@@ -448,24 +352,20 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	public void updateWordLabel(String quizMode,int currentWord,int totalWord, int level){
 
-		for (LEVEL i : LEVEL.values()){
-			if (level == i.getLevel()){
-				_level = i;
-			}
-		}
-		labelSpellWord.setText(( quizMode +" Word "+ (currentWord) + " of " +totalWord+ " on Level " + _level + ": "));
+
+		_labelSpellWord.setText(( quizMode +" Word "+ (currentWord) + " of " +totalWord+ " on Level " + _level + ": "));
 	}
-	
+
 	public void updateTipsLabel(boolean caseSensitive){
 		if (caseSensitive){
-			tipsLabel.setText("(Hint: this word is case sensitive!)");
+			_tipsLabel.setText("(Hint: this word is case sensitive!)");
 		}else {
-			tipsLabel.setText("<html> <BR> </html>");
+			_tipsLabel.setText("<html> <BR> </html>");
 		}
 	}
 
 	public void clearInputArea(){
-		inputArea.setText("");
+		_inputArea.setText("");
 	}
 
 	public void showMainMenu(){
@@ -475,14 +375,20 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnCheckWord || e.getSource() == inputArea){
-			_quizModel.checkSpelling(inputArea.getText());
-		}else if (e.getSource() == btnRelisten){
+		if (e.getSource() == _btnCheckWord || e.getSource() == _inputArea){
+			_quizModel.checkSpelling(_inputArea.getText());
+		}else if (e.getSource() == _btnRelisten){
 			_quizModel.relisten();
+		}else if (e.getSource() == _btnBack){
+			//show level choosing card again
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne");
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 		}
 
 	}
-	
+
 	protected void setFestivalModel(FestivalModel model) {
 		_festivalModel = model;
 	}
