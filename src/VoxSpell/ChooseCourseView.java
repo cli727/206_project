@@ -1,6 +1,7 @@
 package VoxSpell;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -34,8 +35,14 @@ public class ChooseCourseView implements Card, ActionListener{
 	private JButton _btnBackToMain;
 
 	private ChooseCourseView(){
+	    //create new Font
+        Font headingFont = new Font("SansSerif", Font.ITALIC,50);
+       
+		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='white'>"
+				+ "Select your course...</font></html>"));
 		
-		_labelHeading = new JLabel("PLEASE SELECT YOUR COURSE AYE");
+		_labelHeading.setFont(headingFont);
 		
 		/**
 		 * CODE FOR CHANGING BUTTON BACKGROUND WHEN HOVERED OVER SOURCED FROM STACK OVERFLOW:
@@ -98,7 +105,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		//c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(0,40,0,0);
 		mainPanel.add(_labelHeading, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -107,8 +114,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 200;
-		c.ipadx = 190;
+		c.ipady = 170;
+		c.ipadx = 160;
 		c.insets = new Insets(40,10,5,5);
 		mainPanel.add(_btnWordListOne, c);
 		_btnWordListOne.addActionListener(this);
@@ -165,17 +172,17 @@ public class ChooseCourseView implements Card, ActionListener{
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
+		/*c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 8;
 		c.gridy = 6;
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		c.ipadx = 10;
 		c.ipady = 10;
-		c.weightx = 0.3;
+		//c.weightx = 0.3;
 		c.insets = new Insets(10,0,0,10);
 		mainPanel.add(_btnBackToMain, c);
-		_btnBackToMain.addActionListener(this);
+		_btnBackToMain.addActionListener(this);*/
 
 		return mainPanel;
 	}

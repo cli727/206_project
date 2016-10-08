@@ -1,7 +1,9 @@
 package VoxSpell;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -32,8 +34,13 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	private QuizModel _quizModel;
 	private FestivalModel _festivalModel;
 
-	private JLabel _labelSpellWord;
-	private JLabel _spellHere;
+	private JPanel _headingPanel;
+	private JLabel _labelHeading;
+	private JLabel _labelSubheading;
+	
+	private JPanel _updateWordPanel;
+	private JLabel _labelToUpdateWordNum;
+	
 	private JTextField _inputArea ;
 
 	private JLabel _labelDefinition;
@@ -54,18 +61,34 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	final protected String _comboBoxItems[] = {"American (default)", "New Zealand"};
 	final protected JComboBox<String> _cb;
 	
-
-
 	public QuizView (String level, String courseName){
 		//set up fields
 		_level = level;
 
-		_labelSpellWord = new JLabel("Spell Word 1 of 10 on Level " + _level + ": " + "in course : " + courseName);
-		_spellHere = new JLabel("Enter here: ");
+		//===heading======================================================
+		_headingPanel = new JPanel();
+		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Course: " + courseName+ "</font></html>"));
+
+		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,40));
+		
+		_labelSubheading = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Subgroup : " + _level + "</font></html>"));
+		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,30)));
+		
+		//===word progress=================================================
+		_updateWordPanel = new JPanel();
+		_updateWordPanel.setBackground(Color.WHITE);
+		_labelToUpdateWordNum = new JLabel();
+
+		//definition of word
+		_labelDefinition = new JLabel("<html> v. just feeling like <BR> killing myself <BR> over this assignment</html>");
+
 		_inputArea = new JTextField();
 
-		_labelDefinition = new JLabel("I am defi");
-
+		//=======buttons==============================================
 		_btnRelisten = new JButton("Relisten");
 		_btnCheckWord = new JButton("Check spelling");
 		_btnSkipWord = new JButton("Skip");
@@ -105,110 +128,117 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		 */
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 6;
 		c.gridheight = 1;
-		//	c.insets = new Insets(10,45,6,0);
-		add(_labelSpellWord, c);	
-
+		add(_labelHeading, c);
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
+		c.gridwidth = 6;
 		c.gridheight = 1;
-		c.gridwidth = 4;
-		//c.weightx = 0.3;
-		//c.insets = new Insets(5,55,6,0);
-		add(_spellHere, c);
-
+		c.insets = new Insets(5,0,80,0);
+		add(_labelSubheading, c);
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		//c.weightx = 0.3;
+		c.insets = new Insets(5,55,30,0);
+		add(_updateWordPanel, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 3;
 		c.gridwidth = 4;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		//c.insets = new Insets(5,0,6,10);
+		c.insets = new Insets(5,55,40,0);
 		add(_labelDefinition, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		//c.insets = new Insets(10,55,3,0);
+		c.insets = new Insets(10,55,15,0);
 		add(_btnRelisten, c);
 		_btnRelisten.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 4;
+		c.gridy = 5;
 		c.gridwidth = 3;
 		c.gridheight = 1;
 		//c.weightx = 0.5;
-		//c.insets = new Insets(10,15,3,10);
+		c.insets = new Insets(10,5,15,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
 		c.gridx = 4;
-		c.gridy = 4;
+		c.gridy = 5;
 		c.gridwidth = 2;
 		c.gridheight = 1;
 		//c.weightx = 0.7;
-		//c.insets = new Insets(15,55,60,0);
+		c.insets = new Insets(10,5,15,0);
 		add(_tipsLabel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		//c.insets = new Insets(11,55,3,5);
+		c.insets = new Insets(10,55,70,5);
 		add(_cb, c);
 		//add item listener
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		//c.insets = new Insets(10,55,3,0);
+		c.insets = new Insets(10,5,70,0);
 		add(_btnCheckWord, c);
 		_btnCheckWord.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		//c.insets = new Insets(10,55,3,0);
+		c.insets = new Insets(10,5,70,0);
 		add(_btnSkipWord, c);
 		_btnSkipWord.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		//c.insets = new Insets(10,55,3,0);
+		c.insets = new Insets(10,5,70,0);
 		add(_btnShowAnswer, c);
 		_btnShowAnswer.addActionListener(this);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 4;
-		c.gridy = 6;
+		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		//c.insets = new Insets(10,55,3,0);
+		c.insets = new Insets(10,65,10,0);
 		add(_btnBack, c);
 		_btnBack.addActionListener(this);
 		
@@ -352,8 +382,15 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	public void updateWordLabel(String quizMode,int currentWord,int totalWord, int level){
 
+		
+		_labelToUpdateWordNum.setText("<html> <font color='orange'>"
+				+Integer.toString(currentWord)+ "</font></html>");
+		
+		_labelToUpdateWordNum.setFont(new Font("SansSerif", Font.BOLD,17));
+		
+		_updateWordPanel.add(_labelToUpdateWordNum);
+		_updateWordPanel.add(new JLabel(" / "+Integer.toString(_quizModel.getTotalWordNum())));
 
-		_labelSpellWord.setText(( quizMode +" Word "+ (currentWord) + " of " +totalWord+ " on Level " + _level + ": "));
 	}
 
 	public void updateTipsLabel(boolean caseSensitive){

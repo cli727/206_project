@@ -81,7 +81,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			@Override
 			protected void paintComponent(Graphics g){
 				super.paintComponent(g);
-				g.drawImage(_banner, 0, 0, 1019, 100,this);
+				g.drawImage(_banner, 0, 0, 1019, 110,this);
 			}
 		};
 
@@ -152,8 +152,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 250;
-		c.ipadx = 350;
+		c.ipady = 220;
+		c.ipadx = 320;
 		c.insets = new Insets(0,10,5,5);
 		mainPanel.add(_btnPracticeQuiz, c);
 		_btnPracticeQuiz.addActionListener(this);
@@ -224,8 +224,12 @@ public class VoxSpellGui implements Card,ActionListener{
 			new FullStatsView(_frame);
 		}else if (e.getSource() == _btnPracticeQuiz){
 
-			//show choose course card
-			showCourseChooser();
+			//show card to select number of words / levels(headings)
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne"); //wordListOne is the default course
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			
 			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
 
