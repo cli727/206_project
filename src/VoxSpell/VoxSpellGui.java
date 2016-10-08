@@ -98,7 +98,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			@Override
 			protected void paintComponent(Graphics g){
 				super.paintComponent(g);
-				g.drawImage(_banner, 0, 0, 1019, 110,this);
+				g.drawImage(_banner, 0, 0, 1019, 100,this);
 			}
 		};
 
@@ -116,9 +116,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.ipady = 100;
+		c.ipady = 110;
 		_frame.add(_welcomePanel, c);	
-
 
 		//Build the GUI section that has interchangeable components (cards)
 		_cardsPanel.setLayout(_cardLayout);
@@ -193,7 +192,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,10,40,5);
+		c.insets = new Insets(0,10,10,5);
 		mainPanel.add(_btnScoreHistory, c);
 		_btnScoreHistory.addActionListener(this);
 
@@ -203,7 +202,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,40,10);
+		c.insets = new Insets(0,0,10,10);
 		mainPanel.add(_btnHowItWorks, c);
 		_btnHowItWorks.addActionListener(this);
 
