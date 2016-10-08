@@ -36,13 +36,17 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static JFrame _frame;
 
 	private BufferedImage _banner;
-
+	private BufferedImage _footer;
+	
 	private static JPanel _welcomePanel;
 	private JLabel _welcomeLabel;
 	private JButton _btnPracticeQuiz;
 	private JButton _btnTimerQuiz;
 	private JButton _btnReview;
 	private JButton _btnScoreHistory;
+
+
+	private static JPanel _footerPanel;
 
 	private static JPanel _cardsPanel = new JPanel();
 	private static CardLayout _cardLayout = new CardLayout();
@@ -72,19 +76,13 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		//header session that stays throughout all menus
 		try {
-			_banner = ImageIO.read(new File("./banner-01.jpg"));
+			_banner = ImageIO.read(new File("./banner-01.png"));
+			_footer = ImageIO.read(new File("./footer-02.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		_welcomePanel = new JPanel(){
-			@Override
-			protected void paintComponent(Graphics g){
-				super.paintComponent(g);
-				g.drawImage(_banner, 0, 0, 1019, 100,this);
-			}
-		};
-
+		
 		/*ImageIcon banner = new ImageIcon("./banner.jpg");
 		_welcomeLabel = new JLabel(banner);
 		Dimension size = new Dimension(banner.getIconWidth(), banner.getIconHeight());
@@ -98,21 +96,57 @@ public class VoxSpellGui implements Card,ActionListener{
 		_cardsPanel.setLayout(_cardLayout);
 		_cardsPanel.add( cardMainMenu, "Main Menu");
 		_cardsPanel.add(cardChooseCourse, "Choose Course");
+
+		_welcomePanel = new JPanel(){
+			@Override
+			protected void paintComponent(Graphics g){
+				super.paintComponent(g);
+				g.drawImage(_banner, 0, 0,946,100, null);
+			}
+		};
 		
-		_frame.setLayout(new GridBagLayout());
+		_footerPanel =new JPanel(){
+			@Override
+			protected void paintComponent(Graphics g){
+				super.paintComponent(g);
+				g.drawImage(_footer, 0, 0,946,60, null);
+			}
+		};
+		//_footerPanel.add(new JLabel("IAM A FOORTER"));
+		
+		/*_welcomePanel.setOpaque(true);
+		
+		_frame.add(_welcomePanel, BorderLayout.NORTH);	
+
+		_frame.add(_cardsPanel,BorderLayout.CENTER);	
+
+		_frame.add(_footerPanel,BorderLayout.SOUTH);
+		*/
+	_frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.ipady = 90;
+		c.ipady = 110;
+		c.gridheight = 1;
+		c.weighty = 0;
 		_frame.add(_welcomePanel, c);	
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
-		c.insets = new Insets(0,0,0,0);
+		c.ipady = 80;
+		c.insets = new Insets(-30,0,0,0);
 		_frame.add(_cardsPanel,c);	
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.ipady = 50;
+		c.insets = new Insets(0,0,0,0);
+		_frame.add(_footerPanel,c);	
 
 		//begin with showing the main menu screen	
 		showMainMenu(); 
@@ -132,13 +166,12 @@ public class VoxSpellGui implements Card,ActionListener{
 		JPanel mainPanel = new JPanel();
 
 		mainPanel.setBackground(Color.white);
-
-
+		
 		_btnPracticeQuiz = new JButton("Practice Words");
 		_btnTimerQuiz = new JButton("Timer Mode");
 		_btnReview = new JButton("Review Mistakes");
 		_btnScoreHistory = new JButton("Score History");
-
+		
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE
@@ -187,33 +220,10 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,0,10,10);
+		c.insets = new Insets(0,0,5,10);
 		mainPanel.add(_btnScoreHistory, c);
 		_btnScoreHistory.addActionListener(this);
 		
-		
-		/*
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 3;
-		c.gridheight = 2;
-		//c.weightx = 0.5;
-		c.insets = new Insets(0,10,40,5);
-		mainPanel.add(_btnImportWordList, c);
-		_btnImportWordList.addActionListener(this);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.weightx = 0.33;
-		c.gridx = 3;
-		c.gridy = 4;
-		c.gridwidth = 3;
-		c.gridheight = 2;
-		//c.weightx = 0.7;
-		c.insets = new Insets(0,0,40,5);
-		mainPanel.add(_btnCreateWordList, c);
-		_btnCreateWordList.addActionListener(this);*/
-
 		return mainPanel;
 	}
 
@@ -306,6 +316,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static void createAndShowGUI() {
 		//create and show GUI window
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_frame.setResizable(false);
 		_frame.pack(); //Layout frame's components according to their preferred sizes.
 		_frame.setLocationRelativeTo(null); //puts window at the center of screen
 		_frame.setVisible(true);//Display the window
@@ -317,7 +328,8 @@ public class VoxSpellGui implements Card,ActionListener{
 			public void run() {
 				_voxSpellGui = new VoxSpellGui();
 				createAndShowGUI();
-				System.out.println("size: " + _welcomePanel.getSize());
+				System.out.println("size: " + _welcomePanel.getWidth() + " " + _welcomePanel.getHeight());
+				System.out.println("size: " + _footerPanel.getWidth() + " " + _footerPanel.getHeight());
 			}
 		});
 	}

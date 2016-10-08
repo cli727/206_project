@@ -168,7 +168,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,20,10);
+		c.insets = new Insets(0,0,0,10);
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
 

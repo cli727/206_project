@@ -33,7 +33,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	private String _level = null;
 	private QuizModel _quizModel;
-	private FestivalModel _festivalModel;
+	private FestivalModel _festivalModel = FestivalModel.getInstance();
 
 	private JPanel _headingPanel;
 	private JLabel _labelHeading;

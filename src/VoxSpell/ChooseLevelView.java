@@ -124,6 +124,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
+		
 		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -134,7 +135,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(20,90,20,10);
+		c.insets = new Insets(0,90,20,10);
 		_chooseLevelPanel.add(_labelViewChangeCourse, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -276,7 +277,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,10,20,10);
+		c.insets = new Insets(0,10,0,10);
 		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
 
