@@ -33,7 +33,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	private String _level;
 	private String _courseName;
-	
+
 	private QuizModel _quizModel;
 	private FestivalModel _festivalModel = FestivalModel.getInstance();
 
@@ -130,7 +130,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_tipsLabel = new JLabel();
 		_cb = new JComboBox<String>(_comboBoxItems);
 		_btnBack = new JButton("Back");
-		
+
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(Color.white);
 	}
@@ -297,7 +297,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 			_quizModel.relisten();
 		}else if (e.getSource() == _btnBack){
-			
+
 			//popUp confirming user decision
 			gameInProgressPopUp();
 
@@ -367,12 +367,18 @@ public class QuizView extends JPanel implements Card, ActionListener {
 				"default");
 
 		if(dialogResult == JOptionPane.YES_OPTION){
-			//show level choosing card again
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlist");
+			//show level choosing card again, according to game mode
+
+			ChooseLevelView cardChooseLevel = null;
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+				cardChooseLevel = new ChooseLevelView("wordlist");
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+				cardChooseLevel = new ChooseLevelReviewView("wordlist");
+			}
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-			
+
 		}//else dispose panel and carry on
 
 	}
@@ -455,11 +461,11 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	public void showMainMenu(){
 		VoxSpellGui.showMainMenu();
 	}
-	
+
 	protected String getLevelName(){
 		return _level;
 	}
-	
+
 	protected String getCourseName(){
 		return _courseName;
 	}

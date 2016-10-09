@@ -24,13 +24,13 @@ import VoxSpell.FestivalModel.Voice;
 
 public class ResultView implements Card, ActionListener {
 
-	private Vector<String> _allLevelNames;
-	private String _thisLevelName;
-	private String _courseName;
+	protected Vector<String> _allLevelNames;
+	protected String _thisLevelName;
+	protected String _courseName;
 	
 	private JLabel _labelHeading;
 	private JLabel _labelSubheading;
-	private JLabel _labelQuizMode;
+	protected JLabel _labelQuizMode;
 
 	private JPanel _tabelPanel;
 	private JTable _resultTable;
@@ -66,7 +66,7 @@ public class ResultView implements Card, ActionListener {
 		_tabelPanel = new JPanel();
 
 		_btnPracticeAgain = new JButton("Practice Again");
-		_btnNextLevel = new JButton("Practice Next Level (10 Words)");
+		_btnNextLevel = new JButton("Practice Next Level");
 		_btnRaceLevel = new JButton("Test This Level (10 Words)");
 		_btnHome = new JButton("Home");
 	}
@@ -91,6 +91,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridy = 0;
 		c.gridwidth = 4;
 		c.gridheight = 1;
+		c.insets = new Insets(0,-85,0,0);
 		resultPanel.add(_labelQuizMode, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -98,6 +99,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridy = 1;
 		c.gridwidth = 4;
 		c.gridheight = 1;
+		c.insets = new Insets(40,-85,0,0);
 		resultPanel.add(_labelHeading, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -105,6 +107,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridy = 2;
 		c.gridwidth = 4;
 		c.gridheight = 1;
+		c.insets = new Insets(15,-85,0,0);
 		resultPanel.add(_labelSubheading, c);
 
 		//create result table from the set model
@@ -120,7 +123,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridy = 3;
 		c.gridwidth = 4;
 		c.gridheight = 3;
-		c.insets = new Insets(5,0,0,0);
+		c.insets = new Insets(15,0,0,0);
 		resultPanel.add(_tabelPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -223,7 +226,7 @@ public class ResultView implements Card, ActionListener {
 		}
 	}
 
-	private boolean ifDisableNextLevel(){
+	protected boolean ifDisableNextLevel(){
 		
 		if (_allLevelNames.indexOf(_thisLevelName) != (_allLevelNames.size()-1) ){
 			// if not last item in list

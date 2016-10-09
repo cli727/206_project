@@ -14,14 +14,14 @@ public class PracticeQuizModel extends QuizModel{
 
 	private ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
 	private Vector<String> _allLevelNames;
-	
+
 	public PracticeQuizModel(Vector<String> allLevelNames){
 		//constructor, initialise private field
 		super();
-		 _countCheckList = new ArrayList<Integer>();
-		 _allLevelNames = allLevelNames; //without % in front
+		_countCheckList = new ArrayList<Integer>();
+		_allLevelNames = allLevelNames; //without % in front
 	}
-	
+
 	/**
 	 * CheckSpelling for Practice mode. No such concept as mastered/faulted/failed
 	 * The quiz moves on only if the user gets a word right / skip the word
@@ -82,18 +82,18 @@ public class PracticeQuizModel extends QuizModel{
 	 */
 	@Override
 	protected void moveOnToNextWord() {
-		
+
 		if (_currentIndex != -1){
-			
+
 			//add current count check in list
 			_countCheckList.add(_countChecks);
 		}
-		
+
 		_countChecks = 0;
 
 		System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
 
-		
+
 		if ( _currentIndex == (_randomWords.size()-1)){
 
 			//last word in randomWords list
@@ -123,12 +123,20 @@ public class PracticeQuizModel extends QuizModel{
 	 */
 	@Override
 	protected void endOfLevel() {
-		//show result card
-		ResultView resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		//show result card according to game mode
+		ResultView resultView = null;
+		
+		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+			
+			resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+			
+			resultView = new ReviewResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		}
 		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList,_quizView.getLevelName(),_quizView.getCourseName());
-		
+
 		resultView.setModel(resultModel);
-		
+
 		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}
 

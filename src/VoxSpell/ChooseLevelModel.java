@@ -14,8 +14,8 @@ public class ChooseLevelModel {
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 	}
 
-	public void setCoursePath(String courseName) {
-		_coursePath = courseName;
+	public void setCoursePath(String coursePath) {
+		_coursePath = coursePath;
 	}
 
 	public ArrayList<String> getAllWordsFromCourse(){

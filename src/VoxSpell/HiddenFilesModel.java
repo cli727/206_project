@@ -99,7 +99,7 @@ public class HiddenFilesModel {
 							levelWords.add(allWords.get(j));
 						}
 					}
-					
+
 					//write these level names to file
 					try {
 						File stats = new File(thisReviewFilePath.toString());
@@ -108,7 +108,7 @@ public class HiddenFilesModel {
 						FileWriter writer = new FileWriter(stats); 
 
 						for(int k = 0; k < levelWords.size();k++){
-							
+
 							writer.write(levelWords.get(k)+"\n"); 	
 						}
 						writer.flush();
@@ -189,24 +189,46 @@ public class HiddenFilesModel {
 		setUpHiddenFiles();		
 	}
 
-	protected void removeWordFromReviewWordsFile(String word, int level) {		
-		Path reviewWordsFilePath = getReviewWordsFilePath(level); //Which Review File to remove the word from depends on what level it is.
+	/**
+	 * Removes a word from review file of corresponding course
+	 * ASSUMES NO DUPLICATION OF THE SAME WORD IN REVIEW 
+	 * @param word
+	 * @param level
+	 * @param courseName
+	 */
+	protected void removeWordFromReviewWordsFile(String word, String level, String courseName) {
+
+		String coursePath = "./.review/"+courseName+"Review";
+		ArrayList<String> allWords = new ArrayList<String>();
+		allWords = readFileToArray(coursePath);
+
+		allWords.remove(word);
+
+		//recreate the review file with the added word, should replace the original file
 		try {
-			List<String> reviewWordsAtGivenLevel = Files.readAllLines(reviewWordsFilePath, StandardCharsets.ISO_8859_1);//First read in all words from reviewWords file
-			List<String> tempList = new ArrayList<String>();
-			tempList.add(word); 
-			reviewWordsAtGivenLevel.removeAll(tempList); //Then remove all occurrences of the given word
+			File stats = new File(coursePath);
+			stats.createNewFile();
 
-			//Recreate a blank file in the same path as the reviewWords file & rewrite words into the file.
-			Files.delete(reviewWordsFilePath);
-			Files.createFile(reviewWordsFilePath);			
-			Files.write(reviewWordsFilePath, reviewWordsAtGivenLevel, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
+			FileWriter writer = new FileWriter(stats); 
 
+			for(int i = 0; i < allWords.size();i++){
+				writer.write(allWords.get(i)+"\n"); 	
+			}
+			writer.flush();
+			writer.close();
 		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * add a word to review list
+	 * ASSUMES NO DUPLICATION OF WORDS (INTER AND INTRO LEVELS), OTHERWISE ONLY ADDED ONCE
+	 * @param word
+	 * @param level
+	 * @param courseName
+	 */
 	protected void addWordToReviewWordsFile(String word, String level, String courseName) {
 
 		String coursePath = "./.review/"+courseName+"Review";
@@ -218,7 +240,7 @@ public class HiddenFilesModel {
 
 			//find index of this level
 			int index = allWords.indexOf("%"+level);
-			
+
 			int nextLvlIndex = allWords.size();
 
 			for (int i = index + 1; i < allWords.size(); i ++){
@@ -251,23 +273,6 @@ public class HiddenFilesModel {
 
 			e.printStackTrace();
 		}
-
-		/*String wordOnNewLine = word + "\n";
-
-		Path reviewWordsFilePath = getReviewWordsFilePath(level);
-
-		try {
-			//First, check if given word already exists in the file
-			List<String> allReviewWords = Files.readAllLines(reviewWordsFilePath, StandardCharsets.ISO_8859_1);
-			if (allReviewWords.contains(wordOnNewLine)) {
-				return; //if it already exists, there is no need to add it to the file.
-			}
-			else { //if it doesn't already exist, then write it to the file.
-				Files.write(reviewWordsFilePath, wordOnNewLine.getBytes(), StandardOpenOption.APPEND);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}	
 
 	/**
@@ -313,30 +318,6 @@ public class HiddenFilesModel {
 		} catch (IOException e) {
 			//do nothing
 		}
-		/*else { //it is the "review mistakes" mode			
-			for (int i = 0; i < 11; i++) { //for each level... (current specifications state there are 11 levels only)
-				try {
-					BufferedReader br = _hiddenFilesModel.getWordsForReview(i+1);
-
-					String line;
-					//add lists of words at each level in corresponding position in allWords (e.g. position 0 of allWords list is review words for level 1
-					while ((line = br.readLine()) != null) {
-						if (allWords.contains(line)) { //if the word read has already been recorded in allWords previously
-							continue;
-						}
-						else {
-							allWords.add(line);
-						}						
-					}
-					br.close();
-
-				} catch (IOException e) {
-					// do nothing
-				}
-
-			}
-		}*/
-
 		return allWords;
 	}
 
