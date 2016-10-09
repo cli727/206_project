@@ -90,13 +90,15 @@ abstract public class QuizModel {
 	 */
 	protected void getRandomWords(){
 
+		System.out.println("numToQuiz " + _numWordsToQuiz);
+		System.out.println("allWORDS size: " +_allWords.size());
 		if ((_allWords.size() < _numWordsToQuiz) && (_allWords.size() > 0)){
 
 			//less than wanted words, just get all of them 
 			_randomWords.addAll(_allWords);
 
 
-		}else if (_allWords.size() >= 10){
+		}else if (_allWords.size() >= _numWordsToQuiz){
 
 			//chooses _numWordsToQuiz number of random words from allWords
 			while (_randomWords.size() < _numWordsToQuiz){
@@ -109,6 +111,7 @@ abstract public class QuizModel {
 				}
 			}
 		}
+		
 
 		for (int j = 0; j < _randomWords.size(); j ++){
 			System.out.println("Rndome word " + _randomWords.get(j));
