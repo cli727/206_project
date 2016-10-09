@@ -22,46 +22,40 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class ChooseLevelView implements Card, ActionListener{
-	
+
 	private Color _bgColor ;
 
 	private JPanel _chooseLevelPanel;
 
-	private JLabel _labelHeading;
-	private JLabel _labelViewChangeCourse;
+	protected JLabel _labelHeading;
+	private JLabel _labelViewChangeCourse; 
 	private JButton _btnViewWordList;
 	private JButton _btnChangeCourse;
 	private JLabel _labelChooseLevel;
 
-	//private ComboBoxModel<String> _model;
 	private JComboBox<String> _comboBox;
 
-	private JLabel _labelChooseNumWords;
+	private  JLabel _labelChooseNumWords;
 	private JRadioButton _btnAllWords;
 	private JRadioButton _btnTenWords;
-	private JRadioButton _btnTwentyWords;
+	private  JRadioButton _btnTwentyWords;
 	private JRadioButton _btnFortyWords;
 	private JRadioButton _btnFiftyWords;
 
 	private JButton _btnStartQuiz;
-	private JButton _btnBackToPrevious;
-	private JButton _btnBackToMain;
+	private  JButton _btnBackToMain;
 
-	private String _courseName;
+	protected String _courseName;
 
-	private int _numWordsToQuiz;
+	private  int _numWordsToQuiz;
 
-	private ChooseLevelModel _model;
-
-	private boolean _quizAllWords ;
+	protected ChooseLevelModel _model;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
-		
-		_bgColor = new Color(129,224,253); //set background colour
 
-		_quizAllWords = false;
-		_numWordsToQuiz = 10; //if user doesnt change the setting, the wordsToQuiz is 10
+		_bgColor = new Color(0,219,255); //set background colour
+
 		_courseName = courseName;
 
 		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
@@ -81,14 +75,13 @@ public class ChooseLevelView implements Card, ActionListener{
 				+ "Choose a subgroup</font></html>");
 
 		_labelChooseNumWords = new JLabel("How many words you would like to be tested on:");
-		
-		_btnTenWords = new JRadioButton("10 Random Words");
-		_btnTenWords.setSelected(true);//default select this option
 
+		_btnTenWords = new JRadioButton("10 Random Words");
 		_btnTwentyWords = new JRadioButton("20 Random Words");
 		_btnFortyWords = new JRadioButton("40 Random Words");
 		_btnFiftyWords = new JRadioButton("50 Random Words");
 		_btnAllWords = new JRadioButton("All words from this subgroup");
+		_btnAllWords.setSelected(true);//default select this option
 
 		//only allow one radio button selection at a time
 		ButtonGroup group = new ButtonGroup();
@@ -102,7 +95,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		//_btnBackToPrevious = new JButton("Back");
 		_btnBackToMain = new JButton("Home");
-		
+
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(_bgColor);
 	}
@@ -131,7 +124,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.insets = new Insets(0,-164,10,0);
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		
+
 		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -184,12 +177,10 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 4;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
+
 		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_comboBox, c);
-		//	_btnViewWordList.addActionListener(this);
+		_comboBox.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -197,20 +188,15 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 5;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_labelChooseNumWords, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 6;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
+
 		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnTenWords, c);
 		_btnTenWords.addActionListener(this);
@@ -220,9 +206,6 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 7;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnTwentyWords, c);
 		_btnTwentyWords.addActionListener(this);
@@ -232,9 +215,6 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 8;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnFortyWords, c);
 		_btnFortyWords.addActionListener(this);
@@ -244,21 +224,15 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 9;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnFiftyWords, c);
 		_btnFiftyWords.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 10;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_btnAllWords, c);
 		_btnAllWords.addActionListener(this);
@@ -281,12 +255,14 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 13;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		c.insets = new Insets(0,10,0,0);
 		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
+
+		//disable number of word radiobuttons accordingly
+		//get number of words in selected level
+		_numWordsToQuiz= _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
+		disableNumWordsButtons(_numWordsToQuiz);
 
 		return _chooseLevelPanel;
 	}
@@ -308,59 +284,105 @@ public class ChooseLevelView implements Card, ActionListener{
 		}else if (e.getSource() == _btnChangeCourse){
 
 			VoxSpellGui.showCourseChooser();
+		}else if (e.getSource() == _comboBox){
+
+			//disable number of word radiobuttons accordingly
+			//get number of words in selected level
+			_numWordsToQuiz = _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
+			disableNumWordsButtons(_numWordsToQuiz);
+
 		}else if (e.getSource() == _btnTenWords){
-			
-			_quizAllWords  = false;
+
 			_numWordsToQuiz = 10;
 		}else if (e.getSource() == _btnTwentyWords){
-			
-			_quizAllWords  = false;
+
 			_numWordsToQuiz = 20;
 		}else if (e.getSource() == _btnFortyWords){
-			
-			_quizAllWords  = false;
+
 			_numWordsToQuiz = 40;
 		}else if (e.getSource() == _btnFiftyWords){
-			
-			_quizAllWords  = false;
+
 			_numWordsToQuiz = 50;
 		}else if (e.getSource() == _btnAllWords){
-			
-			_quizAllWords  = true;
+
+			_numWordsToQuiz = _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
 		}else if (e.getSource() == _btnStartQuiz){
 
 			String level =  (String) _comboBox.getSelectedItem();
-			
-			if (_quizAllWords){
+
+			/*if (_quizAllWords){
 				_numWordsToQuiz = _model.getLevelWordsFromCourse(level).size();
-			}
-			System.out.println("level "+level);
-			System.out.println("words " + _numWordsToQuiz);
+			}*/
+		/*	System.out.println("level "+level);
+			System.out.println("words " + _numWordsToQuiz);*/
 
 			QuizView quizView = new QuizView(level, _courseName);
 
 			QuizModel quizModel = null;
 
-			//create model of quizView according to quiz mode
-			if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
-				//words from course wordlist
-				quizModel = new PracticeQuizModel();
-				quizModel.setView(quizView);
-				quizModel.setAllWords(_model.getLevelWordsFromCourse(level), _numWordsToQuiz);
-			}else{
-				//words from note book
-			}
+		
+			//words from course wordlist
+			quizModel = new PracticeQuizModel(_model.getAllLevelsFromCourse());
+			quizModel.setView(quizView);
+			quizModel.setAllWords(_model.getLevelWordsFromCourse(level), _numWordsToQuiz);
 
 			quizView.setModel(quizModel);
-			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "New Quiz");
+			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Practice Quiz");
 			quizModel.getRandomWords();
 		}
 
 	}
 
+	protected void disableNumWordsButtons(int numWords) {
+
+
+		//disable buttons accordingly based on numWOrds
+		if (numWords < 50){
+			_btnFiftyWords.setEnabled(false);
+		}else{
+			_btnFiftyWords.setEnabled(true);
+		}
+
+		if (numWords < 40){
+			_btnFortyWords.setEnabled(false);
+		}else{
+			_btnFortyWords.setEnabled(true);
+		}
+
+		if (numWords < 20){
+			_btnTwentyWords.setEnabled(false);
+		}else{
+			_btnTwentyWords.setEnabled(true);
+		}
+
+		if (numWords < 10){
+			_btnTenWords.setEnabled(false);
+		}else{
+			_btnTenWords.setEnabled(true);
+		}
+
+		//always enable 'get all words' button, unless there is no words
+		if (numWords == 0){
+			//disable all buttons
+			_btnAllWords.setEnabled(false);
+			_btnStartQuiz.setEnabled(false);
+
+			//tell user that there is no word to quiz 
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+					"<font color='white'>"
+					+ "This subgroup has no available words!</font></html>");
+		}else{
+			_btnAllWords.setEnabled(true);
+			_btnStartQuiz.setEnabled(true);
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+					"<font color='white'>"
+					+ "Choose a subgroup</font></html>");
+		}
+	}
+
 	public void setModel(ChooseLevelModel model){
 		_model = model;
-		_model.setCoursePath(_courseName);
+		_model.setCoursePath("./.course/"+_courseName);
 	}
 
 	/**
@@ -393,50 +415,5 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		VoxSpellGui.showMainMenu();
 	}
-
-	/** shows the pop up window that allows user to select window
-	 ** returns an integer that represents the level user has selected
-	 ** 0 means the user has chosen to cancel
-	 *
-	 * Reference URL : http://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#input
-	 */
-	private int createAndShowLevelPopUp(String quizMode){
-
-		JPanel popUpPanel = new JPanel();
-		JPanel cbPanel = new JPanel();
-
-		popUpPanel.setLayout(new BorderLayout());
-		cbPanel.setLayout(new BorderLayout());
-
-		DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<Integer>();
-
-		//add all ENUM elements to drop down menu for combo box
-		for (LEVEL i : LEVEL.values()){
-			model.addElement(i.getLevel());
-		}
-
-		JComboBox<Integer> comboBox = new JComboBox<Integer>(model);
-
-		cbPanel.add(new JLabel("Start your " + quizMode +" quiz at level :     "),BorderLayout.BEFORE_LINE_BEGINS);
-		cbPanel.add(comboBox,BorderLayout.CENTER);
-
-		//add comboBox panel to popup window
-		popUpPanel.add(cbPanel,BorderLayout.AFTER_LAST_LINE);
-
-		int result = JOptionPane.showConfirmDialog(VoxSpellGui.getFrame(), popUpPanel, "Choose level", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-		switch (result) {
-		case JOptionPane.OK_OPTION:
-			for (LEVEL i : LEVEL.values()){
-
-				//compare value of selected item to int values of LEVEL items
-				if (comboBox.getSelectedItem().equals(i.getLevel())){
-					return i.getLevel();
-				}
-			}
-		}
-		return 0;
-	}
-
 
 }

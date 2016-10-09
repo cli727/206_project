@@ -31,7 +31,9 @@ import VoxSpell.FestivalModel.Voice;
 @SuppressWarnings("serial")
 public class QuizView extends JPanel implements Card, ActionListener {
 
-	private String _level = null;
+	private String _level;
+	private String _courseName;
+	
 	private QuizModel _quizModel;
 	private FestivalModel _festivalModel = FestivalModel.getInstance();
 
@@ -71,6 +73,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	public QuizView (String level, String courseName){
 		//set up fields
 		_level = level;
+		_courseName = courseName;
 
 		//===heading======================================================
 		//_headingPanel = new JPanel();
@@ -126,7 +129,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		_tipsLabel = new JLabel();
 		_cb = new JComboBox<String>(_comboBoxItems);
-		_btnBack = new JButton("FUCK MY LIFE");
+		_btnBack = new JButton("Back");
 		
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(Color.white);
@@ -335,7 +338,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 				"Warning: Invalid Input", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public void updateWordLabel(String quizMode,int currentWord,int totalWord, int level){
+	public void updateWordLabel(int currentWord){
 
 		_labelToUpdateWordNum.setText("<html> <font color='orange'>"
 				+Integer.toString(currentWord)+ "</font></html>");
@@ -365,60 +368,13 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		if(dialogResult == JOptionPane.YES_OPTION){
 			//show level choosing card again
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne");
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlist");
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 			
 		}//else dispose panel and carry on
 
-	}
-
-	public boolean showPassLevelPopUP(int correct, int incorrect){
-
-		boolean playVideo = false;
-
-		String message = "Level " + _level +" Completed: \n" + "\n" +
-				"You got " + correct+ " words correct.\n" + 
-				"You got " + incorrect + " words incorrect. \n\n"+
-				"Congratulations on passing the level! \n"
-				+ "Would you like to play your video reward?";
-
-		String title="Level Succeeded";
-
-		if (_level.getLevel() == 11){
-			message = "Level ELEVEN" +" Completed: \n" + "\n" +
-					"You got " + correct+ " words correct.\n" + 
-					"You got " + incorrect + " words incorrect. \n\n"+
-					"Congratulations! \n"
-					+ "You have completed all levels!\n"+
-					"Would you like to play your special video reward?";
-
-			title = "All Levels Completed";
-		}
-
-		int dialogResult = JOptionPane.showConfirmDialog (this, message,title,JOptionPane.YES_NO_OPTION);
-
-		if(dialogResult == JOptionPane.YES_OPTION){
-			playVideo = true;
-		}
-
-		//add comboBox panel to popup window
-		return playVideo;
-
-	}
-
-	public void showFailLevelPopUp(int correct, int incorrect){
-
-		String message = "Level " + _level +" Completed: \n" + "\n" +
-				"You got " + correct+ " words correct.\n" + 
-				"You got " + incorrect + " words incorrect. \n\n"+
-				"Sorry you did not pass this level! \n"
-				+ "(You need to get 9 or more words correct to pass)\n"+
-				"Don't give up! \nTry starting on a lower level or review your mistakes!";
-
-		JOptionPane.showMessageDialog(this, message, 
-				"Level Failed", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public boolean showLevelUpPopUP(int currentLevel){
@@ -498,6 +454,14 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	public void showMainMenu(){
 		VoxSpellGui.showMainMenu();
+	}
+	
+	protected String getLevelName(){
+		return _level;
+	}
+	
+	protected String getCourseName(){
+		return _courseName;
 	}
 
 	protected void setFestivalModel(FestivalModel model) {

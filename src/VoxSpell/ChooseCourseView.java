@@ -39,7 +39,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	private ChooseCourseView(){
 		//set background colour for this card
 		_bgColor = new Color(129,224,253);
-		
+
 		//create new Font
 		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
 
@@ -87,7 +87,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 	@Override
 	public JPanel createAndGetPanel() {
-		
+
 
 		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
 					+ " Welcome To VOXSPELL!</html>", 
@@ -199,12 +199,22 @@ public class ChooseCourseView implements Card, ActionListener{
 
 			VoxSpellGui.showMainMenu();
 		}else if (e.getSource() == _btnWordListOne){
+
 			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne");
+			ChooseLevelView cardChooseLevel = null;
+
+			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+
+				cardChooseLevel = new ChooseLevelView("wordlist");
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+				
+				cardChooseLevel = new ChooseLevelReviewView("wordlist");
+			}
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 		}
+		
 	}
 
 }

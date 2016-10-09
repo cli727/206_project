@@ -1,6 +1,7 @@
 package VoxSpell;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import video_player.VideoPlayer;
 
@@ -12,11 +13,13 @@ import video_player.VideoPlayer;
 public class PracticeQuizModel extends QuizModel{
 
 	private ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
+	private Vector<String> _allLevelNames;
 	
-	public PracticeQuizModel(){
+	public PracticeQuizModel(Vector<String> allLevelNames){
 		//constructor, initialise private field
 		super();
 		 _countCheckList = new ArrayList<Integer>();
+		 _allLevelNames = allLevelNames; //without % in front
 	}
 	
 	/**
@@ -103,7 +106,7 @@ public class PracticeQuizModel extends QuizModel{
 			_currentWord = _randomWords.get(_currentIndex);
 
 			//updates word progress on the gui, clears input area, disable answer panel
-			_quizView.updateWordLabel("Spell ", _currentIndex+1, _randomWords.size(),_level);
+			_quizView.updateWordLabel(_currentIndex+1);
 			_quizView.clearInputArea();
 			_quizView.disableAnswer();
 
@@ -121,40 +124,13 @@ public class PracticeQuizModel extends QuizModel{
 	@Override
 	protected void endOfLevel() {
 		//show result card
-		ResultView resultView = new ResultView(_randomWords.size());
-		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList);
+		ResultView resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList,_quizView.getLevelName(),_quizView.getCourseName());
 		
 		resultView.setModel(resultModel);
 		
 		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}
 
-
-	public void ifLevelUp(){
-		if (  _level != 11){
-			//if not the last level
-
-			boolean levelUp = _quizView.showLevelUpPopUP(_level);
-
-			//reset currentCorrectCount whether the user choose to stay or level up
-			_currentCorrectCount = 0;
-			if (levelUp){
-				//level up, get random words on the new level
-				_level ++;
-
-				_attemptedCount = 0;
-				_accuracyRate = 100;
-				_totalCorrectCount = 0;
-
-				_quizView.updateJLabel(_level, "--");
-			}
-			getRandomWords();
-
-		}else {
-			//if last level
-			//goes back to main menu
-			_quizView.showMainMenu();
-		}
-	}
 }
 

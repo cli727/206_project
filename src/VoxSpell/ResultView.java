@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,33 +24,50 @@ import VoxSpell.FestivalModel.Voice;
 
 public class ResultView implements Card, ActionListener {
 
+	private Vector<String> _allLevelNames;
+	private String _thisLevelName;
+	private String _courseName;
+	
 	private JLabel _labelHeading;
+	private JLabel _labelSubheading;
+	private JLabel _labelQuizMode;
 
-	private JPanel _resultPanel;
+	private JPanel _tabelPanel;
 	private JTable _resultTable;
 	private JButton _btnNextLevel;
 	private JButton _btnRaceLevel;
 	private JButton _btnPracticeAgain;
 	private JButton _btnHome;
-	
-	private int _numOfButtons; //an int indicating how many JCheckBox buttons are needed
 
 	private ResultModel _model;
 
-	public ResultView(int numOfButtons){
-		_numOfButtons = numOfButtons;
-
+	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
+		
+		_allLevelNames = allLevelNames; // so that the card knows of the next level (if user presses the button)
+		_thisLevelName = levelName;
+		_courseName = courseName;
+		
+		_labelQuizMode = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Practice Completed!"+ "</font></html>"));
+		_labelQuizMode.setFont((new Font("SansSerif", Font.ITALIC,30)));
+		
 		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
-				+ "Practice Quiz Completed!"+ "</font></html>"));
+				+ "Course: " + _courseName + "</font></html>"));
 
-		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,30));
+		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,20));
+		
+		_labelSubheading = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Subgroup : " + _thisLevelName + "</font></html>"));
+		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,20)));
 
-		_resultPanel = new JPanel();
+		_tabelPanel = new JPanel();
 
 		_btnPracticeAgain = new JButton("Practice Again");
-		_btnNextLevel = new JButton("Practice Next Level");
-		_btnRaceLevel = new JButton("Test This Level");
+		_btnNextLevel = new JButton("Practice Next Level (10 Words)");
+		_btnRaceLevel = new JButton("Test This Level (10 Words)");
 		_btnHome = new JButton("Home");
 	}
 	
@@ -62,7 +80,8 @@ public class ResultView implements Card, ActionListener {
 		
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
-
+		
+		_tabelPanel.setBackground(Color.white);
 		
 		resultPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -72,28 +91,41 @@ public class ResultView implements Card, ActionListener {
 		c.gridy = 0;
 		c.gridwidth = 4;
 		c.gridheight = 1;
-		resultPanel.add(_labelHeading, c);
+		resultPanel.add(_labelQuizMode, c);
 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 4;
+		c.gridheight = 1;
+		resultPanel.add(_labelHeading, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 4;
+		c.gridheight = 1;
+		resultPanel.add(_labelSubheading, c);
 
 		//create result table from the set model
 		_resultTable = new JTable(_model);
 		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 250));
 		//_resultTable.setFillsViewportHeight(true);
-		_resultPanel.add(_resultTable);
+		_tabelPanel.add(_resultTable);
 		JScrollPane scrollPane = new JScrollPane(_resultTable);
-		_resultPanel.add(scrollPane, BorderLayout.NORTH);
+		_tabelPanel.add(scrollPane, BorderLayout.NORTH);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 3;
 		c.gridwidth = 4;
 		c.gridheight = 3;
 		c.insets = new Insets(5,0,0,0);
-		resultPanel.add(_resultPanel, c);
+		resultPanel.add(_tabelPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		//c.weightx = 0.3;
@@ -103,7 +135,7 @@ public class ResultView implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
@@ -113,7 +145,7 @@ public class ResultView implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
@@ -123,7 +155,7 @@ public class ResultView implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
@@ -131,18 +163,57 @@ public class ResultView implements Card, ActionListener {
 		resultPanel.add(_btnHome, c);
 		_btnHome.addActionListener(this);
 
-
+		//check if the next level button needs to be disabled
+		if (ifDisableNextLevel()){
+			_btnNextLevel.setEnabled(false);
+		}
+		
 		return resultPanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//regardless of the button pressed, keep a record of the words to review
+		_model.keepRecordOfSelectedWords();
 
 		if (e.getSource() == _btnPracticeAgain){
+			//show quiz card of this level again
+			
+			ChooseLevelModel modelToHelpGetNewWordSet = new ChooseLevelModel();
+			modelToHelpGetNewWordSet.setCoursePath("./.course/"+_courseName);
 
+			QuizView quizView = new QuizView(_thisLevelName, _courseName);
+			QuizModel quizModel = new PracticeQuizModel(_allLevelNames);
+			
+			quizModel.setView(quizView);
+			quizView.setModel(quizModel);
+			
+			quizModel.setAllWords(modelToHelpGetNewWordSet.getLevelWordsFromCourse(_thisLevelName), _model.getRowCount()); //num of row in table is the same num as word to quiz
+			
+			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Practice Again Quiz");
+			quizModel.getRandomWords();
 			
 		}else if (e.getSource() == _btnNextLevel){
+			//this button is clicked so this button must not be disabled
+			//show quizView of next level
 
+			ChooseLevelModel modelToHelpGetNewWordSet = new ChooseLevelModel();
+			modelToHelpGetNewWordSet.setCoursePath("./.course/"+_courseName);
+			
+			//get words for next level
+			ArrayList<String> newWords = modelToHelpGetNewWordSet.getLevelWordsFromCourse(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+			
+			QuizView quizView = new QuizView(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1), _courseName);
+			QuizModel quizModel = new PracticeQuizModel(_allLevelNames);
+			
+			quizModel.setView(quizView);
+			quizView.setModel(quizModel);
+			
+			quizModel.setAllWords(newWords, _model.getRowCount()); //num of row in table is the same num as word to quiz
+			
+			//show next level quiz card
+			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Next Level Quiz");
+			quizModel.getRandomWords();
 			
 		}else if (e.getSource() == _btnRaceLevel){
 
@@ -152,4 +223,14 @@ public class ResultView implements Card, ActionListener {
 		}
 	}
 
+	private boolean ifDisableNextLevel(){
+		
+		if (_allLevelNames.indexOf(_thisLevelName) != (_allLevelNames.size()-1) ){
+			// if not last item in list
+			return false;
+		}else {
+			//disable this button
+			return true;
+		}
+	}
 }

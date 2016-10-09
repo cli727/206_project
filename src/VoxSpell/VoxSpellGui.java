@@ -234,14 +234,19 @@ public class VoxSpellGui implements Card,ActionListener{
 		}else if (e.getSource() == _btnPracticeQuiz){
 
 			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlistOne"); //wordListOne is the default course
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlist"); //wordList is the default course
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
-
+			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("wordlist"); //default course to review
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			
+			STATUS = REVIEW;
 		}
 	}
 

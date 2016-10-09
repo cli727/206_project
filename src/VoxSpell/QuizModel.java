@@ -17,7 +17,6 @@ abstract public class QuizModel {
 		MASTERED, FAULTED, FAILED
 	}
 
-	protected int _level;
 	protected QuizView _quizView;
 
 	protected HiddenFilesModel _hiddenFilesModel;
@@ -73,10 +72,6 @@ abstract public class QuizModel {
 
 	public void setView(QuizView view){
 		_quizView = view;
-	}
-
-	public void setInitialLevel(int level){
-		_level = level;
 	}
 
 	public void setAllWords(ArrayList<String> allWords, int numWordsToQuiz){

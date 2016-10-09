@@ -23,7 +23,7 @@ public class StatsModel extends AbstractTableModel {
 	
 	protected StatsModel() {
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
-		getStatsFilesAsWordLists();
+		//getStatsFilesAsWordLists();
 		createDatabase();
 	}
 	

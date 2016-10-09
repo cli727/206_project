@@ -15,15 +15,19 @@ public class ResultModel extends AbstractTableModel {
 	private HiddenFilesModel _hiddenFilesModel;
 	private ArrayList<ArrayList<Object>> _database;
 	
-	//private ArrayList<JCheckBox> _listOfButtons;
+	private String _courseName;
+	private String _level;
 	
 	private ArrayList<Boolean> _listOfButtons;
 	private ArrayList<String> _listOfWords;
 	private ArrayList<Integer> _attemptCounts; 
 	protected String[] _databaseHeaderNames = { "Revise Later", "Word", "Attempts" };
 	
-	protected ResultModel(ArrayList<String> listOfWords, ArrayList<Integer> attemptCounts) {
+	protected ResultModel(ArrayList<String> listOfWords, ArrayList<Integer> attemptCounts, String level,String courseName) {
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
+		
+		_level = level;
+		_courseName = courseName;
 		
 		_database= new ArrayList<ArrayList<Object>>();//database can contain Strings, integers or JCheckBox components
 		
@@ -38,15 +42,6 @@ public class ResultModel extends AbstractTableModel {
 		}
 		
 		createDatabase();
-	}
-	
-	/**
-	 * Get each mastered/faulted/failed words file and store them in _listsOfWords as List<String>
-	 */
-	private void getStatsFilesAsWordLists() {
-		_listsOfWords.add(_hiddenFilesModel.getWordsFromStatsFile(StatsFile.MASTERED_WORDS));
-		_listsOfWords.add(_hiddenFilesModel.getWordsFromStatsFile(StatsFile.FAULTED_WORDS));
-		_listsOfWords.add(_hiddenFilesModel.getWordsFromStatsFile(StatsFile.FAILED_WORDS));
 	}
 	
 	/**
@@ -73,34 +68,13 @@ public class ResultModel extends AbstractTableModel {
 	 * @param index
 	 * @return
 	 */
-	public boolean selectCheckBox(int index) {
+	private boolean selectCheckBox(int index) {
 		if (_attemptCounts.get(index) > 1){
 			return true;
 		}
 		return false;
 	}
 	
-	/**
-	 * Collect all unique words quizzed so far.
-	 */
-	private Vector<String> getAllQuizzedWords() {
-		Vector<String> allQuizzedWords = new Vector<String>();	
-
-		for (int i = 0; i < _listsOfWords.size(); i++) {
-			List<String> wordList = _listsOfWords.get(i);
-			for (int j = 0; j < wordList.size(); j++) {
-				String word = wordList.get(j);
-				//only add to allQuizzedWords if the word doesn't already exists
-				if (!(allQuizzedWords.contains(word))) {
-					allQuizzedWords.addElement(word);
-				}
-			}
-		}
-		//sort allQuizzedWords in alphabetical order
-		Collections.sort(allQuizzedWords, String.CASE_INSENSITIVE_ORDER);
-		return allQuizzedWords;
-	}
-
 	@Override
 	public String getColumnName(int col) {
 		return _databaseHeaderNames[col];
@@ -140,12 +114,23 @@ public class ResultModel extends AbstractTableModel {
 	
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		 _database.get(row).set(col, value);
+		System.out.println("set row: " + row + "col : " + col + " to: " + value);
+		
+		//update boolean value in both database and listOfButtons when user changes the cells
+		 _database.get(row).set(col, value); 
+		 _listOfButtons.set(row, (Boolean) value);
 	}
 
 	//method that writes all selected words into review file using hidden files manager
-	private void keepRecordOfSelectedWords(){
+	public void keepRecordOfSelectedWords(){
 		
+		for (int i = 0; i < _listOfButtons.size(); i ++){
+			
+			if (_listOfButtons.get(i)){
+				//add this word from listOfWords to review file 
+				_hiddenFilesModel.addWordToReviewWordsFile(_listOfWords.get(i), _level, _courseName);
+			}
+		}
 	}
 	
 }
