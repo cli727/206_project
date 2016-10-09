@@ -12,6 +12,8 @@ public class ReviewResultView extends ResultView{
 		_labelQuizMode.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
 				+ "Revision Completed!"+ "</font></html>"));
+		
+		_labelTableInfo.setText("(Selected items will be removed from revision list)");
 	}
 
 	//this method needs to be different from its parent for review mode

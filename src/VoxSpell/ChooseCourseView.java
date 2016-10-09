@@ -106,7 +106,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 9;
+		c.gridwidth = 6;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
 		//c.ipady = 200;
@@ -121,7 +121,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.3;
 		c.ipady = 170;
-		c.ipadx = 160;
+		c.ipadx = 230;
 		c.insets = new Insets(40,10,5,5);
 		mainPanel.add(_btnWordListOne, c);
 		_btnWordListOne.addActionListener(this);
@@ -133,19 +133,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.2;
 		c.insets = new Insets(40,0,5,5);
-		mainPanel.add(_btnWordListTwo, c);
-		_btnWordListTwo.addActionListener(this);
-
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 6;
-		c.gridy = 2;
-		c.gridwidth = 3;
-		c.gridheight = 2;
-		//c.weightx = 0.2;
-		c.insets = new Insets(40,0,0,10);
-		mainPanel.add(_btnCreateWordList, c);
-		_btnCreateWordList.addActionListener(this);
+		mainPanel.add(_btnWordListThree, c);
+		_btnWordListThree.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
@@ -155,8 +144,9 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.7;
 		c.insets = new Insets(0,10,0,5);
-		mainPanel.add(_btnWordListThree, c);
-		_btnWordListThree.addActionListener(this);
+		mainPanel.add(_btnCreateWordList, c);
+		_btnCreateWordList.addActionListener(this);
+		
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
@@ -165,30 +155,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
 		c.insets = new Insets(0,0,0,5);
-		mainPanel.add(_btnWordListFour, c);
-		_btnWordListFour.addActionListener(this);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 6;
-		c.gridy = 4;
-		c.gridheight = 2;
-		c.gridwidth = 3;
-		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,0,10);
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
-
-		/*c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 8;
-		c.gridy = 6;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.ipadx = 10;
-		c.ipady = 10;
-		//c.weightx = 0.3;
-		c.insets = new Insets(10,0,0,10);
-		mainPanel.add(_btnBackToMain, c);
-		_btnBackToMain.addActionListener(this);*/
 
 		return mainPanel;
 	}
