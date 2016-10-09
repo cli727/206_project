@@ -1,5 +1,7 @@
 package VoxSpell;
 
+import java.util.ArrayList;
+
 import video_player.VideoPlayer;
 
 /**
@@ -9,6 +11,14 @@ import video_player.VideoPlayer;
 
 public class PracticeQuizModel extends QuizModel{
 
+	private ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
+	
+	public PracticeQuizModel(){
+		//constructor, initialise private field
+		super();
+		 _countCheckList = new ArrayList<Integer>();
+	}
+	
 	/**
 	 * CheckSpelling for Practice mode. No such concept as mastered/faulted/failed
 	 * The quiz moves on only if the user gets a word right / skip the word
@@ -69,9 +79,18 @@ public class PracticeQuizModel extends QuizModel{
 	 */
 	@Override
 	protected void moveOnToNextWord() {
-
+		
+		if (_currentIndex != -1){
+			
+			//add current count check in list
+			_countCheckList.add(_countChecks);
+		}
+		
 		_countChecks = 0;
 
+		System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
+
+		
 		if ( _currentIndex == (_randomWords.size()-1)){
 
 			//last word in randomWords list
@@ -82,8 +101,6 @@ public class PracticeQuizModel extends QuizModel{
 			_currentIndex ++;
 			_attemptedCount ++;
 			_currentWord = _randomWords.get(_currentIndex);
-
-			System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
 
 			//updates word progress on the gui, clears input area, disable answer panel
 			_quizView.updateWordLabel("Spell ", _currentIndex+1, _randomWords.size(),_level);
@@ -99,53 +116,17 @@ public class PracticeQuizModel extends QuizModel{
 	}
 
 	/**
-	 * Manages the end of a level where the user gets to choose to:
-	 * 1) Play the reward video or not
-	 * 2) Level up or stay
+	 * Manages the end of a level,shows the user the result card
 	 */
 	@Override
 	protected void endOfLevel() {
-
-		if (_currentCorrectCount >= 9){
-			//Level Succeeded
-			boolean playVideo;
-
-			if (_currentIndex == 8){
-				//endOfLevel is called when the user has gotten 9 words right on a roll
-				playVideo = _quizView.showPassLevelPopUP(_currentCorrectCount, 0);
-			}else {
-				playVideo = _quizView.showPassLevelPopUP(_currentCorrectCount, (10 - _currentCorrectCount));
-			}
-
-			_randomWords.clear();
-			_currentIndex = -1;
-
-			if (playVideo){
-				//playVideo
-				VideoPlayer mediaPlayer ;
-
-				if (_level != 11){
-					mediaPlayer = new VideoPlayer(this, false);	
-				}else {
-					//play special bonus mark video with ffmpeg manipulations
-					mediaPlayer = new VideoPlayer(this, true);	
-				}
-
-				VoxSpellGui.disableMain();
-				mediaPlayer.playVideo("big_buck_bunny_1_minute.avi");
-
-			}else{
-				//show level up pop up if user does not want to play video
-				ifLevelUp();
-			}
-
-
-		}else {
-			//if user failed, pop up, go back to main menu
-			_quizView.showFailLevelPopUp(_currentCorrectCount, (10 - _currentCorrectCount));
-			_quizView.showMainMenu();
-		}
-
+		//show result card
+		ResultView resultView = new ResultView(_randomWords.size());
+		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList);
+		
+		resultView.setModel(resultModel);
+		
+		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}
 
 
@@ -175,6 +156,5 @@ public class PracticeQuizModel extends QuizModel{
 			_quizView.showMainMenu();
 		}
 	}
-
 }
 

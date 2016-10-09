@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class ChooseLevelView implements Card, ActionListener{
+	
+	private Color _bgColor ;
 
 	private JPanel _chooseLevelPanel;
 
@@ -55,12 +57,14 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
+		
+		_bgColor = new Color(129,224,253); //set background colour
 
 		_quizAllWords = false;
 		_numWordsToQuiz = 10; //if user doesnt change the setting, the wordsToQuiz is 10
 		_courseName = courseName;
 
-		Font headingFont = new Font("SansSerif", Font.ITALIC,50);
+		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
 
 		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='white'>"
@@ -98,12 +102,15 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		//_btnBackToPrevious = new JButton("Back");
 		_btnBackToMain = new JButton("Home");
+		
+		//change main menu footer/header background color so that it is consistent with this background color
+		VoxSpellGui.setHeaderFooterColor(_bgColor);
 	}
 
 	@Override
 	public JPanel createAndGetPanel() {
 		_chooseLevelPanel = new JPanel();
-		_chooseLevelPanel.setBackground(new Color(6,149,255));
+		_chooseLevelPanel.setBackground(_bgColor);
 
 		//items in combo box are all levels 
 		_comboBox = new JComboBox<String>(_model.getAllLevelsFromCourse());
@@ -119,23 +126,23 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 4;
+		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
+		c.insets = new Insets(0,-164,10,0);
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		
 		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 1;
-		c.gridwidth = 4;
+		c.gridwidth = 2;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(50,90,10,0);
 		_chooseLevelPanel.add(_labelViewChangeCourse, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -146,7 +153,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_btnViewWordList, c);
 		_btnViewWordList.addActionListener(this);
 
@@ -155,7 +162,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(0,0,20,10);
+		c.insets = new Insets(0,0,10,0);
 		_chooseLevelPanel.add(_btnChangeCourse, c);
 		_btnChangeCourse.addActionListener(this);
 
@@ -168,7 +175,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_labelChooseLevel, c);
 		//	_btnViewWordList.addActionListener(this);
 
@@ -180,7 +187,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_comboBox, c);
 		//	_btnViewWordList.addActionListener(this);
 
@@ -193,7 +200,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_labelChooseNumWords, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -204,7 +211,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,10);
+		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnTenWords, c);
 		_btnTenWords.addActionListener(this);
 
@@ -216,7 +223,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,10);
+		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnTwentyWords, c);
 		_btnTwentyWords.addActionListener(this);
 
@@ -228,7 +235,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,10);
+		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnFortyWords, c);
 		_btnFortyWords.addActionListener(this);
 
@@ -240,7 +247,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,10);
+		c.insets = new Insets(0,90,5,0);
 		_chooseLevelPanel.add(_btnFiftyWords, c);
 		_btnFiftyWords.addActionListener(this);
 		
@@ -252,7 +259,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_btnAllWords, c);
 		_btnAllWords.addActionListener(this);
 
@@ -265,7 +272,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		c.ipady = 10;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,20,10);
+		c.insets = new Insets(0,90,10,0);
 		_chooseLevelPanel.add(_btnStartQuiz, c);
 		_btnStartQuiz.addActionListener(this);
 
@@ -277,21 +284,9 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,10,0,10);
+		c.insets = new Insets(0,10,0,0);
 		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
-
-		/*c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 4;
-		c.gridy = 11;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
-		c.insets = new Insets(0,10,20,0);
-		_chooseLevelPanel.add(_btnBackToPrevious, c);
-		_btnBackToPrevious.addActionListener(this);*/
 
 		return _chooseLevelPanel;
 	}

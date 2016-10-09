@@ -23,8 +23,10 @@ import javax.swing.event.ChangeListener;
 
 public class ChooseCourseView implements Card, ActionListener{
 
+	private Color _bgColor;
+
 	private static ChooseCourseView _courseChooser;
-	
+
 	private JLabel _labelHeading;
 	private JButton _btnWordListOne;
 	private JButton _btnWordListTwo;
@@ -35,15 +37,18 @@ public class ChooseCourseView implements Card, ActionListener{
 	private JButton _btnBackToMain;
 
 	private ChooseCourseView(){
-	    //create new Font
-        Font headingFont = new Font("SansSerif", Font.ITALIC,50);
-       
+		//set background colour for this card
+		_bgColor = new Color(129,224,253);
+		
+		//create new Font
+		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
+
 		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='white'>"
 				+ "Select your course...</font></html>"));
-		
+
 		_labelHeading.setFont(headingFont);
-		
+
 		/**
 		 * CODE FOR CHANGING BUTTON BACKGROUND WHEN HOVERED OVER SOURCED FROM STACK OVERFLOW:
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
@@ -63,7 +68,7 @@ public class ChooseCourseView implements Card, ActionListener{
 				}
 			}
 		});
-		
+
 		_btnWordListTwo = new JButton("WordListTwo");
 		_btnWordListThree = new JButton("WordListThree");
 		_btnWordListFour = new JButton("WordLIstFOur");
@@ -71,9 +76,9 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnCreateWordList = new JButton("CreateWordLIst");
 		_btnBackToMain = new JButton("Back");
 	}
-	
+
 	public static synchronized ChooseCourseView getInstance(){
-		
+
 		if (_courseChooser == null){
 			_courseChooser = new ChooseCourseView();
 		}
@@ -82,13 +87,14 @@ public class ChooseCourseView implements Card, ActionListener{
 
 	@Override
 	public JPanel createAndGetPanel() {
+		
 
 		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
 					+ " Welcome To VOXSPELL!</html>", 
 					JLabel.CENTER),BorderLayout.NORTH);*/
 		JPanel mainPanel = new JPanel();
 
-		mainPanel.setBackground(new Color(6,149,255));
+		mainPanel.setBackground(_bgColor);
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE
@@ -107,7 +113,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		//c.ipadx = 190;
 		c.insets = new Insets(0,40,0,0);
 		mainPanel.add(_labelHeading, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -129,7 +135,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.insets = new Insets(40,0,5,5);
 		mainPanel.add(_btnWordListTwo, c);
 		_btnWordListTwo.addActionListener(this);
-		
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 6;
@@ -137,7 +143,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(40,0,5,10);
+		c.insets = new Insets(40,0,0,10);
 		mainPanel.add(_btnCreateWordList, c);
 		_btnCreateWordList.addActionListener(this);
 
@@ -148,7 +154,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,10,20,5);
+		c.insets = new Insets(0,10,0,5);
 		mainPanel.add(_btnWordListThree, c);
 		_btnWordListThree.addActionListener(this);
 
@@ -158,10 +164,10 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,20,5);
+		c.insets = new Insets(0,0,0,5);
 		mainPanel.add(_btnWordListFour, c);
 		_btnWordListFour.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 6;
 		c.gridy = 4;
@@ -190,7 +196,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnBackToMain){
-			
+
 			VoxSpellGui.showMainMenu();
 		}else if (e.getSource() == _btnWordListOne){
 			//show card to select number of words / levels(headings)

@@ -24,7 +24,7 @@ abstract public class QuizModel {
 	protected FestivalModel _festivalModel;
 
 	//arraylist that only stores the words that should be quizzed for this game
-	protected List<String> _randomWords;
+	protected ArrayList<String> _randomWords;
 
 	//list of list structure for all words of this level
 	private static ArrayList<String> _allWords;

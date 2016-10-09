@@ -73,17 +73,17 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_level = level;
 
 		//===heading======================================================
-		_headingPanel = new JPanel();
+		//_headingPanel = new JPanel();
 		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
 				+ "Course: " + courseName+ "</font></html>"));
 
-		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,40));
+		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,30));
 
 		_labelSubheading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
 				+ "Subgroup : " + _level + "</font></html>"));
-		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,30)));
+		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,20)));
 
 		//===word progress=================================================
 		_updateWordPanel = new JPanel();
@@ -127,6 +127,9 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_tipsLabel = new JLabel();
 		_cb = new JComboBox<String>(_comboBoxItems);
 		_btnBack = new JButton("FUCK MY LIFE");
+		
+		//change main menu footer/header background color so that it is consistent with this background color
+		VoxSpellGui.setHeaderFooterColor(Color.white);
 	}
 
 	/**
@@ -168,7 +171,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridy = 1;
 		c.gridwidth = 6;
 		c.gridheight = 1;
-		c.insets = new Insets(5,0,80,0);
+		c.insets = new Insets(5,0,50,0);
 		add(_labelSubheading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -177,7 +180,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,55,30,0);
+		c.insets = new Insets(25,0,20,0);
 		add(_updateWordPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -186,7 +189,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 4;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,55,40,0);
+		c.insets = new Insets(5,55,30,0);
 		add(_labelDefinition, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -204,7 +207,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(0,55,15,0);
+		c.insets = new Insets(0,55,10,0);
 		add(_btnRelisten, c);
 		_btnRelisten.addActionListener(this);
 
@@ -214,7 +217,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 3;
 		c.gridheight = 1;
 		//c.weightx = 0.5;
-		c.insets = new Insets(0,5,15,0);
+		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
 
@@ -225,7 +228,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 2;
 		c.gridheight = 1;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,5,15,0);
+		c.insets = new Insets(0,5,10,0);
 		add(_tipsLabel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -234,7 +237,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(10,55,70,5);
+		c.insets = new Insets(10,55,60,5);
 		add(_cb, c);
 		//add item listener
 
@@ -244,7 +247,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,5,70,0);
+		c.insets = new Insets(10,5,60,0);
 		add(_btnCheckWord, c);
 		_btnCheckWord.addActionListener(this);
 
@@ -254,7 +257,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,5,70,0);
+		c.insets = new Insets(10,5,60,0);
 		add(_btnSkipWord, c);
 		_btnSkipWord.addActionListener(this);
 
@@ -264,7 +267,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,5,70,0);
+		c.insets = new Insets(10,5,60,0);
 		add(_btnShowAnswer, c);
 		_btnShowAnswer.addActionListener(this);
 
@@ -274,7 +277,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,65,10,0);
+		c.insets = new Insets(10,65,0,0);
 		add(_btnBack, c);
 		_btnBack.addActionListener(this);
 
