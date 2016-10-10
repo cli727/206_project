@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
@@ -36,7 +37,11 @@ public class ChooseCourseView implements Card, ActionListener{
 	private JButton _btnCreateWordList;
 	private JButton _btnBackToMain;
 
+	private HiddenFilesModel _hiddenFilesModel;
+
 	private ChooseCourseView(){
+		_hiddenFilesModel = HiddenFilesModel.getInstance();
+		
 		//set background colour for this card
 		_bgColor = new Color(129,224,253);
 
@@ -144,7 +149,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.insets = new Insets(0,10,0,5);
 		mainPanel.add(_btnCreateWordList, c);
 		_btnCreateWordList.addActionListener(this);
-		
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
@@ -164,39 +169,68 @@ public class ChooseCourseView implements Card, ActionListener{
 		if (e.getSource() == _btnBackToMain){
 
 			VoxSpellGui.showMainMenu();
-		}else if (e.getSource() == _btnKEYwords){
+		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			//test mode, show quiz view after
+			System.out.println(VoxSpellGui.STATUS);
+			if (e.getSource() == _btnKEYwords){
 
-			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = null;
+				QuizView quizView = new TestQuizView(null,"KEY");//level not needed for test view
+				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/KEY"));
 
-			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
-
-				cardChooseLevel = new ChooseLevelView("KEY");
-			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+				quizModel.setView(quizView);
 				
-				cardChooseLevel = new ChooseLevelReviewView("KEY");
-			}
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
-			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-			
-		}else if(e.getSource() == _btnIELTSwords){
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KEY");
+				for(int i = 0; i < allWords.size(); i++){
+					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
+						allWords.remove(allWords.get(i));
+					}
+				}
+				quizModel.setAllWords(allWords, 10); //just 10 words always for test mode
 
-			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = null;
+				quizView.setModel(quizModel);
+				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
+				quizModel.getRandomWords();
 
-			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 
-				cardChooseLevel = new ChooseLevelView("IELTS");
-			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+			}else if(e.getSource() == _btnIELTSwords){
+
 				
-				cardChooseLevel = new ChooseLevelReviewView("IELTS");
 			}
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
-			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+
+		}else if (! VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			//new/review mode, show level chooser after
+			if (e.getSource() == _btnKEYwords){
+
+				//show card to select number of words / levels(headings)
+				ChooseLevelView cardChooseLevel = null;
+
+				if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+
+					cardChooseLevel = new ChooseLevelView("KEY");
+				}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+
+					cardChooseLevel = new ChooseLevelReviewView("KEY");
+				}
+				
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+
+			}else if(e.getSource() == _btnIELTSwords){
+
+				//show card to select number of words / levels(headings)
+				ChooseLevelView cardChooseLevel = null;
+
+				if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+
+					cardChooseLevel = new ChooseLevelView("IELTS");
+				}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+
+					cardChooseLevel = new ChooseLevelReviewView("IELTS");
+				}
+				
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			}
 		}
-		
+
 	}
 
 }

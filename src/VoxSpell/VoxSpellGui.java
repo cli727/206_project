@@ -231,26 +231,19 @@ public class VoxSpellGui implements Card,ActionListener{
 
 			//show card to select number of words / levels(headings)
 			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //KEY is the default course
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 		}else if (e.getSource() == _btnReview){
 			STATUS = REVIEW;
 			//ChooseLevelReviewView object instead of ChooseLevelView
 			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KEY"); //default course to review
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 			
 		}else if (e.getSource() == _btnTestQuiz){
 			STATUS = TEST;
 			
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //default course to test
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
-			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-		
+			//since no level chooser is needed for test mode (all levels included), just should course chooser
+			showCourseChooser();
 		}
 	}
 

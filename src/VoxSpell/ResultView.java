@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import VoxSpell.FestivalModel.Voice;
 
 public class ResultView implements Card, ActionListener {
+	protected HiddenFilesModel _hiddenFilesModel;
 
 	protected Vector<String> _allLevelNames;
 	protected String _thisLevelName;
@@ -45,6 +46,7 @@ public class ResultView implements Card, ActionListener {
 	private ResultModel _model;
 
 	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
+		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		_allLevelNames = allLevelNames; // so that the card knows of the next level (if user presses the button)
 		_thisLevelName = levelName;
@@ -196,16 +198,13 @@ public class ResultView implements Card, ActionListener {
 		if (e.getSource() == _btnPracticeAgain){
 			//show quiz card of this level again
 
-			ChooseLevelModel modelToHelpGetNewWordSet = new ChooseLevelModel();
-			modelToHelpGetNewWordSet.setCoursePath("./.course/"+_courseName);
-
 			QuizView quizView = new QuizView(_thisLevelName, _courseName);
-			QuizModel quizModel = new PracticeQuizModel(_allLevelNames);
+			QuizModel quizModel = new QuizModel(_allLevelNames);
 
 			quizModel.setView(quizView);
 			quizView.setModel(quizModel);
 
-			quizModel.setAllWords(modelToHelpGetNewWordSet.getLevelWordsFromCourse(_thisLevelName), _model.getRowCount()); //num of row in table is the same num as word to quiz
+			quizModel.setAllWords(_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_thisLevelName), _model.getRowCount()); //num of row in table is the same num as word to quiz
 
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Practice Again Quiz");
 			quizModel.getRandomWords();
@@ -214,14 +213,11 @@ public class ResultView implements Card, ActionListener {
 			//this button is clicked so this button must not be disabled
 			//show quizView of next level
 
-			ChooseLevelModel modelToHelpGetNewWordSet = new ChooseLevelModel();
-			modelToHelpGetNewWordSet.setCoursePath("./.course/"+_courseName);
-
 			//get words for next level
-			ArrayList<String> newWords = modelToHelpGetNewWordSet.getLevelWordsFromCourse(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+			ArrayList<String> newWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
 
 			QuizView quizView = new QuizView(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1), _courseName);
-			QuizModel quizModel = new PracticeQuizModel(_allLevelNames);
+			QuizModel quizModel = new QuizModel(_allLevelNames);
 
 			quizModel.setView(quizView);
 			quizView.setModel(quizModel);

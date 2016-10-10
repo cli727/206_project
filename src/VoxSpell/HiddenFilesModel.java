@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * A Singleton class that manages reading/writing actions to the hidden files
@@ -144,18 +145,6 @@ public class HiddenFilesModel {
 	 */
 	protected void addWordToStatsFile(String filePath, String word) {
 
-		/*Path filePath = null;
-
-		switch (file) {
-		case REVIEW:
-			filePath = _reviewFilePath;
-			break;
-		case HISTORY:
-			filePath = _historyFilePath;
-			break;
-		}*/
-
-
 		List<String> allWords = new ArrayList<String>();
 
 		try {
@@ -231,6 +220,7 @@ public class HiddenFilesModel {
 	 */
 	protected void addWordToReviewWordsFile(String word, String level, String courseName) {
 
+		
 		String coursePath = "./.review/"+courseName+"Review";
 		ArrayList<String> allWords = new ArrayList<String>();
 		allWords = readFileToArray(coursePath);
@@ -253,7 +243,7 @@ public class HiddenFilesModel {
 			}
 
 			//add word at position of next level (i.e. so it pushes next level further)
-			System.out.println("next index: " +nextLvlIndex + " total: " + allWords.size());
+			
 			allWords.add(nextLvlIndex, word);
 		}
 
@@ -273,6 +263,7 @@ public class HiddenFilesModel {
 
 			e.printStackTrace();
 		}
+		
 	}	
 
 	/**
@@ -320,10 +311,51 @@ public class HiddenFilesModel {
 		}
 		return allWords;
 	}
+	
+	public Vector<String> getAllLevelsFromCourse(String _coursePath){
+		Vector<String>_allLevelsFromCourse = new Vector<String>();
 
-	protected ArrayList<String> readLevelOfFile(String filepath){
-		ArrayList<String> allLevels = new ArrayList<String>();
-		return allLevels;
+		for (int i = 0; i < readFileToArray( _coursePath).size(); i ++){
+
+			if (Character.toString(readFileToArray( _coursePath).get(i).charAt(0)).equals("%")){
+				//if the first char of this string is %, this is a new level
+				//add the level name in without the % sign
+				_allLevelsFromCourse.add(readFileToArray( _coursePath).get(i).substring(1));
+			}
+		}
+		return _allLevelsFromCourse;
+	}
+
+	public ArrayList<String> getLevelWordsFromCourse(String _coursePath,String level) {
+		ArrayList<String> allWords = readFileToArray( _coursePath);
+		ArrayList<String> levelWords = new ArrayList<String>();
+
+		level = "%" + level;
+		int startIndex = 0;
+
+		//find the beginning of the level in the allWord list of the course
+		for (int i = 0; i < allWords.size(); i ++){
+			if (allWords.get(i).equals(level)){
+				startIndex = i;
+				break;
+			}
+		}
+
+		//starting from level position + 1, to the position before the next level
+		//these words are the words needed for this level
+		for (int j = startIndex + 1; j < allWords.size(); j ++){
+			if (Character.toString(allWords.get(j).charAt(0)).equals("%")){
+				break;
+			}else {
+				levelWords.add(allWords.get(j));
+			}
+		}
+
+		/*System.out.println("printing level words");
+		for (int k = 0; k < levelWords.size(); k ++){
+			System.out.println(levelWords.get(k));
+		}*/
+		return levelWords;
 
 	}
 

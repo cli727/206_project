@@ -371,8 +371,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
 				cardChooseLevel = new ChooseLevelReviewView(_courseName);
 			}
-			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-			cardChooseLevel.setModel(chooseLevelModel);
+
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 		}//else dispose panel and carry on

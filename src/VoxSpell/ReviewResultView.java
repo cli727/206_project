@@ -20,12 +20,8 @@ public class ReviewResultView extends ResultView{
 	//next level is disabled when next level review words are empty
 	@Override
 	protected boolean ifDisableNextLevel(){
-
-		ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
-		chooseLevelModel.setCoursePath("./.review/"+_courseName + "Review");
 		
-		System.out.println("next level size: " + chooseLevelModel.getLevelWordsFromCourse(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)).size());
-		if ( chooseLevelModel.getLevelWordsFromCourse(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)).size() != 0 ){
+		if ( _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)).size() != 0 ){
 			// if next level word size is not 0
 			return false;
 		}else {

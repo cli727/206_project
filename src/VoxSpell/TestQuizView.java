@@ -25,7 +25,9 @@ public class TestQuizView extends QuizView{
 
 	public TestQuizView(String level, String courseName) {
 		super(level, courseName);
-
+		
+		_labelSubheading.setText("Testing all levels");
+		
 		_counter = 9;
 		_timerBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 9);
 		_timerBar.setValue(9);
@@ -181,15 +183,24 @@ public class TestQuizView extends QuizView{
 		super.actionPerformed(e);
 		//with the addition of timer listener
 		if (e.getSource() == _timer){
+			System.out.println(_counter);
 			_counter--;
 			_timerBar.setValue(_counter);
 			if (_counter<1) {
 				//time up, fail this word and move on to next word
 				_quizModel.moveOnToNextWord();
-				//_timer.stop();
+				_timer.stop();
+				_counter = 9;//reset counter for new word
+				_timer.start();
 			} 
 		}
 	}
+	
+	/**
+	 * method for its model to get timer's value, so that model can allocate a score
+	 */
 
-
+	protected int getTimerValue(){
+		return _counter;
+	}
 }

@@ -22,37 +22,37 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class ChooseLevelView implements Card, ActionListener{
-
+	protected HiddenFilesModel _hiddenFilesModel; 
+	
 	private Color _bgColor ;
 
-	private JPanel _chooseLevelPanel;
+	protected JPanel _chooseLevelPanel;
 
 	protected JLabel _labelHeading;
 	private JLabel _labelViewChangeCourse; 
-	private JButton _btnViewWordList;
-	private JButton _btnChangeCourse;
-	private JLabel _labelChooseLevel;
+	protected JButton _btnViewWordList;
+	protected JButton _btnChangeCourse;
+	protected JLabel _labelChooseLevel;
 
-	private JComboBox<String> _comboBox;
+	protected JComboBox<String> _comboBox;
 
-	private  JLabel _labelChooseNumWords;
-	private JRadioButton _btnAllWords;
-	private JRadioButton _btnTenWords;
-	private  JRadioButton _btnTwentyWords;
-	private JRadioButton _btnFortyWords;
-	private JRadioButton _btnFiftyWords;
+	protected  JLabel _labelChooseNumWords;
+	protected JRadioButton _btnAllWords;
+	protected JRadioButton _btnTenWords;
+	protected  JRadioButton _btnTwentyWords;
+	protected JRadioButton _btnFortyWords;
+	protected JRadioButton _btnFiftyWords;
 
-	private JButton _btnStartQuiz;
-	private  JButton _btnBackToMain;
+	protected JButton _btnStartQuiz;
+	protected  JButton _btnBackToMain;
 
 	protected String _courseName;
 
-	private  int _numWordsToQuiz;
-
-	protected ChooseLevelModel _model;
+	protected  int _numWordsToQuiz;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
+		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		_bgColor = new Color(0,219,255); //set background colour
 
@@ -113,7 +113,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		_chooseLevelPanel.setBackground(_bgColor);
 
 		//items in combo box are all levels 
-		_comboBox = new JComboBox<String>(_model.getAllLevelsFromCourse());
+		_comboBox = new JComboBox<String>(_hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName));
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -268,8 +268,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		//disable number of word radiobuttons accordingly
 		//get number of words in selected level
-		_numWordsToQuiz= _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
-		disableNumWordsButtons(_numWordsToQuiz);
+		disableNumWordsButtons();
 
 		return _chooseLevelPanel;
 	}
@@ -284,7 +283,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		}else if(e.getSource() == _btnViewWordList) {
 
 			//create frame to show all words in the selected course
-			new ShowAllCourseWordsView(_courseName, _model.getAllWordsFromCourse(), _chooseLevelPanel);			
+			new ShowAllCourseWordsView(_courseName, _hiddenFilesModel.readFileToArray("./.course/"+_courseName), _chooseLevelPanel);			
 			//disable this frame
 			VoxSpellGui.getFrame().setEnabled(false);
 
@@ -295,8 +294,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 			//disable number of word radiobuttons accordingly
 			//get number of words in selected level
-			_numWordsToQuiz = _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
-			disableNumWordsButtons(_numWordsToQuiz);
+			disableNumWordsButtons();
 
 		}else if (e.getSource() == _btnTenWords){
 
@@ -312,7 +310,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			_numWordsToQuiz = 50;
 		}else if (e.getSource() == _btnAllWords){
 
-			_numWordsToQuiz = _model.getLevelWordsFromCourse((String) _comboBox.getSelectedItem()).size();
+			_numWordsToQuiz = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,(String) _comboBox.getSelectedItem()).size();
 		}else if (e.getSource() == _btnStartQuiz){
 
 			String level =  (String) _comboBox.getSelectedItem();
@@ -331,13 +329,15 @@ public class ChooseLevelView implements Card, ActionListener{
 			if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 				//create a test quiz view if the status is test, i.e. with timer etc.
 				quizView = new TestQuizView(level,_courseName);
+				quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName));
 			}else {
 				//create regular quiz view otherwise
 				quizView = new QuizView(level, _courseName);
+				quizModel = new QuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/" + _courseName));
 			}
-			quizModel = new PracticeQuizModel(_model.getAllLevelsFromCourse());
+			
 			quizModel.setView(quizView);
-			quizModel.setAllWords(_model.getLevelWordsFromCourse(level), _numWordsToQuiz);
+			quizModel.setAllWords(_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,level), _numWordsToQuiz);
 
 			quizView.setModel(quizModel);
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Practice Quiz");
@@ -346,34 +346,36 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	}
 
-	protected void disableNumWordsButtons(int numWords) {
+	protected void disableNumWordsButtons() {
+		
+		_numWordsToQuiz=_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,(String) _comboBox.getSelectedItem()).size();
 		//disable buttons accordingly based on numWOrds
-		if (numWords < 50){
+		if (_numWordsToQuiz < 50){
 			_btnFiftyWords.setEnabled(false);
 		}else{
 			_btnFiftyWords.setEnabled(true);
 		}
 
-		if (numWords < 40){
+		if (_numWordsToQuiz < 40){
 			_btnFortyWords.setEnabled(false);
 		}else{
 			_btnFortyWords.setEnabled(true);
 		}
 
-		if (numWords < 20){
+		if (_numWordsToQuiz < 20){
 			_btnTwentyWords.setEnabled(false);
 		}else{
 			_btnTwentyWords.setEnabled(true);
 		}
 
-		if (numWords < 10){
+		if (_numWordsToQuiz < 10){
 			_btnTenWords.setEnabled(false);
 		}else{
 			_btnTenWords.setEnabled(true);
 		}
 
 		//always enable 'get all words' button, unless there is no words
-		if (numWords == 0){
+		if (_numWordsToQuiz == 0){
 			//disable all buttons
 			_btnAllWords.setEnabled(false);
 			_btnStartQuiz.setEnabled(false);
@@ -389,10 +391,5 @@ public class ChooseLevelView implements Card, ActionListener{
 					"<font color='white'>"
 					+ "Choose a subgroup</font></html>");
 		}
-	}
-
-	public void setModel(ChooseLevelModel model){
-		_model = model;
-		_model.setCoursePath("./.course/"+_courseName);
 	}
 }
