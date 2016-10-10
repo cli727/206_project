@@ -31,8 +31,8 @@ import VoxSpell.FestivalModel.Voice;
 @SuppressWarnings("serial")
 public class QuizView extends JPanel implements Card, ActionListener {
 
-	private String _level;
-	private String _courseName;
+	protected String _level;
+	protected String _courseName;
 
 	private QuizModel _quizModel;
 	private FestivalModel _festivalModel = FestivalModel.getInstance();
@@ -371,9 +371,9 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 			ChooseLevelView cardChooseLevel = null;
 			if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
-				cardChooseLevel = new ChooseLevelView("wordlist");
+				cardChooseLevel = new ChooseLevelView(_courseName);
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
-				cardChooseLevel = new ChooseLevelReviewView("wordlist");
+				cardChooseLevel = new ChooseLevelReviewView(_courseName);
 			}
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
@@ -381,48 +381,6 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		}//else dispose panel and carry on
 
-	}
-
-	public boolean showLevelUpPopUP(int currentLevel){
-
-		boolean levelUp = false;
-
-		JPanel popUpPanel = new JPanel();
-
-
-		//ask them if they want to play their reward video
-
-		int dialogResult  = JOptionPane.showOptionDialog(popUpPanel, 
-				("<html>Would you like to: <BR><BR>"+
-						"Move on to the next Level ( level " + (currentLevel+1) +" )<BR>" + 
-						"Or <BR>"+
-						"Try more words from this level? <BR>    </html>"),
-				"Level Up", 
-				JOptionPane.OK_CANCEL_OPTION, 
-				JOptionPane.INFORMATION_MESSAGE, 
-				null, 
-				new String[]{"Level Up", "Stay"}, // this is the array
-				"default");
-
-		if(dialogResult == JOptionPane.YES_OPTION){
-			//update level
-			int level = _level.getLevel();
-			level++;
-			for (LEVEL i : LEVEL.values()){
-				if (level == i.getLevel()){
-					_level = i;
-					break;
-				}
-			}
-			levelUp = true;
-		}else if(dialogResult == JOptionPane.NO_OPTION){
-			levelUp = false;
-		}else{
-			//if the user closes the window 
-			showLevelUpPopUP(currentLevel);
-		}
-
-		return levelUp;
 	}
 
 	public void showReviewEndPopUp(int correct, int incorrect){
@@ -434,16 +392,6 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		JOptionPane.showMessageDialog(this, message, 
 				"Review Completed", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	/**
-	 * Update accuracy rates of a level
-	 * @param level
-	 */
-	public void updateJLabel(int level, String accuracy){
-		JLabel labelToUpdate = _accuracyLabels.get(level -1);
-
-		labelToUpdate.setText("* Level "+ level +": "+accuracy);
 	}
 
 	public void updateTipsLabel(boolean caseSensitive){

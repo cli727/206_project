@@ -316,6 +316,8 @@ public class ChooseLevelView implements Card, ActionListener{
 		/*	System.out.println("level "+level);
 			System.out.println("words " + _numWordsToQuiz);*/
 
+			
+			System.out.println(_courseName);
 			QuizView quizView = new QuizView(level, _courseName);
 
 			QuizModel quizModel = null;

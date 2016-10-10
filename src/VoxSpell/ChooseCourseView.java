@@ -28,9 +28,9 @@ public class ChooseCourseView implements Card, ActionListener{
 	private static ChooseCourseView _courseChooser;
 
 	private JLabel _labelHeading;
-	private JButton _btnWordListOne;
+	private JButton _btnKEYwords;
 	private JButton _btnWordListTwo;
-	private JButton _btnWordListThree;
+	private JButton _btnIELTSwords;
 	private JButton _btnWordListFour;
 	private JButton _btnImportWordList;
 	private JButton _btnCreateWordList;
@@ -53,25 +53,23 @@ public class ChooseCourseView implements Card, ActionListener{
 		 * CODE FOR CHANGING BUTTON BACKGROUND WHEN HOVERED OVER SOURCED FROM STACK OVERFLOW:
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
 		 */
-		_btnWordListOne = new JButton("WordListOne");
-		//_btnWordListOne.setToolTipText("NOOOOO");
-		_btnWordListOne.getModel().addChangeListener(new ChangeListener(){
+		_btnKEYwords = new JButton("KEY");
+		//_btnKEYwords.setToolTipText("NOOOOO");
+		_btnKEYwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					//_btnWordListOne.setIcon(icon());
-					_btnWordListOne.setText("IM HOVERED ");
+					//_btnKEYwords.setIcon(icon());
+					_btnKEYwords.setText("IM HOVERED ");
 				}else{
-					_btnWordListOne.setText("WordListOne");
+					_btnKEYwords.setText("KEY");
 				}
 			}
 		});
 
-		_btnWordListTwo = new JButton("WordListTwo");
-		_btnWordListThree = new JButton("WordListThree");
-		_btnWordListFour = new JButton("WordLIstFOur");
+		_btnIELTSwords = new JButton("IELTS");
 		_btnImportWordList = new JButton("Import WordList");
 		_btnCreateWordList = new JButton("CreateWordLIst");
 		_btnBackToMain = new JButton("Back");
@@ -120,11 +118,11 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 170;
-		c.ipadx = 230;
+		c.ipady = 180;
+		c.ipadx = 310;
 		c.insets = new Insets(40,10,5,5);
-		mainPanel.add(_btnWordListOne, c);
-		_btnWordListOne.addActionListener(this);
+		mainPanel.add(_btnKEYwords, c);
+		_btnKEYwords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
@@ -132,9 +130,9 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(40,0,5,5);
-		mainPanel.add(_btnWordListThree, c);
-		_btnWordListThree.addActionListener(this);
+		c.insets = new Insets(40,0,5,10);
+		mainPanel.add(_btnIELTSwords, c);
+		_btnIELTSwords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
@@ -154,7 +152,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,0,5);
+		c.insets = new Insets(0,0,0,10);
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
 
@@ -166,17 +164,33 @@ public class ChooseCourseView implements Card, ActionListener{
 		if (e.getSource() == _btnBackToMain){
 
 			VoxSpellGui.showMainMenu();
-		}else if (e.getSource() == _btnWordListOne){
+		}else if (e.getSource() == _btnKEYwords){
 
 			//show card to select number of words / levels(headings)
 			ChooseLevelView cardChooseLevel = null;
 
 			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 
-				cardChooseLevel = new ChooseLevelView("wordlist");
+				cardChooseLevel = new ChooseLevelView("KEY");
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
 				
-				cardChooseLevel = new ChooseLevelReviewView("wordlist");
+				cardChooseLevel = new ChooseLevelReviewView("KEY");
+			}
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			
+		}else if(e.getSource() == _btnIELTSwords){
+
+			//show card to select number of words / levels(headings)
+			ChooseLevelView cardChooseLevel = null;
+
+			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+
+				cardChooseLevel = new ChooseLevelView("IELTS");
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+				
+				cardChooseLevel = new ChooseLevelReviewView("IELTS");
 			}
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);

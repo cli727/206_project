@@ -184,8 +184,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 210;
-		c.ipadx = 280;
+		c.ipady = 200;
+		c.ipadx = 300;
 		c.insets = new Insets(0,10,5,5);
 		mainPanel.add(_btnPracticeQuiz, c);
 		_btnPracticeQuiz.addActionListener(this);
@@ -234,14 +234,14 @@ public class VoxSpellGui implements Card,ActionListener{
 		}else if (e.getSource() == _btnPracticeQuiz){
 
 			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("wordlist"); //wordList is the default course
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //KEY is the default course
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
-			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("wordlist"); //default course to review
+			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KEY"); //default course to review
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
