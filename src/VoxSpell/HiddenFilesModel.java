@@ -353,29 +353,7 @@ public class HiddenFilesModel {
 		return false;
 	}
 
-	/**
-	 * Check if there are quiz words for the level chosen
-	 * @param level
-	 * @param quizMode
-	 * @return
-	 */
-	protected boolean levelEmpty(int level, String quizMode){
-
-		if(quizMode.equals(VoxSpellGui.REVIEW)){
-
-			ArrayList<String> allWords = _hiddenFilesModel.readFileToArray(coursePath);
-
-			if ( allWords.get(level-1).isEmpty()){
-				return true;
-			}
-
-			return false;
-
-		}else {
-			//NEW should not have empty levels according to assignment3 specification
-			return false;
-		}
-	}
+	//public void checkDuplicates()
 
 	private void writeSCMCodeToVoiceFiles() {
 		try {

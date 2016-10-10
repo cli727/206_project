@@ -1,8 +1,11 @@
 package VoxSpell;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import VoxSpell.HiddenFilesModel.StatsFile;
 
@@ -90,31 +93,35 @@ abstract public class QuizModel {
 	 */
 	protected void getRandomWords(){
 
-		System.out.println("numToQuiz " + _numWordsToQuiz);
+		/*System.out.println("numToQuiz " + _numWordsToQuiz);
 		System.out.println("allWORDS size: " +_allWords.size());
-		if ((_allWords.size() < _numWordsToQuiz) && (_allWords.size() > 0)){
+		System.out.println("random size: " +_randomWords.size());*/
 
-			//less than wanted words, just get all of them 
-			_randomWords.addAll(_allWords);
-
-
-		}else if (_allWords.size() >= _numWordsToQuiz){
-
-			//chooses _numWordsToQuiz number of random words from allWords
-			while (_randomWords.size() < _numWordsToQuiz){
-				Random r = new Random();
-				String randomWord = _allWords.get(r.nextInt(_allWords.size()));//generate a random word
-
-				if (! _randomWords.contains(randomWord)){
-					//only add randomWord if it is not already in the list, avoid repetition
-					_randomWords.add(randomWord);
-				}
-			}
-		}
+		//The method aims to avoid duplicates in the randomly generated words, which may lead to infinite loop if
+		//the words within the level are duplicated in the wordlist
 		
+		Set<String> duplicates = new LinkedHashSet<String>();
+	    Set<String> uniques = new HashSet<String>();
 
-		for (int j = 0; j < _randomWords.size(); j ++){
-			System.out.println("Rndome word " + _randomWords.get(j));
+	    /*for(String t : _allWords) {
+	        if(!uniques.add(t)) {
+	           System.out.println("duplicate: " + t);
+	        }
+	    }*/
+		
+		//chooses _numWordsToQuiz number of random words from allWords
+		while (_randomWords.size() < _numWordsToQuiz){
+			//System.out.println("1");
+			Random r = new Random();
+			String randomWord = _allWords.get(r.nextInt(_allWords.size()));//generate a random word
+
+			//System.out.println("randomWords: " + randomWord + "randome size: " + _randomWords.size());
+
+			if (! _randomWords.contains(randomWord)){
+				
+				//only add randomWord if it is not already in the list, avoid repetition
+				_randomWords.add(randomWord);
+			}
 		}
 
 		//start spelling the FIRST word
@@ -128,7 +135,7 @@ abstract public class QuizModel {
 	protected int getTotalWordNum(){
 		return _randomWords.size();
 	}
-	
+
 
 	/**
 	 * Helper method for the view to update GUI with correct word spelling when the user chooses "show answer"

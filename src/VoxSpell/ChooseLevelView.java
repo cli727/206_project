@@ -60,9 +60,16 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
 
-		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
-				+ "<font color='white'>"
-				+ "Set up your practice quiz...</font></html>"));
+		//set up header label according to quiz mode, otherwise test and practice level chooser view serves same function
+		if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
+					+ "<font color='white'>"
+					+ "Set up your test...</font></html>"));
+		}else{
+			_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
+					+ "<font color='white'>"
+					+ "Set up your practice quiz...</font></html>"));
+		}
 
 		_labelHeading.setFont(headingFont);
 
@@ -313,17 +320,21 @@ public class ChooseLevelView implements Card, ActionListener{
 			/*if (_quizAllWords){
 				_numWordsToQuiz = _model.getLevelWordsFromCourse(level).size();
 			}*/
-		/*	System.out.println("level "+level);
-			System.out.println("words " + _numWordsToQuiz);*/
+			System.out.println("level "+level);
+			System.out.println("words " + _numWordsToQuiz);
 
-			
-			System.out.println(_courseName);
-			QuizView quizView = new QuizView(level, _courseName);
-
+			QuizView quizView =null;
 			QuizModel quizModel = null;
 
-		
 			//words from course wordlist
+
+			if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+				//create a test quiz view if the status is test, i.e. with timer etc.
+				quizView = new TestQuizView(level,_courseName);
+			}else {
+				//create regular quiz view otherwise
+				quizView = new QuizView(level, _courseName);
+			}
 			quizModel = new PracticeQuizModel(_model.getAllLevelsFromCourse());
 			quizModel.setView(quizView);
 			quizModel.setAllWords(_model.getLevelWordsFromCourse(level), _numWordsToQuiz);
@@ -336,8 +347,6 @@ public class ChooseLevelView implements Card, ActionListener{
 	}
 
 	protected void disableNumWordsButtons(int numWords) {
-
-
 		//disable buttons accordingly based on numWOrds
 		if (numWords < 50){
 			_btnFiftyWords.setEnabled(false);
@@ -386,36 +395,4 @@ public class ChooseLevelView implements Card, ActionListener{
 		_model = model;
 		_model.setCoursePath("./.course/"+_courseName);
 	}
-
-	/**
-	 * Shows a pop up telling user that the selected game/level has no possible quiz words
-	 * @param quizMode
-	 * @param allEmpty
-	 * @param level
-	 */
-	private void showNoAvailableWordsPopUp(String quizMode, boolean allEmpty, int level){
-
-		String message;
-		if(allEmpty){
-			if (quizMode.equals(VoxSpellGui.REVIEW)){
-
-				message = "There is no word to review at all levels!\n"+
-						"What about starting a New Quiz :)";
-			}else {
-				message = "No wordlist found. Please ensure that the \n"+
-						"'wordlist' file is in the working directory!";
-			}
-
-		}else{
-			//level empty
-			message = "There is no word to review for Level " + level + " !\n" +
-					"Please select another level to review.";
-		}
-
-		JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
-				"No Available Words", JOptionPane.INFORMATION_MESSAGE);
-
-		VoxSpellGui.showMainMenu();
-	}
-
 }

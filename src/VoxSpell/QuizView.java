@@ -34,41 +34,37 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	protected String _level;
 	protected String _courseName;
 
-	private QuizModel _quizModel;
-	private FestivalModel _festivalModel = FestivalModel.getInstance();
+	protected QuizModel _quizModel;
+	protected FestivalModel _festivalModel = FestivalModel.getInstance();
 
-	private JPanel _headingPanel;
-	private JLabel _labelHeading;
-	private JLabel _labelSubheading;
+	protected JPanel _headingPanel;
+	protected JLabel _labelHeading;
+	protected JLabel _labelSubheading;
 
-	private JPanel _updateWordPanel;
-	private JLabel _labelToUpdateWordNum;
-	private JLabel _labelTotalWord;
+	protected JPanel _updateWordPanel;
+	protected JLabel _labelToUpdateWordNum;
+	protected JLabel _labelTotalWord;
 
-	private JTextField _inputArea ;
+	protected JTextField _inputArea ;
 
-	private JLabel _labelDefinition;
+	protected JLabel _labelDefinition;
 
 	private JPanel _answerPanel;
 	private JLabel _labelCorrectSpelling; //"correct spelling:"
 	private JLabel _labelAnswer; // actual answer 
 
-	private JButton _btnRelisten;
+	protected JButton _btnRelisten;
 
-	private JButton _btnCheckWord;
+	protected JButton _btnCheckWord;
 	private JButton _btnSkipWord;
 	private JButton _btnShowAnswer;
 
-	private JLabel _labelFesVoice ;
-	private JLabel _labelAccuracy;
+	protected JLabel _tipsLabel;
 
-	private JLabel _tipsLabel;
-
-	private JButton _btnBack;
+	protected JButton _btnBack;
 
 	final protected String _comboBoxItems[] = {"American (default)", "New Zealand"};
 	final protected JComboBox<String> _cb;
-
 
 	public QuizView (String level, String courseName){
 		//set up fields

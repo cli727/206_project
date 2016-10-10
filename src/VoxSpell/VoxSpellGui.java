@@ -41,7 +41,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static JPanel _welcomePanel;
 	private JLabel _welcomeLabel;
 	private JButton _btnPracticeQuiz;
-	private JButton _btnTimerQuiz;
+	private JButton _btnTestQuiz;
 	private JButton _btnReview;
 	private JButton _btnScoreHistory;
 
@@ -50,9 +50,6 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	private static JPanel _cardsPanel = new JPanel();
 	private static CardLayout _cardLayout = new CardLayout();
-	/*	private static FlowLayout _flowLayout = new FlowLayout();*/
-	private static HiddenFilesModel _hiddenFilesModel = HiddenFilesModel.getInstance();
-	private static QuizModel quiz;
 	protected static FestivalModel _festivalModel;
 	private static String _currentCard;
 
@@ -60,7 +57,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	public static String STATUS = null;
 	public static final String NEW = "New";
 	public static final String REVIEW = "Review";
-
+	public static final String TEST = "Test";
 	/**
 	 * Singleton class, deals with card handling
 	 */
@@ -166,7 +163,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		mainPanel.setBackground(Color.WHITE);
 
 		_btnPracticeQuiz = new JButton("Practice Words");
-		_btnTimerQuiz = new JButton("Timer Mode");
+		_btnTestQuiz = new JButton("Test Mode");
 		_btnReview = new JButton("Review Mistakes");
 		_btnScoreHistory = new JButton("Score History");
 
@@ -197,8 +194,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
 		c.insets = new Insets(0,0,5,10);
-		mainPanel.add(_btnTimerQuiz, c);
-		_btnTimerQuiz.addActionListener(this);
+		mainPanel.add(_btnTestQuiz, c);
+		_btnTestQuiz.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -225,13 +222,12 @@ public class VoxSpellGui implements Card,ActionListener{
 		return mainPanel;
 	}
 
-
-
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnScoreHistory) {
 
 			new FullStatsView(_frame);
 		}else if (e.getSource() == _btnPracticeQuiz){
+			STATUS = NEW;
 
 			//show card to select number of words / levels(headings)
 			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //KEY is the default course
@@ -239,48 +235,30 @@ public class VoxSpellGui implements Card,ActionListener{
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
-			STATUS = NEW;
 		}else if (e.getSource() == _btnReview){
+			STATUS = REVIEW;
+			//ChooseLevelReviewView object instead of ChooseLevelView
 			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KEY"); //default course to review
 			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
 			cardChooseLevel.setModel(chooseLevelModel);
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 			
-			STATUS = REVIEW;
+		}else if (e.getSource() == _btnTestQuiz){
+			STATUS = TEST;
+			
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //default course to test
+			ChooseLevelModel chooseLevelModel = new ChooseLevelModel();
+			cardChooseLevel.setModel(chooseLevelModel);
+			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+		
 		}
 	}
 
 	/**
-	 * Shows a pop up telling user that the selected game/level has no possible quiz words
-	 * @param quizMode
-	 * @param allEmpty
-	 * @param level
+	 * Public method for to show any Card object
+	 * @param cardPanel
+	 * @param cardName
 	 */
-	private void showNoAvailableWordsPopUp(String quizMode, boolean allEmpty, int level){
-
-		String message;
-		if(allEmpty){
-			if (quizMode.equals(REVIEW)){
-
-				message = "There is no word to review at all levels!\n"+
-						"What about starting a New Quiz :)";
-			}else {
-				message = "No wordlist found. Please ensure that the \n"+
-						"'wordlist' file is in the working directory!";
-			}
-
-		}else{
-			//level empty
-			message = "There is no word to review for Level " + level + " !\n" +
-					"Please select another level to review.";
-		}
-
-		JOptionPane.showMessageDialog(_frame, message, 
-				"No Available Words", JOptionPane.INFORMATION_MESSAGE);
-
-		showMainMenu();
-	}
-
 	public void showCard (JPanel cardPanel, String cardName){
 		//show non static card object
 		_cardsPanel.add(cardPanel, cardName);
@@ -337,8 +315,6 @@ public class VoxSpellGui implements Card,ActionListener{
 			public void run() {
 				_voxSpellGui = new VoxSpellGui();
 				createAndShowGUI();
-				System.out.println("size: " + _welcomePanel.getWidth() + " " + _welcomePanel.getHeight());
-				System.out.println("size: " + _footerPanel.getWidth() + " " + _footerPanel.getHeight());
 			}
 		});
 	}
