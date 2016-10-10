@@ -171,7 +171,7 @@ public class ChooseCourseView implements Card, ActionListener{
 			VoxSpellGui.showMainMenu();
 		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 			//test mode, show quiz view after
-			System.out.println(VoxSpellGui.STATUS);
+
 			if (e.getSource() == _btnKEYwords){
 
 				QuizView quizView = new TestQuizView(null,"KEY");//level not needed for test view
@@ -191,14 +191,29 @@ public class ChooseCourseView implements Card, ActionListener{
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
 				quizModel.getRandomWords();
 
-
 			}else if(e.getSource() == _btnIELTSwords){
 
+				QuizView quizView = new TestQuizView(null,"IELTS");//level not needed for test view
+				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/IELTS"));
+
+				quizModel.setView(quizView);
 				
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/IELTS");
+				for(int i = 0; i < allWords.size(); i++){
+					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
+						allWords.remove(allWords.get(i));
+					}
+				}
+				quizModel.setAllWords(allWords, 10); //just 10 words always for test mode
+
+				quizView.setModel(quizModel);
+				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
+				quizModel.getRandomWords();
 			}
 
 		}else if (! VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 			//new/review mode, show level chooser after
+			
 			if (e.getSource() == _btnKEYwords){
 
 				//show card to select number of words / levels(headings)
@@ -228,6 +243,49 @@ public class ChooseCourseView implements Card, ActionListener{
 				}
 				
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			}
+		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			//test mode, show quiz view 
+			if (e.getSource() == _btnKEYwords){
+				QuizView testQuizView = new TestQuizView(null, "KEY"); //"level" parameter not needed for test
+				QuizModel testQuizModel = new TestQuizModel(null); //"allLevelNames" para not needed for test
+				
+				testQuizView.setModel(testQuizModel);
+				testQuizModel.setView(testQuizView);
+				
+				//get rid of level tile entries i.e. %level 1 before passing the entire list
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KEY");
+				for(int i = 0; i < allWords.size(); i++){
+					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
+						allWords.remove(i);
+					}
+				}
+				
+				testQuizModel.setAllWords(allWords, 10);//always 10 words for test mode
+				testQuizModel.getRandomWords();
+				
+				VoxSpellGui.getInstance().showCard(testQuizView.createAndGetPanel(), "Test");
+
+			}else if(e.getSource() == _btnIELTSwords){
+
+				QuizView testQuizView = new TestQuizView(null, "IELTS"); //"level" parameter not needed for test
+				QuizModel testQuizModel = new TestQuizModel(null); //"allLevelNames" para not needed for test
+				
+				testQuizView.setModel(testQuizModel);
+				testQuizModel.setView(testQuizView);
+				
+				//get rid of level tile entries i.e. %level 1 before passing the entire list
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/IELTS");
+				for(int i = 0; i < allWords.size(); i++){
+					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
+						allWords.remove(i);
+					}
+				}
+				
+				testQuizModel.setAllWords(allWords, 10);//always 10 words for test mode
+				testQuizModel.getRandomWords();
+				
+				VoxSpellGui.getInstance().showCard(testQuizView.createAndGetPanel(), "Test");
 			}
 		}
 

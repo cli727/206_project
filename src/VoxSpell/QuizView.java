@@ -329,6 +329,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	}
 
 	public void showInvalidInputPopUp(){
+		
 		JOptionPane.showMessageDialog(this, "Non alphabetical character(s) detected! \n"
 				+ "Make sure you do not have unintended white spaces.", 
 				"Warning: Invalid Input", JOptionPane.INFORMATION_MESSAGE);
@@ -346,7 +347,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	/** shows a pop up window if the user leaves in the middle of a game
 	 */
-	private void gameInProgressPopUp(){
+	protected void gameInProgressPopUp(){
 
 		JPanel popUpPanel = new JPanel();
 

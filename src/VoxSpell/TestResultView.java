@@ -2,86 +2,44 @@ package VoxSpell;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import VoxSpell.FestivalModel.Voice;
-
-public class ResultView implements Card, ActionListener {
-	protected HiddenFilesModel _hiddenFilesModel;
-
-	protected Vector<String> _allLevelNames;
-	protected String _thisLevelName;
-	protected String _courseName;
-
-	protected JLabel _labelHeading;
-	protected JLabel _labelSubheading;
-	protected JLabel _labelQuizMode;
-
-	protected JPanel _tabelPanel;
-	protected JTable _resultTable;
-
-	protected JLabel _labelTableInfo;
-
-	private JButton _btnNextLevel;
-	private JButton _btnRaceLevel;
-	private JButton _btnPracticeAgain;
+public class TestResultView extends ResultView {
+	
+	private JButton _btnKeepGoing;
+	private JButton _btnTestAgain;
+	private JButton _btnVideoReward;
 	private JButton _btnHome;
 
-	protected ResultModel _model;
-
-	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
-		_hiddenFilesModel = HiddenFilesModel.getInstance();
-
-		_allLevelNames = allLevelNames; // so that the card knows of the next level (if user presses the button)
-		_thisLevelName = levelName;
-		_courseName = courseName;
-
-		_labelQuizMode = new JLabel(("<html> <p style='text-align:center;'>"
+	public TestResultView(String levelName, String courseName, Vector<String> allLevelNames) {
+		super(levelName, courseName, allLevelNames);
+		
+		_labelQuizMode.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
-				+ "Practice Completed!"+ "</font></html>"));
-		_labelQuizMode.setFont((new Font("SansSerif", Font.ITALIC,30)));
-
-		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "Test Completed!"+ "</font></html>"));
+		
+		_labelSubheading.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
-				+ "Course: " + _courseName + "</font></html>"));
-
-		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,17));
-
-		_labelSubheading = new JLabel(("<html> <p style='text-align:center;'>"
-				+ "<font color='black'>"
-				+ "Subgroup : " + _thisLevelName + "</font></html>"));
-		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,17)));
-
-		_tabelPanel = new JPanel();
-
-		_labelTableInfo = new JLabel("(Selected Items will be added to your revision list)");
-
-		_btnPracticeAgain = new JButton("Practice Again");
-		_btnNextLevel = new JButton("Practice Next Level");
-		_btnRaceLevel = new JButton("Test Course (10 Words)");
+				+ "Well Done" + "</font></html>"));
+		
+		_btnKeepGoing = new JButton("Continue Test");
+		_btnTestAgain = new JButton("Try Again");
+		_btnVideoReward = new JButton ("Video Reward");
 		_btnHome = new JButton("Home");
 	}
-
-	public void setModel(ResultModel model){
-		_model = model;
-	}
-
+	
 	@Override
 	public JPanel createAndGetPanel() {
 
@@ -236,14 +194,4 @@ public class ResultView implements Card, ActionListener {
 		}
 	}
 
-	protected boolean ifDisableNextLevel(){
-
-		if (_allLevelNames.indexOf(_thisLevelName) != (_allLevelNames.size()-1) ){
-			// if not last item in list
-			return false;
-		}else {
-			//disable this button
-			return true;
-		}
-	}
 }

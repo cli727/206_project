@@ -23,6 +23,11 @@ import java.util.Vector;
  *
  */
 public class HiddenFilesModel {
+	public static final String _reviewFolderPath = "./.review/";
+	public static final String _testHistoryFolderPath = "./.testHistory/";
+	public static final String _testCorrectFolderPath = "./.testCorrect/";
+	public static final String _testIncorrectFolderPath = "./.testIncorrect/";
+	public static final String _highScoreFolderPath = "./.highScore/";
 
 	protected enum StatsFile {
 		REVIEW, HISTORY
@@ -62,19 +67,36 @@ public class HiddenFilesModel {
 
 			//Create file paths for the hidden files
 
-			Path _reviewFolderPath = Paths.get("./.review");
-			Path _historyFilePath = Paths.get("./.history");;
-
 			_festivalFolderPath = Paths.get("./.festival");
 			_slowPacedVoiceFilePath = Paths.get("./.festival/slowPacedVoice.scm");
 			_americanVoiceFilePath = Paths.get("./.festival/americanVoice.scm");
 			_newZealandVoiceFilePath = Paths.get("./.festival/newZealandVoice.scm");
 
 
-			if (Files.notExists(_reviewFolderPath)) {
-				Files.createDirectory(_reviewFolderPath);
+			//create .review folder if it does not exist
+			if (Files.notExists(Paths.get(_reviewFolderPath))) {
+				Files.createDirectory(Paths.get(_reviewFolderPath));
 			}			
-			//set up a review file for each wordlist/course within ./.course
+
+			//create .testHistory folder it it does not exist
+			if(Files.notExists(Paths.get(_testHistoryFolderPath))){
+				Files.createDirectories(Paths.get(_testHistoryFolderPath));
+			}
+
+			//create .testCorrect folder if it doesnot exist
+			if(Files.notExists(Paths.get(_testCorrectFolderPath))){
+				Files.createDirectories(Paths.get(_testCorrectFolderPath));
+			}
+
+			//create .testIncorrect folder if it does not exist
+			if(Files.notExists(Paths.get(_testIncorrectFolderPath))){
+				Files.createDirectories(Paths.get(_testIncorrectFolderPath));
+			}
+
+			//create .highScore folder if it does not exist
+			if(Files.notExists(Paths.get(_highScoreFolderPath))){
+				Files.createDirectories(Paths.get(_highScoreFolderPath));
+			}
 
 			File folder = new File("./.course");
 			File[] listOfFiles = folder.listFiles(); //all file names within ./.course folder
@@ -82,7 +104,8 @@ public class HiddenFilesModel {
 			//for every file in the ./course folder
 			for (int i = 0; i < listOfFiles.length; i++ ){
 
-				Path thisReviewFilePath = Paths.get("./.review/" + listOfFiles[i].getName()+"Review");
+				//==========create each course's review file if it does not exist==========================
+				Path thisReviewFilePath = Paths.get(_reviewFolderPath + listOfFiles[i].getName()+"Review");
 
 				//create the review version of the course file, consisting of only level names to begin with
 				if (Files.notExists(thisReviewFilePath)) {
@@ -96,7 +119,6 @@ public class HiddenFilesModel {
 					//find level names
 					for (int j = 0; j < allWords.size(); j ++){
 						if (Character.toString(allWords.get(j).charAt(0)).equals("%")){
-							System.out.println("save to level words:" + allWords.get(j));
 							levelWords.add(allWords.get(j));
 						}
 					}
@@ -120,10 +142,38 @@ public class HiddenFilesModel {
 					}
 
 				}
-			}
 
-			if (Files.notExists(_historyFilePath)) {
-				Files.createFile(_historyFilePath);				
+				//==========create each course's test history file if it does not exist==========================
+				Path thisTestHistoryFilePath = Paths.get(_testHistoryFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thisTestHistoryFilePath)) {
+
+					Files.createFile(thisTestHistoryFilePath);
+				}
+
+				//==========create each course's test correct file if it does not exist==========================
+				Path thistestCorrectFilePath = Paths.get(_testCorrectFolderPath+ listOfFiles[i].getName());
+
+				if (Files.notExists(thistestCorrectFilePath)) {
+
+					Files.createFile(thistestCorrectFilePath);
+				}
+
+				//==========create each course's test incorrect file if it does not exist==========================
+				Path thistestIncorrectFilePath = Paths.get(_testIncorrectFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thistestIncorrectFilePath)) {
+
+					Files.createFile(thistestIncorrectFilePath);
+				}
+
+				//==========create each course's high score file if it does not exist==========================
+				Path thisHighScoreFilePath = Paths.get(_highScoreFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thisHighScoreFilePath )) {
+
+					Files.createFile(thisHighScoreFilePath );
+				}
 			}
 
 			//Directory for storing scm files to be given as input to festival
@@ -141,18 +191,20 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * add a word into either review / history file, avoid duplications
+	 * append a word to end of its course history, avoid duplicates	
+	 * @param courseName
+	 * @param word
 	 */
-	protected void addWordToStatsFile(String filePath, String word) {
+	protected void addWordToHistFile(String courseName, String word) {
 
 		List<String> allWords = new ArrayList<String>();
 
 		try {
-			allWords = Files.readAllLines(Paths.get(filePath), StandardCharsets.ISO_8859_1);
+			
+			allWords = Files.readAllLines(Paths.get(_testHistoryFolderPath+courseName), StandardCharsets.ISO_8859_1);
 			if(! allWords.contains(word)){
-				//only add _currentWord into the corresponding file if it does not already exist
 
-				BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toString(), true));
+				BufferedWriter writer = new BufferedWriter(new FileWriter((_testHistoryFolderPath+courseName).toString(), true));
 				writer.append(word+"\n");
 				writer.close();
 
@@ -164,6 +216,26 @@ public class HiddenFilesModel {
 		}
 	}
 
+	/**
+	 * Adding to correct / incorrect allows duplications, therefore count number of times a word is correct/incorrect
+	 * during a test
+	 * @param filePath
+	 * @param word
+	 */
+	protected void addWordToCorrectIncorrectFile(String filePath, String word){
+
+		try {
+
+			BufferedWriter writer = new BufferedWriter(new FileWriter((filePath).toString(), true));
+			writer.append(word+"\n");
+			writer.close();
+
+
+		}catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 
 	protected void clearStats() {
 		//First delete all files hidden files, then recreate them as blank files.
@@ -220,7 +292,7 @@ public class HiddenFilesModel {
 	 */
 	protected void addWordToReviewWordsFile(String word, String level, String courseName) {
 
-		
+
 		String coursePath = "./.review/"+courseName+"Review";
 		ArrayList<String> allWords = new ArrayList<String>();
 		allWords = readFileToArray(coursePath);
@@ -243,7 +315,7 @@ public class HiddenFilesModel {
 			}
 
 			//add word at position of next level (i.e. so it pushes next level further)
-			
+
 			allWords.add(nextLvlIndex, word);
 		}
 
@@ -263,7 +335,7 @@ public class HiddenFilesModel {
 
 			e.printStackTrace();
 		}
-		
+
 	}	
 
 	/**
@@ -305,13 +377,15 @@ public class HiddenFilesModel {
 			reader.close();
 
 		} catch (FileNotFoundException e) {
-			//do nothing, the GUI will be telling user about empty word list
+
+			e.printStackTrace();
+
 		} catch (IOException e) {
-			//do nothing
+			e.printStackTrace();
 		}
 		return allWords;
 	}
-	
+
 	public Vector<String> getAllLevelsFromCourse(String _coursePath){
 		Vector<String>_allLevelsFromCourse = new Vector<String>();
 
@@ -357,32 +431,6 @@ public class HiddenFilesModel {
 		}*/
 		return levelWords;
 
-	}
-
-	/**
-	 * Method to check if the wordlist file/review files are empty given the quizMode
-	 * (No quiz words at all for any levels)
-	 * @param quizMode
-	 * @return
-	 */
-	protected boolean allEmpty(String quizMode){
-		int nonEmptyLevel = 0;
-
-		ArrayList<String> allWords = _hiddenFilesModel.readFileToArray(quizMode);
-
-		for (int i = 0; i < allWords.size();i++){
-
-			if (! allWords.get(i).isEmpty()){
-				nonEmptyLevel ++;
-			}
-		}
-
-		if (nonEmptyLevel == 0){
-			//no level is not empty -> all empty
-			return true;
-		}
-
-		return false;
 	}
 
 	//public void checkDuplicates()
