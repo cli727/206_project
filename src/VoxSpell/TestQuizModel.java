@@ -7,11 +7,11 @@ import javax.swing.JPanel;
 
 
 public class TestQuizModel extends QuizModel{
-private HiddenFilesModel _hiddenFilesModel;
-	
+	private HiddenFilesModel _hiddenFilesModel;
+
 	public TestQuizModel(Vector<String> allLevelNames) {
 		super(allLevelNames);
-		
+
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 	}
 
@@ -37,7 +37,7 @@ private HiddenFilesModel _hiddenFilesModel;
 		}else{
 			//compare userInput with currentWord
 			_countChecks ++;
-			
+
 			//add word to history first
 			_hiddenFilesModel.addWordToHistFile(_quizView.getCourseName(), _currentWord);
 
@@ -47,7 +47,7 @@ private HiddenFilesModel _hiddenFilesModel;
 				//allocate score according to time left
 				int timeLeft = ((TestQuizView)_quizView).getTimerValue();
 				System.out.println("time left : " + timeLeft);
-				
+
 				if ((15 >= timeLeft) && (timeLeft >= 11)){
 					//add 5 points
 					((TestQuizView)_quizView).updateScore(5);
@@ -58,13 +58,13 @@ private HiddenFilesModel _hiddenFilesModel;
 					//add 2 points
 					((TestQuizView)_quizView).updateScore(2);
 				}
-				
+
 				_festivalModel.correctVoice();
 
 				//write word to correct history file
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName(), 
 						_currentWord);
-				
+
 				//System.out.println(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName());
 				moveOnToNextWord();
 
@@ -72,7 +72,7 @@ private HiddenFilesModel _hiddenFilesModel;
 				//word is not spelt correctly 
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testIncorrectFolderPath+_quizView.getCourseName(), 
 						_currentWord);
-				
+
 				//write word to correct history file
 
 				_festivalModel.failedVoice();
@@ -81,17 +81,17 @@ private HiddenFilesModel _hiddenFilesModel;
 			}
 		}
 	}
-	
+
 	/**
 	 * Test mode needs to reset timer every time it moves on to next word
 	 * 
 	 */
-	
+
 	@Override
 	protected void moveOnToNextWord() {
 
 		super.moveOnToNextWord();
-		
+
 		//reset timer
 		((TestQuizView)_quizView).resetTimer();
 	}
@@ -101,21 +101,15 @@ private HiddenFilesModel _hiddenFilesModel;
 	 */
 	@Override
 	protected void endOfLevel() {
-		/*//show result card according to game mode
-		ResultView resultView = null;
 		
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
-			
-			resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
-			
-			resultView = new ReviewResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
-		}
-		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList,_quizView.getLevelName(),_quizView.getCourseName());
+		//stop timer
+		
+		((TestQuizView)_quizView).stopTimer();
+		
+		System.out.println("score : " + ((TestQuizView)_quizView).getScore());
+		TestResultView resultView = new TestResultView(_quizView.getCourseName(),((TestQuizView)_quizView).getScore());
 
-		resultView.setModel(resultModel);
-
-		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");*/
+		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}
 
 }

@@ -23,7 +23,7 @@ import javax.swing.JRadioButton;
 
 public class ChooseLevelView implements Card, ActionListener{
 	protected HiddenFilesModel _hiddenFilesModel; 
-	
+
 	private Color _bgColor ;
 
 	protected JPanel _chooseLevelPanel;
@@ -326,16 +326,10 @@ public class ChooseLevelView implements Card, ActionListener{
 
 			//words from course wordlist
 
-			if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
-				//create a test quiz view if the status is test, i.e. with timer etc.
-				quizView = new TestQuizView(level,_courseName);
-				quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName));
-			}else {
-				//create regular quiz view otherwise
-				quizView = new QuizView(level, _courseName);
-				quizModel = new QuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/" + _courseName));
-			}
-			
+			//create regular quiz view otherwise
+			quizView = new QuizView(level, _courseName);
+			quizModel = new QuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/" + _courseName));
+
 			quizModel.setView(quizView);
 			quizModel.setAllWords(_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,level), _numWordsToQuiz);
 
@@ -347,7 +341,7 @@ public class ChooseLevelView implements Card, ActionListener{
 	}
 
 	protected void disableNumWordsButtons() {
-		
+
 		_numWordsToQuiz=_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,(String) _comboBox.getSelectedItem()).size();
 		//disable buttons accordingly based on numWOrds
 		if (_numWordsToQuiz < 50){

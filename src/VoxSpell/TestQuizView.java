@@ -27,8 +27,9 @@ public class TestQuizView extends QuizView{
 	private JLabel _updateScore;
 
 	private int _counter;
+	private boolean _finished = false;
 
-	public TestQuizView(String level, String courseName) {
+	public TestQuizView(String level, String courseName, int score) {
 		super(level, courseName);
 
 		_labelSubheading.setText("Testing all levels");
@@ -48,7 +49,7 @@ public class TestQuizView extends QuizView{
 
 		_scoreTitle.setFont(new Font("SansSerif", Font.ITALIC,25));
 
-		_updateScore = new JLabel("0");
+		_updateScore = new JLabel(Integer.toString(score));
 
 		_updateScore.setFont(new Font("SansSerif", Font.ITALIC,45));
 
@@ -216,14 +217,19 @@ public class TestQuizView extends QuizView{
 		super.actionPerformed(e);
 		//with the addition of timer listener
 		if (e.getSource() == _timer){
-
+			//System.out.println(_counter);
 			_counter--;
 			_timerBar.setValue(_counter);
-			if (_counter<1) {
-				//time up, fail this word and move on to next word
-				_festivalModel.failedVoice();
-				_quizModel.moveOnToNextWord();
-			} 
+			
+			if (!_finished){
+				if (_counter<1) {
+					//time up, fail this word and move on to next word
+					_festivalModel.failedVoice();
+					_quizModel.moveOnToNextWord();
+				} 
+			}else{
+				_timer.stop();
+			}
 		}
 	}
 
@@ -248,7 +254,7 @@ public class TestQuizView extends QuizView{
 				"default");
 
 		if(dialogResult == JOptionPane.YES_OPTION){
-		
+
 
 			VoxSpellGui.showMainMenu();
 
@@ -271,10 +277,16 @@ public class TestQuizView extends QuizView{
 	protected void resetTimer() {
 		_timer.stop();
 		_timerBar.setValue(15);
-		_counter = 15;//reset counter for new word
+		_counter = 16;//reset countera bit longer so that festival cans speak its word
 		_timer.start();
 	}
 
+	/**
+	 * view does not know when quiz has ended so model will help stop the timer
+	 */
+	protected void stopTimer(){
+		_finished  = true;
+	}
 	/**
 	 * method for its model to get timer's value, so that model can allocate a score
 	 */
@@ -287,5 +299,9 @@ public class TestQuizView extends QuizView{
 
 		score = score + addMarks;
 		_updateScore.setText(Integer.toString(score));
+	}
+
+	public int getScore() {
+		return Integer.parseInt(_updateScore.getText()); //get current score
 	}
 }

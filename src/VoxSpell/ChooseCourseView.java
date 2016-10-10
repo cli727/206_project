@@ -41,7 +41,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 	private ChooseCourseView(){
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
-		
+
 		//set background colour for this card
 		_bgColor = new Color(129,224,253);
 
@@ -174,11 +174,11 @@ public class ChooseCourseView implements Card, ActionListener{
 
 			if (e.getSource() == _btnKEYwords){
 
-				QuizView quizView = new TestQuizView(null,"KEY");//level not needed for test view
+				QuizView quizView = new TestQuizView(null,"KEY", 0);//level not needed for test view
 				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/KEY"));
 
 				quizModel.setView(quizView);
-				
+
 				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KEY");
 				for(int i = 0; i < allWords.size(); i++){
 					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
@@ -193,11 +193,11 @@ public class ChooseCourseView implements Card, ActionListener{
 
 			}else if(e.getSource() == _btnIELTSwords){
 
-				QuizView quizView = new TestQuizView(null,"IELTS");//level not needed for test view
+				QuizView quizView = new TestQuizView(null,"IELTS",0);//level not needed for test view
 				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/IELTS"));
 
 				quizModel.setView(quizView);
-				
+
 				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/IELTS");
 				for(int i = 0; i < allWords.size(); i++){
 					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
@@ -213,7 +213,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 		}else if (! VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 			//new/review mode, show level chooser after
-			
+
 			if (e.getSource() == _btnKEYwords){
 
 				//show card to select number of words / levels(headings)
@@ -226,7 +226,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 					cardChooseLevel = new ChooseLevelReviewView("KEY");
 				}
-				
+
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 			}else if(e.getSource() == _btnIELTSwords){
@@ -241,51 +241,8 @@ public class ChooseCourseView implements Card, ActionListener{
 
 					cardChooseLevel = new ChooseLevelReviewView("IELTS");
 				}
-				
+
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-			}
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
-			//test mode, show quiz view 
-			if (e.getSource() == _btnKEYwords){
-				QuizView testQuizView = new TestQuizView(null, "KEY"); //"level" parameter not needed for test
-				QuizModel testQuizModel = new TestQuizModel(null); //"allLevelNames" para not needed for test
-				
-				testQuizView.setModel(testQuizModel);
-				testQuizModel.setView(testQuizView);
-				
-				//get rid of level tile entries i.e. %level 1 before passing the entire list
-				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KEY");
-				for(int i = 0; i < allWords.size(); i++){
-					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
-						allWords.remove(i);
-					}
-				}
-				
-				testQuizModel.setAllWords(allWords, 10);//always 10 words for test mode
-				testQuizModel.getRandomWords();
-				
-				VoxSpellGui.getInstance().showCard(testQuizView.createAndGetPanel(), "Test");
-
-			}else if(e.getSource() == _btnIELTSwords){
-
-				QuizView testQuizView = new TestQuizView(null, "IELTS"); //"level" parameter not needed for test
-				QuizModel testQuizModel = new TestQuizModel(null); //"allLevelNames" para not needed for test
-				
-				testQuizView.setModel(testQuizModel);
-				testQuizModel.setView(testQuizView);
-				
-				//get rid of level tile entries i.e. %level 1 before passing the entire list
-				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/IELTS");
-				for(int i = 0; i < allWords.size(); i++){
-					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
-						allWords.remove(i);
-					}
-				}
-				
-				testQuizModel.setAllWords(allWords, 10);//always 10 words for test mode
-				testQuizModel.getRandomWords();
-				
-				VoxSpellGui.getInstance().showCard(testQuizView.createAndGetPanel(), "Test");
 			}
 		}
 

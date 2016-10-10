@@ -110,7 +110,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_answerPanel.add(_labelAnswer);
 
 		//definition of word
-		_labelDefinition = new JLabel("<html> v. just feeling like <BR> killing myself <BR> over this assignment</html>");
+		_labelDefinition = new JLabel("<html> v. some definition <BR> will probably <BR> go here in the future</html>");
 
 		_inputArea = new JTextField();
 

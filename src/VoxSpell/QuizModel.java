@@ -19,7 +19,7 @@ public class QuizModel {
 	protected FestivalModel _festivalModel;
 
 	//arraylist that only stores the words that should be quizzed for this game
-	private ArrayList<String> _randomWords;
+	protected ArrayList<String> _randomWords;
 
 	//list of list structure for all words of this level
 	private static ArrayList<String> _allWords;
@@ -72,7 +72,7 @@ public class QuizModel {
 		_numWordsToQuiz = numWordsToQuiz;
 	}
 
-	private ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
+	protected ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
 	private Vector<String> _allLevelNames;
 
 	/**
