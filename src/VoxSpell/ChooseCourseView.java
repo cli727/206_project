@@ -7,13 +7,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 /**
@@ -29,21 +34,29 @@ public class ChooseCourseView implements Card, ActionListener{
 	private static ChooseCourseView _courseChooser;
 
 	private JLabel _labelHeading;
-	private JButton _btnKEYwords;
+	private JButton _btnKETwords;
 	private JButton _btnWordListTwo;
 	private JButton _btnIELTSwords;
 	private JButton _btnWordListFour;
 	private JButton _btnImportWordList;
-	private JButton _btnCreateWordList;
+	private JButton _btnUseWordList;
 	private JButton _btnBackToMain;
 
 	private HiddenFilesModel _hiddenFilesModel;
+
+	//=====for JFile chooser
+	private JTextArea log;
+
+	private JFileChooser fc;
+
+	private JButton openButton;
 
 	private ChooseCourseView(){
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		//set background colour for this card
-		_bgColor = new Color(129,224,253);
+		//_bgColor = new Color(129,224,253);
+
 
 		//create new Font
 		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
@@ -58,25 +71,25 @@ public class ChooseCourseView implements Card, ActionListener{
 		 * CODE FOR CHANGING BUTTON BACKGROUND WHEN HOVERED OVER SOURCED FROM STACK OVERFLOW:
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
 		 */
-		_btnKEYwords = new JButton("KEY");
-		//_btnKEYwords.setToolTipText("NOOOOO");
-		_btnKEYwords.getModel().addChangeListener(new ChangeListener(){
+		_btnKETwords = new JButton("KET");
+		//_btnKETwords.setToolTipText("NOOOOO");
+		_btnKETwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					//_btnKEYwords.setIcon(icon());
-					_btnKEYwords.setText("IM HOVERED ");
+					//_btnKETwords.setIcon(icon());
+					_btnKETwords.setText("choose course..");
 				}else{
-					_btnKEYwords.setText("KEY");
+					_btnKETwords.setText("KET");
 				}
 			}
 		});
 
 		_btnIELTSwords = new JButton("IELTS");
 		_btnImportWordList = new JButton("Import WordList");
-		_btnCreateWordList = new JButton("CreateWordLIst");
+		_btnUseWordList = new JButton("Use Imported Worlist");
 		_btnBackToMain = new JButton("Back");
 	}
 
@@ -91,6 +104,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	@Override
 	public JPanel createAndGetPanel() {
 
+		_bgColor = new Color(0,200,200);
 
 		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
 					+ " Welcome To VOXSPELL!</html>", 
@@ -124,10 +138,10 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.3;
 		c.ipady = 180;
-		c.ipadx = 310;
+		c.ipadx = 290;
 		c.insets = new Insets(40,10,5,5);
-		mainPanel.add(_btnKEYwords, c);
-		_btnKEYwords.addActionListener(this);
+		mainPanel.add(_btnKETwords, c);
+		_btnKETwords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
@@ -147,8 +161,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.7;
 		c.insets = new Insets(0,10,0,5);
-		mainPanel.add(_btnCreateWordList, c);
-		_btnCreateWordList.addActionListener(this);
+		mainPanel.add(_btnUseWordList, c);
+		_btnUseWordList.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -169,17 +183,65 @@ public class ChooseCourseView implements Card, ActionListener{
 		if (e.getSource() == _btnBackToMain){
 
 			VoxSpellGui.showMainMenu();
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+		}else if (e.getSource() == _btnImportWordList){
+			/**
+			 * Code copied and modified from oracle jfile chooser demo:
+			 * https://docs.oracle.com/javase/tutorial/uiswing/examples/components/FileChooserDemoProject/src/components/FileChooserDemo.java
+			 */
+
+	
+			//Create a file chooser
+			fc = new JFileChooser();
+			
+			//set file chooser to open from current directory instead of from home
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			fc.setCurrentDirectory(workingDirectory);
+
+			//Uncomment one of the following lines to try a different
+			//file selection mode.  The first allows just directories
+			//to be selected (and, at least in the Java look and feel,
+			//shown).  The second allows both files and directories
+			//to be selected.  If you leave these lines commented out,
+			//then the default mode (FILES_ONLY) will be used.
+			//
+			//fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			//fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+			int returnVal = fc.showOpenDialog(VoxSpellGui.getFrame());
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				//This is where a real application would open the file.
+			
+				
+				if( ! _hiddenFilesModel.copyToCourse(file.getPath(),file.getName())){
+					//copyToCourse returned false, the file did not match with the required format
+					//show pop up
+					String message = "Your file did not match the format specified! \n" + 
+							"Please check again before you import this file. \n";
+
+					JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
+							"Format Not Met", JOptionPane.INFORMATION_MESSAGE);
+				}
+				//else copyToCourse is successful
+				
+			} else {
+				//cancelled do nothing
+			}
+			
+
+		}else if (e.getSource() == _btnKETwords){
 			//test mode, show quiz view after
 
-			if (e.getSource() == _btnKEYwords){
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+				//test view
 
-				QuizView quizView = new TestQuizView(null,"KEY", 0);//level not needed for test view
-				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/KEY"));
+				QuizView quizView = new TestQuizView(null,"KET", 0);//level not needed for test view
+				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/KET"));
 
 				quizModel.setView(quizView);
 
-				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KEY");
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/KET");
 				for(int i = 0; i < allWords.size(); i++){
 					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
 						allWords.remove(allWords.get(i));
@@ -191,8 +253,26 @@ public class ChooseCourseView implements Card, ActionListener{
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
 				quizModel.getRandomWords();
 
-			}else if(e.getSource() == _btnIELTSwords){
+			}else{
+				//show card to select number of words / levels(headings)
+				ChooseLevelView cardChooseLevel = null;
 
+				if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+
+					cardChooseLevel = new ChooseLevelView("KET");
+				}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+
+					cardChooseLevel = new ChooseLevelReviewView("KET");
+				}
+
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			}
+
+		}else if (e.getSource() == _btnIELTSwords){
+			//new/review mode, show level chooser after
+
+			if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+				//test view
 				QuizView quizView = new TestQuizView(null,"IELTS",0);//level not needed for test view
 				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/IELTS"));
 
@@ -209,28 +289,9 @@ public class ChooseCourseView implements Card, ActionListener{
 				quizView.setModel(quizModel);
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
 				quizModel.getRandomWords();
-			}
 
-		}else if (! VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
-			//new/review mode, show level chooser after
-
-			if (e.getSource() == _btnKEYwords){
-
-				//show card to select number of words / levels(headings)
-				ChooseLevelView cardChooseLevel = null;
-
-				if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
-
-					cardChooseLevel = new ChooseLevelView("KEY");
-				}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
-
-					cardChooseLevel = new ChooseLevelReviewView("KEY");
-				}
-
-				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-
-			}else if(e.getSource() == _btnIELTSwords){
-
+			}else{
+				// not test view
 				//show card to select number of words / levels(headings)
 				ChooseLevelView cardChooseLevel = null;
 
@@ -245,7 +306,8 @@ public class ChooseCourseView implements Card, ActionListener{
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 			}
 		}
-
 	}
 
 }
+
+

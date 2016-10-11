@@ -339,17 +339,63 @@ public class HiddenFilesModel {
 	}	
 
 	/**
-	 * A private helper method to retrieve the reviewWords file at the corresponding level. 
-	 * @param level
-	 * @return
+	 * A method that gets the  user selected wordlist and copy it as a wordlist
+	 * Returns a boolean indicating whether the user selected file matches with required wordlist format
+	 * 
+	 * Invalid format include:
+	 * 1. file that does not start with "%" i.e. a level name
+	 * 2. empty file
+	 * 3. file that contains duplicate words in a level (getRandomWords may break, because randomWords keeps
+	 * adding non duplicated words, repeated words may cause infinite while loop)
+	 * 4. file with "" ? i.e. empty entry
+	 * 
+	 * @param path
 	 */
+	public boolean copyToCourse(String userWordListpath, String fileName) {
+		
+		ArrayList<String> allWords = new ArrayList<String>();
+		allWords = readFileToArray(userWordListpath);
+		
+		//check if the file matches with required format
+		if (allWords.size() == 0){
+			//empty file
+			return false;
+		}else if (! Character.toString(allWords.get(0).charAt(0)).equals("%")){
+			//does not start with a level
+			return false;
+		}
+		
+		//valid file, copy it to .course directory
+	
+		try {
+			File newCourse = new File("./.course/"+fileName);
+			newCourse.createNewFile();
+
+			FileWriter writer = new FileWriter(newCourse); 
+
+			for(int k = 0; k < allWords.size();k++){
+
+				writer.write(allWords.get(k)+"\n"); 	
+			}
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		//set up its review, testHistory, test Correct, testIncorrect , high score hidden files
+		setUpHiddenFiles();
+		
+		return true;//successful
+	}
 
 	protected static Path getFestivalFolderPath() {
 		return _festivalFolderPath;
 	}
 
 	/**
-	 * Read the contents of a file according to quizMode, into a list of list of strings
+	 * Read the contents of a file according to quizMode, into a list of strings
 	 * array structure
 	 * 
 	 * CODE REUSED FROM CHEN LI'S ASSIGNMENT 2 SUBMISSION
@@ -433,8 +479,6 @@ public class HiddenFilesModel {
 
 	}
 
-	//public void checkDuplicates()
-
 	private void writeSCMCodeToVoiceFiles() {
 		try {
 			//For slower-paced voice
@@ -469,4 +513,6 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 		}
 	}
+
+	
 }

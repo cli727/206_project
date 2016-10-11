@@ -67,9 +67,6 @@ public class VoxSpellGui implements Card,ActionListener{
 	}
 
 	private void buildGUI() {
-		//Create the static cards
-		JPanel cardMainMenu = createAndGetPanel();
-		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
 
 		//header session that stays throughout all menus
 		try {
@@ -79,21 +76,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		/*ImageIcon banner = new ImageIcon("./banner.jpg");
-		_welcomeLabel = new JLabel(banner);
-		Dimension size = new Dimension(banner.getIconWidth(), banner.getIconHeight());
-		_welcomeLabel.setPreferredSize(size);
-
-		_welcomePanel.add(_welcomeLabel);*/
-
-		_frame.getContentPane().setBackground(Color.white);
-
-		//Build the GUI section that has interchangeable components (cards)
-		_cardsPanel.setLayout(_cardLayout);
-		_cardsPanel.add( cardMainMenu, "Main Menu");
-		_cardsPanel.add(cardChooseCourse, "Choose Course");
-
+		
 		_welcomePanel = new JPanel(){
 			@Override
 			protected void paintComponent(Graphics g){
@@ -109,9 +92,27 @@ public class VoxSpellGui implements Card,ActionListener{
 				g.drawImage(_footer, 0, 0,946,60, null);
 			}
 		};
-		
+
+		/*ImageIcon banner = new ImageIcon("./banner.jpg");
+		_welcomeLabel = new JLabel(banner);
+		Dimension size = new Dimension(banner.getIconWidth(), banner.getIconHeight());
+		_welcomeLabel.setPreferredSize(size);
+
+		_welcomePanel.add(_welcomeLabel);*/
+
+		_frame.getContentPane().setBackground(Color.white);
+
+		//Create the static cards
+		JPanel cardMainMenu = createAndGetPanel();
+		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
+
+		//Build the GUI section that has interchangeable components (cards)
+		_cardsPanel.setLayout(_cardLayout);
+		_cardsPanel.add( cardMainMenu, "Main Menu");
+		_cardsPanel.add(cardChooseCourse, "Choose Course");
+
 		//_frame.setContentPane(_welcomePanel);
-		
+
 		_frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -230,18 +231,18 @@ public class VoxSpellGui implements Card,ActionListener{
 			STATUS = NEW;
 
 			//show card to select number of words / levels(headings)
-			ChooseLevelView cardChooseLevel = new ChooseLevelView("KEY"); //KEY is the default course
+			ChooseLevelView cardChooseLevel = new ChooseLevelView("KET"); //KET is the default course
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 		}else if (e.getSource() == _btnReview){
 			STATUS = REVIEW;
 			//ChooseLevelReviewView object instead of ChooseLevelView
-			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KEY"); //default course to review
+			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KET"); //default course to review
 			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
-			
+
 		}else if (e.getSource() == _btnTestQuiz){
 			STATUS = TEST;
-			
+
 			//since no level chooser is needed for test mode (all levels included), just should course chooser
 			showCourseChooser();
 		}
@@ -269,9 +270,11 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	public static void showCourseChooser(){
 		_cardLayout.show(_cardsPanel, "Choose Course");
+		//change main menu footer/header background color so that it is consistent with this background color
+		VoxSpellGui.setHeaderFooterColor(new Color(0,200,200));
 		_currentCard = "Choose Course";
 	}
-	
+
 	public static void setHeaderFooterColor(Color color){
 		_welcomePanel.setBackground(color);
 		_footerPanel.setBackground(color);

@@ -54,7 +54,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//initialise fields
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
-		_bgColor = new Color(0,219,255); //set background colour
+		_bgColor = new Color(0,200,200); //set background colour
 
 		_courseName = courseName;
 
@@ -73,15 +73,15 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		_labelHeading.setFont(headingFont);
 
-		_labelViewChangeCourse = new JLabel("VIEW AND CHOOSE YOUR GOAL FOR " + _courseName);
-		_btnViewWordList = new JButton("VIEW WORDS");
+		_labelViewChangeCourse = new JLabel("View and set up goal for " + _courseName);
+		_btnViewWordList = new JButton("View Words");
 		_btnChangeCourse = new JButton("Change Course");
 
 		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
 				"<font color='white'>"
 				+ "Choose a subgroup</font></html>");
 
-		_labelChooseNumWords = new JLabel("How many words you would like to be tested on:");
+		_labelChooseNumWords = new JLabel("How many words would you like:");
 
 		_btnTenWords = new JRadioButton("10 Random Words");
 		_btnTwentyWords = new JRadioButton("20 Random Words");
@@ -89,6 +89,12 @@ public class ChooseLevelView implements Card, ActionListener{
 		_btnFiftyWords = new JRadioButton("50 Random Words");
 		_btnAllWords = new JRadioButton("All words from this subgroup");
 		_btnAllWords.setSelected(true);//default select this option
+		
+		_btnTenWords.setBackground(_bgColor);
+		_btnTwentyWords.setBackground(_bgColor);
+		_btnFortyWords.setBackground(_bgColor);
+		_btnFiftyWords.setBackground(_bgColor);
+		_btnAllWords.setBackground(_bgColor);
 
 		//only allow one radio button selection at a time
 		ButtonGroup group = new ButtonGroup();
@@ -318,8 +324,8 @@ public class ChooseLevelView implements Card, ActionListener{
 			/*if (_quizAllWords){
 				_numWordsToQuiz = _model.getLevelWordsFromCourse(level).size();
 			}*/
-			System.out.println("level "+level);
-			System.out.println("words " + _numWordsToQuiz);
+			/*System.out.println("level "+level);
+			System.out.println("words " + _numWordsToQuiz);*/
 
 			QuizView quizView =null;
 			QuizModel quizModel = null;
