@@ -102,14 +102,16 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		_frame.getContentPane().setBackground(Color.white);
 
-		//Create the static cards
+		//Create the static cards, from singleton classes
 		JPanel cardMainMenu = createAndGetPanel();
 		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
+		JPanel cardImportCourse = ImportWordListView.getInstance().createAndGetPanel();
 
 		//Build the GUI section that has interchangeable components (cards)
 		_cardsPanel.setLayout(_cardLayout);
 		_cardsPanel.add( cardMainMenu, "Main Menu");
 		_cardsPanel.add(cardChooseCourse, "Choose Course");
+		_cardsPanel.add(cardImportCourse, "Import Wordlist");
 
 		//_frame.setContentPane(_welcomePanel);
 
@@ -274,7 +276,15 @@ public class VoxSpellGui implements Card,ActionListener{
 		VoxSpellGui.setHeaderFooterColor(new Color(0,200,200));
 		_currentCard = "Choose Course";
 	}
+	
 
+	public static void showImportWordListView(){
+		_cardLayout.show(_cardsPanel, "Import Wordlist");
+		//change main menu footer/header background color so that it is consistent with this background color
+		VoxSpellGui.setHeaderFooterColor(Color.white);
+		_currentCard = "Import Wordlist";
+	}
+	
 	public static void setHeaderFooterColor(Color color){
 		_welcomePanel.setBackground(color);
 		_footerPanel.setBackground(color);

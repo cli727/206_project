@@ -13,7 +13,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -189,6 +191,29 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 		} 
 	}
+	
+	/**
+	 * searches through ./.course directory and finds course names that are not "KET" or "IELTS"
+	 * @return
+	 */
+	public ArrayList<String> getImportedCourseNames() {
+		ArrayList<String> importedCourse = new ArrayList<String>();
+		
+		File folder = new File("./.course");
+		File[] listOfFiles = folder.listFiles(); //all file names within ./.course folder
+
+		//for every file in the ./course folder
+		for (int i = 0; i < listOfFiles.length; i++ ){
+			String thisCourse = listOfFiles[i].getName();
+			
+			if (! thisCourse.equals("KET") && ! thisCourse.equals("IELTS")){
+				//not the built in lists
+				importedCourse.add(thisCourse);
+			}
+		}
+		return importedCourse;
+	}
+
 
 	/**
 	 * append a word to end of its course history, avoid duplicates	
@@ -347,6 +372,7 @@ public class HiddenFilesModel {
 	 * 2. empty file
 	 * 3. file that contains duplicate words in a level (getRandomWords may break, because randomWords keeps
 	 * adding non duplicated words, repeated words may cause infinite while loop)
+	 * 4. file not named KET or IELTS
 	 * 4. file with "" ? i.e. empty entry
 	 * 
 	 * @param path
@@ -363,6 +389,27 @@ public class HiddenFilesModel {
 		}else if (! Character.toString(allWords.get(0).charAt(0)).equals("%")){
 			//does not start with a level
 			return false;
+		}else if (fileName.equals("KET") || fileName.equals("IELTS")){
+			//do not want to override the build in lists
+			return false;
+		}
+		
+		//check for duplicates in all levels
+		
+		Vector<String> allLevelNames = getAllLevelsFromCourse(userWordListpath); //get all level names first
+		
+		for(int j = 0; j < allLevelNames.size(); j ++){
+			//get all words from level
+			ArrayList<String> wordsFromLevel = getLevelWordsFromCourse(userWordListpath,allLevelNames.get(j));
+			
+			//a quick way to find out whether there are duplicates in the list using sets
+			Set<String> set = new HashSet<String>(wordsFromLevel);
+
+			if(set.size() < wordsFromLevel.size()){
+			    //duplicates 
+				return false;
+			}
+			
 		}
 		
 		//valid file, copy it to .course directory
@@ -390,6 +437,40 @@ public class HiddenFilesModel {
 		return true;//successful
 	}
 
+	/**
+	 * Delete a course and all its statistics hidden files
+	 * returns true indicating success, false indicating error
+	 * 
+	 * @param courseName
+	 * @return 
+	 */
+	public boolean deleteCourseStats(String courseName) {
+		
+		try {
+			//delete course file
+			Files.deleteIfExists(Paths.get("./.course/"+courseName));
+			
+			//delete .review file
+			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName + "Review"));
+			
+			//delete .testCorrect file
+			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
+			
+			//delete test Incorrect file
+			Files.deleteIfExists(Paths.get(_testIncorrectFolderPath + courseName));
+			
+			//delete highScore file
+			Files.deleteIfExists(Paths.get(_highScoreFolderPath + courseName));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
 	protected static Path getFestivalFolderPath() {
 		return _festivalFolderPath;
 	}
@@ -513,6 +594,8 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 		}
 	}
+
+	
 
 	
 }

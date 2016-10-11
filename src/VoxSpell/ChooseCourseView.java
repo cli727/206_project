@@ -39,17 +39,12 @@ public class ChooseCourseView implements Card, ActionListener{
 	private JButton _btnIELTSwords;
 	private JButton _btnWordListFour;
 	private JButton _btnImportWordList;
-	private JButton _btnUseWordList;
+	private JButton _btnViewImportedWordList;
 	private JButton _btnBackToMain;
 
 	private HiddenFilesModel _hiddenFilesModel;
 
-	//=====for JFile chooser
-	private JTextArea log;
 
-	private JFileChooser fc;
-
-	private JButton openButton;
 
 	private ChooseCourseView(){
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
@@ -88,8 +83,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		});
 
 		_btnIELTSwords = new JButton("IELTS");
-		_btnImportWordList = new JButton("Import WordList");
-		_btnUseWordList = new JButton("Use Imported Worlist");
+		_btnImportWordList = new JButton("New Course");
+		_btnViewImportedWordList = new JButton("My Course");
 		_btnBackToMain = new JButton("Back");
 	}
 
@@ -161,8 +156,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.7;
 		c.insets = new Insets(0,10,0,5);
-		mainPanel.add(_btnUseWordList, c);
-		_btnUseWordList.addActionListener(this);
+		mainPanel.add(_btnViewImportedWordList, c);
+		_btnViewImportedWordList.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -184,52 +179,14 @@ public class ChooseCourseView implements Card, ActionListener{
 
 			VoxSpellGui.showMainMenu();
 		}else if (e.getSource() == _btnImportWordList){
-			/**
-			 * Code copied and modified from oracle jfile chooser demo:
-			 * https://docs.oracle.com/javase/tutorial/uiswing/examples/components/FileChooserDemoProject/src/components/FileChooserDemo.java
-			 */
-
-	
-			//Create a file chooser
-			fc = new JFileChooser();
 			
-			//set file chooser to open from current directory instead of from home
-			File workingDirectory = new File(System.getProperty("user.dir"));
-			fc.setCurrentDirectory(workingDirectory);
-
-			//Uncomment one of the following lines to try a different
-			//file selection mode.  The first allows just directories
-			//to be selected (and, at least in the Java look and feel,
-			//shown).  The second allows both files and directories
-			//to be selected.  If you leave these lines commented out,
-			//then the default mode (FILES_ONLY) will be used.
-			//
-			//fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			//fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-
-			int returnVal = fc.showOpenDialog(VoxSpellGui.getFrame());
-
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-				//This is where a real application would open the file.
+			VoxSpellGui.showImportWordListView();
 			
-				
-				if( ! _hiddenFilesModel.copyToCourse(file.getPath(),file.getName())){
-					//copyToCourse returned false, the file did not match with the required format
-					//show pop up
-					String message = "Your file did not match the format specified! \n" + 
-							"Please check again before you import this file. \n";
-
-					JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
-							"Format Not Met", JOptionPane.INFORMATION_MESSAGE);
-				}
-				//else copyToCourse is successful
-				
-			} else {
-				//cancelled do nothing
-			}
+		}else if (e.getSource() == _btnViewImportedWordList){
 			
-
+			ShowImportedWordListView importedWordListView = new ShowImportedWordListView();
+			VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
+			
 		}else if (e.getSource() == _btnKETwords){
 			//test mode, show quiz view after
 
@@ -247,7 +204,16 @@ public class ChooseCourseView implements Card, ActionListener{
 						allWords.remove(allWords.get(i));
 					}
 				}
-				quizModel.setAllWords(allWords, 10); //just 10 words always for test mode
+
+				//just 10 words always for test mode
+				//if the entire course does not have 10 words, just get all of them
+
+				int numWordsToQuiz = 10;
+
+				if(allWords.size() < 10){
+					numWordsToQuiz = allWords.size();
+				}
+				quizModel.setAllWords(allWords, numWordsToQuiz); 
 
 				quizView.setModel(quizModel);
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
@@ -284,7 +250,14 @@ public class ChooseCourseView implements Card, ActionListener{
 						allWords.remove(allWords.get(i));
 					}
 				}
-				quizModel.setAllWords(allWords, 10); //just 10 words always for test mode
+				
+				//get 10 words for test, all words in course if the course has less than 10 words
+				int numWordsToQuiz = 10;
+
+				if(allWords.size() < 10){
+					numWordsToQuiz = allWords.size();
+				}
+				quizModel.setAllWords(allWords, numWordsToQuiz); 
 
 				quizView.setModel(quizModel);
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");

@@ -73,7 +73,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		_labelHeading.setFont(headingFont);
 
-		_labelViewChangeCourse = new JLabel("View and set up goal for " + _courseName);
+		_labelViewChangeCourse = new JLabel("Course: " + _courseName);
 		_btnViewWordList = new JButton("View Words");
 		_btnChangeCourse = new JButton("Change Course");
 

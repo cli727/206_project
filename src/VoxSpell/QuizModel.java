@@ -203,6 +203,7 @@ public class QuizModel {
 	    }*/
 		
 		//chooses _numWordsToQuiz number of random words from allWords
+	   
 		while (_randomWords.size() < _numWordsToQuiz){
 			//System.out.println("1");
 			Random r = new Random();

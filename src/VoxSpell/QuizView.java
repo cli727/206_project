@@ -349,9 +349,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	 */
 	protected void gameInProgressPopUp(){
 
-		JPanel popUpPanel = new JPanel();
-
-		int dialogResult  = JOptionPane.showOptionDialog(popUpPanel, 
+		int dialogResult  = JOptionPane.showOptionDialog(VoxSpellGui.getFrame(), 
 				("<html>Warning: <BR>" + "<BR>" +
 						"You have a quiz in progress. <BR>" + 
 						"Are you sure you want to leave? <BR>" + 
