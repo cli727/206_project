@@ -34,9 +34,9 @@ public class TestQuizView extends QuizView{
 
 		_labelSubheading.setText("Testing all levels");
 
-		_counter = 15;
-		_timerBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 15);
-		_timerBar.setValue(15);
+		_counter = 20;
+		_timerBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 20);
+		_timerBar.setValue(20);
 
 		_timer = new Timer(1000, this);
 
@@ -276,8 +276,8 @@ public class TestQuizView extends QuizView{
 
 	protected void resetTimer() {
 		_timer.stop();
-		_timerBar.setValue(15);
-		_counter = 16;//reset countera bit longer so that festival cans speak its word
+		_timerBar.setValue(20);
+		_counter = 21;//reset countera bit longer so that festival cans speak its word
 		_timer.start();
 	}
 

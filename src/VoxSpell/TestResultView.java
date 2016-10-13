@@ -19,8 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class TestResultView implements ActionListener , Card{
-	
+public class TestResultView extends ResultView implements ActionListener , Card{
+
 	private HiddenFilesModel _hiddenFilesModel;
 
 	private JButton _btnKeepGoing;
@@ -31,34 +31,27 @@ public class TestResultView implements ActionListener , Card{
 	private JLabel _labelScoreTitle;
 	private JLabel _labelScore;
 
-	private JLabel _labelTestRecorded;
-	private JLabel _labelVideoReward;
-	private JLabel _labelKeepGoing;
-
+	private JLabel _labelResult;
+	private JLabel _labelNewBest;
 
 	private int _score;
 	private JLabel _labelQuizMode;
-	private JLabel _labelSubheading;
 	private String _courseName;
 	private JLabel _labelHeading;
 
-	public TestResultView( String courseName,int score) {
+	public TestResultView(String levelName, String courseName, Vector<String> allLevelNames, int score) {
+		super(levelName, courseName, allLevelNames);
+
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		_courseName = courseName;
 		_score = score;
 
-		_labelQuizMode = new JLabel(("<html> <p style='text-align:center;'>"
-				+ "<font color='black'>"
-				+ "Test Completed!"+ "</font></html>"));
+		_labelQuizMode = new JLabel();
 
 		_labelQuizMode.setFont(new Font("SansSerif", Font.ITALIC,30));
 
-		_labelSubheading = new JLabel (("<html> <p style='text-align:center;'>"
-				+ "<font color='black'>"
-				+ "Score: " + "</font></html>"));
-
-		_labelSubheading.setFont(new Font("SansSerif", Font.ITALIC,17));
+		_labelResult = new JLabel();
 
 		_labelHeading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
@@ -77,22 +70,11 @@ public class TestResultView implements ActionListener , Card{
 				+ _score +"</font></html>"));
 
 		_labelScore.setFont(new Font("SansSerif", Font.ITALIC,45));
-		
-		
-		//======================================================================
-		
-		
-		_labelTestRecorded= new JLabel("Good Effort, this test is recorded (View Test Score)");
-		_labelTestRecorded.setFont(new Font("SansSerif", Font.ITALIC,15));;
-		
-		_labelVideoReward= new JLabel("You can play your video reward now!");
-		_labelVideoReward.setFont(new Font("SansSerif", Font.ITALIC,15));;
-		
-		_labelKeepGoing= new JLabel("Continue test to update your personal score!");
-		_labelKeepGoing.setFont(new Font("SansSerif", Font.ITALIC,15));;
-		
-		//=======================================================================
 
+		_labelNewBest = new JLabel("<html> <p style='text-align:center;'>"
+				+ "<font color='green'>"
+				+ "NEW PERSONAL BEST!"+"</font></html>");
+		
 		_btnKeepGoing = new JButton("Continue Test");
 		_btnTestAgain = new JButton("Try Again");
 		_btnVideoReward = new JButton ("Video Reward");
@@ -103,12 +85,40 @@ public class TestResultView implements ActionListener , Card{
 	@Override
 	public JPanel createAndGetPanel() {
 
+		//create result table from the set model
+		_resultTable = new JTable(_model);
+		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 250));
+		//_resultTable.setFillsViewportHeight(true);
+		_tabelPanel.add(_resultTable);
+		JScrollPane scrollPane = new JScrollPane(_resultTable);
+		_tabelPanel.add(scrollPane, BorderLayout.NORTH);
+
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
 
-
 		resultPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+
+		if (ifDisableNextLevel()){
+			//failed
+			_labelQuizMode.setText("<html> <p style='text-align:center;'>"
+					+ "<font color='black'>"
+					+  "Level failed..." + "</font></html>");
+
+			_labelResult.setText("(You need to get at least 8 words correct to pass)");
+			
+			//disable 'next level', 'video reward' buttons
+			_btnKeepGoing.setEnabled(false);
+			_btnVideoReward.setEnabled(false);
+		}else {
+			//passed
+
+			_labelQuizMode.setText("<html> <p style='text-align:center;'>"
+					+ "<font color='black'>"
+					+ "Level passed" + "</font></html>");
+			_labelResult.setText("Continue test to update your personal best score!");
+		}
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -119,6 +129,15 @@ public class TestResultView implements ActionListener , Card{
 		resultPanel.add(_labelQuizMode, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.gridheight = 1;
+		c.insets = new Insets(0,200,0,0);
+		resultPanel.add(_labelNewBest, c);
+
+
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 2;
@@ -126,97 +145,88 @@ public class TestResultView implements ActionListener , Card{
 		c.insets = new Insets(0,-85,0,0);
 		resultPanel.add(_labelHeading, c);
 
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 2;
+		c.gridheight = 1;
+		c.insets = new Insets(0,-85,0,0);
+		resultPanel.add(_labelResult ,c);
+
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 1;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,0,0,0);
-		resultPanel.add(_labelSubheading, c);
+		c.insets = new Insets(0,200,0,0);
+		resultPanel.add(_labelScoreTitle, c);
 
-		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 2;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,0,0,0);
+		c.insets = new Insets(0,200,0,0);
 		resultPanel.add(_labelScore, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridheight = 2;
-		c.gridwidth = 4;
-		//c.weightx = 0.3
-		c.insets = new Insets(0,25,0,0);
-		resultPanel.add(_labelTestRecorded, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.gridheight = 2;
-		c.gridwidth = 4;
-		//c.weightx = 0.3;
-		c.insets = new Insets(5,25,0,5);
-		resultPanel.add(_labelVideoReward, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 8;
-		c.gridwidth = 2;
 		c.gridheight = 4;
+		c.gridwidth = 4;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,25,0,5);
-		resultPanel.add(_labelKeepGoing, c);
+		c.insets = new Insets(5,0,0,5);
+		resultPanel.add(_tabelPanel, c);
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 9;
+		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(150,-55,0,5);
-		resultPanel.add(_btnKeepGoing, c);
-		_btnKeepGoing.addActionListener(this);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 9;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		//c.weightx = 0.3;
-		c.insets = new Insets(150,0,0,5);
+		c.insets = new Insets(20,0,0,5);
 		resultPanel.add(_btnTestAgain, c);
 		_btnTestAgain.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 9;
+		c.gridx = 1;
+		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(150,0,0,5);
+		c.insets = new Insets(20,0,0,5);
+		resultPanel.add(_btnKeepGoing, c);
+		_btnKeepGoing.addActionListener(this);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 7;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		c.insets = new Insets(20,0,0,5);
 		resultPanel.add(_btnVideoReward, c);
 		_btnVideoReward.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
-		c.gridy = 9;
+		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(150,0,0,5);
+		c.insets = new Insets(20,0,0,5);
 		resultPanel.add(_btnHome, c);
 		_btnHome.addActionListener(this);
-
 
 		return resultPanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	
+
 
 		if (e.getSource() == _btnTestAgain){
 			//show quiz card of this level again, CLEAR SCORE
@@ -265,4 +275,16 @@ public class TestResultView implements ActionListener , Card{
 		}
 	}
 
+	@Override
+	protected boolean ifDisableNextLevel(){
+		//next 'level' is enabled if the user has gotten 8/10 words correct
+		System.out.println(((TestResultModel) _model).getCorrectNumber());
+		if (((TestResultModel) _model).getCorrectNumber() >= 8){
+			
+			return false;
+		}else {
+			//disable this button
+			return true;
+		}
+	}
 }

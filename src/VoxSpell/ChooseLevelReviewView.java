@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -12,6 +14,7 @@ import javax.swing.JPanel;
 
 public class ChooseLevelReviewView extends ChooseLevelView implements ActionListener {
 
+	boolean _noReviewWords;
 
 	public ChooseLevelReviewView(String courseName) {
 
@@ -20,6 +23,34 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 		_labelHeading.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='white'>"
 				+ "Set up your review quiz...</font></html>"));
+
+		//items in combo box are all levels that are NOT empty
+		Vector<String> allLevels = _hiddenFilesModel.getAllLevelsFromCourse("./.review/"+_courseName+"Review");
+		Vector<String> nonEmptyLevels = new Vector<String>();
+
+		for (int i = 0; i < allLevels.size(); i ++){
+			//get words within this level, check if empty
+			ArrayList<String> levelWords =_hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review", allLevels.get(i));
+
+			if (levelWords.size() != 0){
+				//only add non empty levels
+				nonEmptyLevels.add(allLevels.get(i));
+			}
+		}
+
+		_comboBox = new JComboBox<String>(nonEmptyLevels);
+
+
+		if(nonEmptyLevels.size() == 0){
+			//if no words to review at all
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+					"<font color='white'>"
+					+ "No available review words!</font></html>");
+
+			_btnStartQuiz.setEnabled(false);
+			_noReviewWords = true;
+
+		}
 
 	}
 
@@ -44,7 +75,7 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 
 		}else if (e.getSource() == _btnChangeCourse){
 
-			VoxSpellGui.showCourseChooser();
+			VoxSpellGui.showCourseChooser(_courseName);
 		}else if (e.getSource() == _comboBox){
 
 			//disable number of word radiobuttons accordingly
@@ -99,46 +130,49 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 
 		_numWordsToQuiz=_hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",(String) _comboBox.getSelectedItem()).size();
 		//disable buttons accordingly based on numWOrds
-		if (_numWordsToQuiz < 50){
-			_btnFiftyWords.setEnabled(false);
-		}else{
-			_btnFiftyWords.setEnabled(true);
-		}
+		if (! _noReviewWords){
+			if (_numWordsToQuiz < 50){
+				_btnFiftyWords.setEnabled(false);
+			}else{
+				_btnFiftyWords.setEnabled(true);
+			}
 
-		if (_numWordsToQuiz < 40){
-			_btnFortyWords.setEnabled(false);
-		}else{
-			_btnFortyWords.setEnabled(true);
-		}
+			if (_numWordsToQuiz < 40){
+				_btnFortyWords.setEnabled(false);
+			}else{
+				_btnFortyWords.setEnabled(true);
+			}
 
-		if (_numWordsToQuiz < 20){
-			_btnTwentyWords.setEnabled(false);
-		}else{
-			_btnTwentyWords.setEnabled(true);
-		}
+			if (_numWordsToQuiz < 20){
+				_btnTwentyWords.setEnabled(false);
+			}else{
+				_btnTwentyWords.setEnabled(true);
+			}
 
-		if (_numWordsToQuiz < 10){
-			_btnTenWords.setEnabled(false);
-		}else{
-			_btnTenWords.setEnabled(true);
-		}
+			if (_numWordsToQuiz < 10){
+				_btnTenWords.setEnabled(false);
+			}else{
+				_btnTenWords.setEnabled(true);
+			}
 
-		//always enable 'get all words' button, unless there is no words
-		if (_numWordsToQuiz == 0){
-			//disable all buttons
-			_btnAllWords.setEnabled(false);
-			_btnStartQuiz.setEnabled(false);
 
-			//tell user that there is no word to quiz 
-			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
-					"<font color='white'>"
-					+ "This subgroup has no available words!</font></html>");
-		}else{
-			_btnAllWords.setEnabled(true);
-			_btnStartQuiz.setEnabled(true);
-			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
-					"<font color='white'>"
-					+ "Choose a subgroup</font></html>");
+			//always enable 'get all words' button, unless there is no words
+			if (_numWordsToQuiz == 0){
+				//disable all buttons
+				_btnAllWords.setEnabled(false);
+				_btnStartQuiz.setEnabled(false);
+
+				//tell user that there is no word to quiz 
+				_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+						"<font color='white'>"
+						+ "This subgroup has no available words!</font></html>");
+			}else{
+				_btnAllWords.setEnabled(true);
+				_btnStartQuiz.setEnabled(true);
+				_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
+						"<font color='white'>"
+						+ "Choose a subgroup</font></html>");
+			}
 		}
 	}
 

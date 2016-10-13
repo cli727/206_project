@@ -56,7 +56,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 
 		_coursePane= new JScrollPane();
 
-		_btnUseList = new JButton("Start Quiz");
+		_btnUseList = new JButton("Set Course");
 		_btnDeleteList = new JButton ("Delete Course");
 		_btnBack = new JButton("Back");
 
@@ -184,10 +184,51 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnBack){
-			VoxSpellGui.showCourseChooser();
+			VoxSpellGui.showCourseChooser("KET");
 		}else if (e.getSource() == _btnUseList){
+			//show card  based on quiz status
+			
+			String courseName = _courseList.getSelectedValue().toString();
+			
+			ChooseLevelView cardChooseLevel = null;
 
+			if(VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 
+				cardChooseLevel = new ChooseLevelView(courseName);
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+				
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+
+				cardChooseLevel = new ChooseLevelReviewView(courseName);
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+				
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+				
+				//test view
+				QuizView quizView = new TestQuizView(null,courseName,0);//level not needed for test view
+				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/"+courseName));
+
+				quizModel.setView(quizView);
+
+				ArrayList<String> allWords = _hiddenFilesModel.readFileToArray("./.course/"+courseName);
+				for(int i = 0; i < allWords.size(); i++){
+					if (Character.toString(allWords.get(i).charAt(0)).equals("%")){
+						allWords.remove(allWords.get(i));
+					}
+				}
+				
+				//get 10 words for test, all words in course if the course has less than 10 words
+				int numWordsToQuiz = 10;
+
+				if(allWords.size() < 10){
+					numWordsToQuiz = allWords.size();
+				}
+				quizModel.setAllWords(allWords, numWordsToQuiz); 
+
+				quizView.setModel(quizModel);
+				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
+				quizModel.getRandomWords();
+			}
 
 		}else if (e.getSource() == _btnDeleteList){
 			//warning message

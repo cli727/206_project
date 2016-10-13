@@ -35,18 +35,20 @@ public class ChooseCourseView implements Card, ActionListener{
 
 	private JLabel _labelHeading;
 	private JButton _btnKETwords;
-	private JButton _btnWordListTwo;
 	private JButton _btnIELTSwords;
-	private JButton _btnWordListFour;
 	private JButton _btnImportWordList;
 	private JButton _btnViewImportedWordList;
-	private JButton _btnBackToMain;
+	private JButton _btnBack;
+	
+	private String _courseNameToGoBackTo;
 
 	private HiddenFilesModel _hiddenFilesModel;
 
 
 
-	private ChooseCourseView(){
+	public ChooseCourseView(String courseName){
+		_courseNameToGoBackTo = courseName;
+		
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		//set background colour for this card
@@ -85,15 +87,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnIELTSwords = new JButton("IELTS");
 		_btnImportWordList = new JButton("New Course");
 		_btnViewImportedWordList = new JButton("My Course");
-		_btnBackToMain = new JButton("Back");
-	}
-
-	public static synchronized ChooseCourseView getInstance(){
-
-		if (_courseChooser == null){
-			_courseChooser = new ChooseCourseView();
-		}
-		return _courseChooser;
+		_btnBack = new JButton("Back");
 	}
 
 	@Override
@@ -132,9 +126,9 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		c.ipady = 180;
+		c.ipady = 165;
 		c.ipadx = 290;
-		c.insets = new Insets(40,10,5,5);
+		c.insets = new Insets(20,10,5,5);
 		mainPanel.add(_btnKETwords, c);
 		_btnKETwords.addActionListener(this);
 
@@ -144,7 +138,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(40,0,5,10);
+		c.insets = new Insets(20,0,5,10);
 		mainPanel.add(_btnIELTSwords, c);
 		_btnIELTSwords.addActionListener(this);
 
@@ -170,23 +164,54 @@ public class ChooseCourseView implements Card, ActionListener{
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
 
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 5;
+		c.gridy = 6;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		c.ipadx = 0;
+		c.ipady = 0;
+		c.insets = new Insets(20,150,0,10);
+		mainPanel.add(_btnBack, c);
+		_btnBack.addActionListener(this);
+
+
+
 		return mainPanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == _btnBackToMain){
+		if (e.getSource() == _btnBack){
+			
+			//decide which card to go back to based on quiz mode
+			
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+				VoxSpellGui.showMainMenu();
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 
-			VoxSpellGui.showMainMenu();
+				//show card to select number of words / levels(headings)
+				ChooseLevelView cardChooseLevel = new ChooseLevelView(_courseNameToGoBackTo); 
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+			
+				//ChooseLevelReviewView object instead of ChooseLevelView
+				ChooseLevelView cardChooseLevel = new ChooseLevelReviewView(_courseNameToGoBackTo); 
+				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+
+			}
+			
 		}else if (e.getSource() == _btnImportWordList){
-			
+
 			VoxSpellGui.showImportWordListView();
-			
+
 		}else if (e.getSource() == _btnViewImportedWordList){
-			
+
 			ShowImportedWordListView importedWordListView = new ShowImportedWordListView();
 			VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
-			
+
 		}else if (e.getSource() == _btnKETwords){
 			//test mode, show quiz view after
 
@@ -250,7 +275,7 @@ public class ChooseCourseView implements Card, ActionListener{
 						allWords.remove(allWords.get(i));
 					}
 				}
-				
+
 				//get 10 words for test, all words in course if the course has less than 10 words
 				int numWordsToQuiz = 10;
 

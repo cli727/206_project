@@ -49,8 +49,6 @@ public class FestivalModel implements ItemListener {
 		String festivalCommand = "festival -b " + accentVoiceFilePath + " " + tempFilePath;
 		Runnable workerThread = new FestivalModelWorker(festivalCommand);
 		_executorService.execute(workerThread);
-		_executorService.shutdown();
-		_executorService = Executors.newFixedThreadPool(1);
 	}
 
 	public void relistenWord(String currentWord) {
@@ -61,8 +59,6 @@ public class FestivalModel implements ItemListener {
 		String festivalCommand = "festival -b " + accentVoiceFilePath + " " + HiddenFilesModel._slowPacedVoiceFilePath.toString() + " " + tempFilePath;
 		Runnable workerThread = new FestivalModelWorker(festivalCommand);
 		_executorService.execute(workerThread);	
-		_executorService.shutdown();
-		_executorService = Executors.newFixedThreadPool(1);
 	}
 	public void correctVoice(){
 		String accentVoiceFilePath = getAccentVoiceFilePathToUse().toString();
@@ -72,7 +68,7 @@ public class FestivalModel implements ItemListener {
 	}
 
 	public void faultedVoice(String currentWord){
-		String speechSCMCmd = "(SayText \"Incorrect! Try once more "+ currentWord + " " + currentWord + "\")";
+		String speechSCMCmd = "(SayText \"Incorrect! Try again. \")";
 		String tempFilePath = createAndGetTempSCMFileForFestivalSpeech(speechSCMCmd).toString();
 		String accentVoiceFilePath = getAccentVoiceFilePathToUse().toString();
 

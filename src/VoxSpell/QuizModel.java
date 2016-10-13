@@ -31,7 +31,7 @@ public class QuizModel {
 	private int _currentIndex;
 
 	private int _totalCorrectCount;
-	private int _currentCorrectCount;
+	protected int _currentCorrectCount;
 
 	private int _attemptedCount;
 	private double _accuracyRate; 
@@ -41,10 +41,17 @@ public class QuizModel {
 
 	//keeps track of how many times it took to get the word spelt correctly
 	protected int _countChecks;
+	
+	protected ArrayList<String> _countCheckList; //keeps track of attempted times of every word 
+	protected ArrayList<String> _countCorrectList; //keeps track of correct times of every word, can be 1 or 0, needed for test model
+	
+	private Vector<String> _allLevelNames;
 
 	public QuizModel(Vector<String> allLevelNames){
 		//initialise fields		
-		_countCheckList = new ArrayList<Integer>();
+		_countCheckList = new ArrayList<String>();
+		_countCorrectList = new ArrayList<String>();
+		
 		_allLevelNames = allLevelNames; //without % in front
 		
 		_randomWords = new ArrayList<String>();
@@ -71,9 +78,6 @@ public class QuizModel {
 		_allWords = allWords;
 		_numWordsToQuiz = numWordsToQuiz;
 	}
-
-	protected ArrayList<Integer> _countCheckList; //keeps track of attempted times of every word 
-	private Vector<String> _allLevelNames;
 
 	/**
 	 * CheckSpelling for Practice mode. No such concept as mastered/faulted/failed
@@ -122,12 +126,16 @@ public class QuizModel {
 		if (_currentIndex != -1){
 
 			//add current count check in list
-			_countCheckList.add(_countChecks);
+			_countCheckList.add(Integer.toString(_countChecks));
+			
+			//add correct times in list
+			 _countCorrectList.add(Integer.toString(_currentCorrectCount));
 		}
 
 		_countChecks = 0;
+		_currentCorrectCount = 0;
 
-		System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
+		//System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
 
 
 		if ( _currentIndex == (_randomWords.size()-1)){

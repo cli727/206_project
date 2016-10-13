@@ -39,7 +39,6 @@ public class ResultView implements Card, ActionListener {
 	protected JLabel _labelTableInfo;
 
 	private JButton _btnNextLevel;
-	private JButton _btnRaceLevel;
 	private JButton _btnPracticeAgain;
 	private JButton _btnHome;
 
@@ -74,7 +73,6 @@ public class ResultView implements Card, ActionListener {
 
 		_btnPracticeAgain = new JButton("Practice Again");
 		_btnNextLevel = new JButton("Practice Next Level");
-		_btnRaceLevel = new JButton("Test Course (10 Words)");
 		_btnHome = new JButton("Home");
 	}
 
@@ -90,33 +88,6 @@ public class ResultView implements Card, ActionListener {
 
 		_tabelPanel.setBackground(Color.white);
 
-		resultPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 4;
-		c.gridheight = 1;
-		c.insets = new Insets(0,-85,0,0);
-		resultPanel.add(_labelQuizMode, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 4;
-		c.gridheight = 1;
-		c.insets = new Insets(20,-85,0,0);
-		resultPanel.add(_labelHeading, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 4;
-		c.gridheight = 1;
-		c.insets = new Insets(0,-85,0,0);
-		resultPanel.add(_labelSubheading, c);
-
 		//create result table from the set model
 		_resultTable = new JTable(_model);
 		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 250));
@@ -124,11 +95,40 @@ public class ResultView implements Card, ActionListener {
 		_tabelPanel.add(_resultTable);
 		JScrollPane scrollPane = new JScrollPane(_resultTable);
 		_tabelPanel.add(scrollPane, BorderLayout.NORTH);
+		
+
+		resultPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		c.insets = new Insets(0,-85,0,0);
+		resultPanel.add(_labelQuizMode, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		c.insets = new Insets(20,-85,0,0);
+		resultPanel.add(_labelHeading, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		c.insets = new Insets(0,-85,0,0);
+		resultPanel.add(_labelSubheading, c);
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridwidth = 4;
+		c.gridwidth = 3;
 		c.gridheight = 3;
 		c.insets = new Insets(20,0,0,0);
 		resultPanel.add(_tabelPanel, c);
@@ -137,7 +137,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridx = 0;
 		c.gridy = 6;
 		c.gridheight = 1;
-		c.gridwidth = 4;
+		c.gridwidth = 3;
 		//c.weightx = 0.3
 		c.insets = new Insets(0,60,0,0);
 		resultPanel.add(_labelTableInfo, c);
@@ -164,16 +164,6 @@ public class ResultView implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
-		c.gridy = 7;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		//c.weightx = 0.3;
-		c.insets = new Insets(25,0,0,5);
-		resultPanel.add(_btnRaceLevel, c);
-		_btnRaceLevel.addActionListener(this);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 3;
 		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -227,9 +217,6 @@ public class ResultView implements Card, ActionListener {
 			//show next level quiz card
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Next Level Quiz");
 			quizModel.getRandomWords();
-
-		}else if (e.getSource() == _btnRaceLevel){
-
 
 		}else if (e.getSource() == _btnHome){
 			VoxSpellGui.showMainMenu();

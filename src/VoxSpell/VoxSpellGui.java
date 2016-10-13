@@ -89,7 +89,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			@Override
 			protected void paintComponent(Graphics g){
 				super.paintComponent(g);
-				g.drawImage(_footer, 0, 0,946,60, null);
+				g.drawImage(_footer, 0, 0,910,60, null);
 			}
 		};
 
@@ -104,13 +104,11 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		//Create the static cards, from singleton classes
 		JPanel cardMainMenu = createAndGetPanel();
-		JPanel cardChooseCourse = ChooseCourseView.getInstance().createAndGetPanel();
 		JPanel cardImportCourse = ImportWordListView.getInstance().createAndGetPanel();
 
 		//Build the GUI section that has interchangeable components (cards)
 		_cardsPanel.setLayout(_cardLayout);
 		_cardsPanel.add( cardMainMenu, "Main Menu");
-		_cardsPanel.add(cardChooseCourse, "Choose Course");
 		_cardsPanel.add(cardImportCourse, "Import Wordlist");
 
 		//_frame.setContentPane(_welcomePanel);
@@ -246,7 +244,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			STATUS = TEST;
 
 			//since no level chooser is needed for test mode (all levels included), just should course chooser
-			showCourseChooser();
+			showCourseChooser(null);
 		}
 	}
 
@@ -270,7 +268,11 @@ public class VoxSpellGui implements Card,ActionListener{
 	}
 
 
-	public static void showCourseChooser(){
+	public static void showCourseChooser(String courseName){
+		ChooseCourseView chooseCourseView = new ChooseCourseView(courseName);
+	
+		JPanel cardChooseCourse = chooseCourseView.createAndGetPanel();
+		_cardsPanel.add(cardChooseCourse, "Choose Course");
 		_cardLayout.show(_cardsPanel, "Choose Course");
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(new Color(0,200,200));

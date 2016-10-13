@@ -89,7 +89,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		_btnFiftyWords = new JRadioButton("50 Random Words");
 		_btnAllWords = new JRadioButton("All words from this subgroup");
 		_btnAllWords.setSelected(true);//default select this option
-		
+
 		_btnTenWords.setBackground(_bgColor);
 		_btnTwentyWords.setBackground(_bgColor);
 		_btnFortyWords.setBackground(_bgColor);
@@ -109,6 +109,23 @@ public class ChooseLevelView implements Card, ActionListener{
 		//_btnBackToPrevious = new JButton("Back");
 		_btnBackToMain = new JButton("Home");
 
+
+		//items in combo box are all levels that are NOT empty
+		Vector<String> nonEmptyLevels = _hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName);
+		
+		for (int i = 0; i < nonEmptyLevels.size(); i ++){
+			//get words within this level, check if empty
+			
+			if (_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName, nonEmptyLevels.get(i)).isEmpty()){
+				//remove from list because it has no words to quiz
+				
+				nonEmptyLevels.remove(i);
+			};
+		}
+		
+		_comboBox = new JComboBox<String>(nonEmptyLevels);
+	
+
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(_bgColor);
 	}
@@ -117,9 +134,6 @@ public class ChooseLevelView implements Card, ActionListener{
 	public JPanel createAndGetPanel() {
 		_chooseLevelPanel = new JPanel();
 		_chooseLevelPanel.setBackground(_bgColor);
-
-		//items in combo box are all levels 
-		_comboBox = new JComboBox<String>(_hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName));
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -295,7 +309,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		}else if (e.getSource() == _btnChangeCourse){
 
-			VoxSpellGui.showCourseChooser();
+			VoxSpellGui.getInstance().showCourseChooser(_courseName);
 		}else if (e.getSource() == _comboBox){
 
 			//disable number of word radiobuttons accordingly
