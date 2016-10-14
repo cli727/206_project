@@ -173,9 +173,24 @@ public class HiddenFilesModel {
 				Path thisHighScoreFilePath = Paths.get(_highScoreFolderPath + listOfFiles[i].getName());
 
 				if (Files.notExists(thisHighScoreFilePath )) {
+					//recreate the review file with the added word, should replace the original file
+					try {
+						File stats = new File(thisHighScoreFilePath.toString());
+						stats.createNewFile();
 
-					Files.createFile(thisHighScoreFilePath );
+						FileWriter writer = new FileWriter(stats); 
+
+						writer.write("0"+"\n"); 	
+
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
 				}
+
+
 			}
 
 			//Directory for storing scm files to be given as input to festival
@@ -191,21 +206,21 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	/**
 	 * searches through ./.course directory and finds course names that are not "KET" or "IELTS"
 	 * @return
 	 */
 	public ArrayList<String> getImportedCourseNames() {
 		ArrayList<String> importedCourse = new ArrayList<String>();
-		
+
 		File folder = new File("./.course");
 		File[] listOfFiles = folder.listFiles(); //all file names within ./.course folder
 
 		//for every file in the ./course folder
 		for (int i = 0; i < listOfFiles.length; i++ ){
 			String thisCourse = listOfFiles[i].getName();
-			
+
 			if (! thisCourse.equals("KET") && ! thisCourse.equals("IELTS")){
 				//not the built in lists
 				importedCourse.add(thisCourse);
@@ -225,7 +240,7 @@ public class HiddenFilesModel {
 		List<String> allWords = new ArrayList<String>();
 
 		try {
-			
+
 			allWords = Files.readAllLines(Paths.get(_testHistoryFolderPath+courseName), StandardCharsets.ISO_8859_1);
 			if(! allWords.contains(word)){
 
@@ -239,6 +254,51 @@ public class HiddenFilesModel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+	
+	public ArrayList<String> getHistroyWords(String _courseName) {
+		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
+		
+		return allWords;
+	}
+	
+	/**
+	 * Get correct/incorrect counts of all words in a history file 
+	 * @param _courseName
+	 * @param getCorrect
+	 * @return
+	 */
+	public ArrayList<Integer> getCorrectIncorrectCount (String _courseName, boolean getCorrect){
+		ArrayList<String> histWords = getHistroyWords(_courseName);
+		
+		ArrayList<String> countFile;
+		
+		if(getCorrect){
+			//get correct counts
+			countFile = readFileToArray(_testCorrectFolderPath+_courseName);
+		}else {
+			//get incorrect counts
+			countFile = readFileToArray(_testIncorrectFolderPath+_courseName);
+		}
+		
+		ArrayList<Integer> totalCount = new ArrayList<Integer>();
+		
+		
+		for (int i = 0; i < histWords.size(); i ++){
+			int count = 0;
+			
+			//count appearance of each history word in the count hidden file
+			for(int j = 0; j <countFile.size(); j ++){
+				
+				if (countFile.get(j).equals(histWords.get(i))){
+					count ++;
+				}
+			}
+			
+			totalCount.add(count);
+		}
+		
+		return totalCount;
 	}
 
 	/**
@@ -378,10 +438,10 @@ public class HiddenFilesModel {
 	 * @param path
 	 */
 	public boolean copyToCourse(String userWordListpath, String fileName) {
-		
+
 		ArrayList<String> allWords = new ArrayList<String>();
 		allWords = readFileToArray(userWordListpath);
-		
+
 		//check if the file matches with required format
 		if (allWords.size() == 0){
 			//empty file
@@ -393,27 +453,27 @@ public class HiddenFilesModel {
 			//do not want to override the build in lists
 			return false;
 		}
-		
+
 		//check for duplicates in all levels
-		
+
 		Vector<String> allLevelNames = getAllLevelsFromCourse(userWordListpath); //get all level names first
-		
+
 		for(int j = 0; j < allLevelNames.size(); j ++){
 			//get all words from level
 			ArrayList<String> wordsFromLevel = getLevelWordsFromCourse(userWordListpath,allLevelNames.get(j));
-			
+
 			//a quick way to find out whether there are duplicates in the list using sets
 			Set<String> set = new HashSet<String>(wordsFromLevel);
 
 			if(set.size() < wordsFromLevel.size()){
-			    //duplicates 
+				//duplicates 
 				return false;
 			}
-			
+
 		}
-		
+
 		//valid file, copy it to .course directory
-	
+
 		try {
 			File newCourse = new File("./.course/"+fileName);
 			newCourse.createNewFile();
@@ -430,10 +490,10 @@ public class HiddenFilesModel {
 
 			e.printStackTrace();
 		}
-		
+
 		//set up its review, testHistory, test Correct, testIncorrect , high score hidden files
 		setUpHiddenFiles();
-		
+
 		return true;//successful
 	}
 
@@ -445,32 +505,32 @@ public class HiddenFilesModel {
 	 * @return 
 	 */
 	public boolean deleteCourseStats(String courseName) {
-		
+
 		try {
 			//delete course file
 			Files.deleteIfExists(Paths.get("./.course/"+courseName));
-			
+
 			//delete .review file
 			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName + "Review"));
-			
+
 			//delete .testCorrect file
 			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
-			
+
 			//delete test Incorrect file
 			Files.deleteIfExists(Paths.get(_testIncorrectFolderPath + courseName));
-			
+
 			//delete highScore file
 			Files.deleteIfExists(Paths.get(_highScoreFolderPath + courseName));
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	protected static Path getFestivalFolderPath() {
 		return _festivalFolderPath;
 	}
@@ -552,11 +612,43 @@ public class HiddenFilesModel {
 			}
 		}
 
-		/*System.out.println("printing level words");
-		for (int k = 0; k < levelWords.size(); k ++){
-			System.out.println(levelWords.get(k));
-		}*/
 		return levelWords;
+
+	}
+
+	/**
+	 * Return the current best test score of a course
+	 * @param _courseName
+	 * @return
+	 */
+	public int getHighScore(String _courseName) {
+		String highscore = readFileToArray(_highScoreFolderPath+_courseName).get(0); //Array should have only one number
+
+		return Integer.parseInt(highscore);
+
+	}
+
+	/**
+	 * Set new high score in hidden file
+	 */
+	public void setNewScore(String _courseName, int _score) {
+		String coursePath = _highScoreFolderPath + _courseName;
+
+		//recreate the highscore file with the new score, should replace the original file
+		try {
+			File stats = new File(coursePath);
+			stats.createNewFile();
+
+			FileWriter writer = new FileWriter(stats); 
+
+			writer.write(_score+"\n"); 	
+
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 
 	}
 
@@ -595,7 +687,4 @@ public class HiddenFilesModel {
 		}
 	}
 
-	
-
-	
 }

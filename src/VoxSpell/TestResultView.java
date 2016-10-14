@@ -19,7 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class TestResultView extends ResultView implements ActionListener , Card{
+import video_player.VideoPlayer;
+
+public class TestResultView extends JTableView implements ActionListener , Card{
 
 	private HiddenFilesModel _hiddenFilesModel;
 
@@ -39,8 +41,9 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 	private String _courseName;
 	private JLabel _labelHeading;
 
-	public TestResultView(String levelName, String courseName, Vector<String> allLevelNames, int score) {
-		super(levelName, courseName, allLevelNames);
+
+
+	public TestResultView( String courseName, int score) {
 
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
@@ -71,10 +74,18 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 
 		_labelScore.setFont(new Font("SansSerif", Font.ITALIC,45));
 
-		_labelNewBest = new JLabel("<html> <p style='text-align:center;'>"
-				+ "<font color='green'>"
-				+ "NEW PERSONAL BEST!"+"</font></html>");
-		
+		_labelNewBest = new JLabel(" ");//only visible when user has created new best score
+
+		if(_hiddenFilesModel.getHighScore(_courseName) < _score){
+			//new best score
+			_labelNewBest.setText("<html> <p style='text-align:center;'>"
+					+ "<font color='green'>"
+					+ "NEW PERSONAL BEST!"+"</font></html>");
+
+			//set new best score
+			_hiddenFilesModel.setNewScore(_courseName, _score);
+		}
+
 		_btnKeepGoing = new JButton("Continue Test");
 		_btnTestAgain = new JButton("Try Again");
 		_btnVideoReward = new JButton ("Video Reward");
@@ -88,10 +99,12 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 		//create result table from the set model
 		_resultTable = new JTable(_model);
 		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 250));
-		//_resultTable.setFillsViewportHeight(true);
-		_tabelPanel.add(_resultTable);
+
+		_tablePanel = new JPanel();
+		_tablePanel.add(_resultTable);
 		JScrollPane scrollPane = new JScrollPane(_resultTable);
-		_tabelPanel.add(scrollPane, BorderLayout.NORTH);
+		_tablePanel.add(scrollPane, BorderLayout.NORTH);
+		_tablePanel.setBackground(Color.white);
 
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
@@ -106,7 +119,7 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 					+  "Level failed..." + "</font></html>");
 
 			_labelResult.setText("(You need to get at least 8 words correct to pass)");
-			
+
 			//disable 'next level', 'video reward' buttons
 			_btnKeepGoing.setEnabled(false);
 			_btnVideoReward.setEnabled(false);
@@ -178,7 +191,7 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 		c.gridwidth = 4;
 		//c.weightx = 0.3;
 		c.insets = new Insets(5,0,0,5);
-		resultPanel.add(_tabelPanel, c);
+		resultPanel.add(_tablePanel, c);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -269,18 +282,26 @@ public class TestResultView extends ResultView implements ActionListener , Card{
 			quizModel.getRandomWords();
 		}else if (e.getSource() == _btnVideoReward){
 
+			//playVideo, using ffmpeg to manipulate the video
+			VideoPlayer mediaPlayer ;
+
+			//play special bonus mark video with ffmpeg manipulations
+			mediaPlayer = new VideoPlayer();	
+			mediaPlayer.playVideo("big_buck_bunny_1_minute.avi");
+
+			//disable main GUI
+			VoxSpellGui.getFrame().setEnabled(false);
 
 		}else if (e.getSource() == _btnHome){
 			VoxSpellGui.showMainMenu();
 		}
 	}
 
-	@Override
 	protected boolean ifDisableNextLevel(){
 		//next 'level' is enabled if the user has gotten 8/10 words correct
 		System.out.println(((TestResultModel) _model).getCorrectNumber());
 		if (((TestResultModel) _model).getCorrectNumber() >= 8){
-			
+
 			return false;
 		}else {
 			//disable this button

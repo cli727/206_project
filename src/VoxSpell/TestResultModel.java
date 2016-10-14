@@ -2,6 +2,8 @@ package VoxSpell;
 
 import java.util.ArrayList;
 
+import javax.swing.table.AbstractTableModel;
+
 /**
  * This class extends ResultModel
  * The test result models does not have the functionality to add words to the review list
@@ -10,28 +12,35 @@ import java.util.ArrayList;
  * @author chen
  *
  */
-public class TestResultModel extends ResultModel{
+public class TestResultModel extends AbstractTableModel  {
 
 	protected String[] _testDatabaseHeaderNames = { "Word", "Result"};
 	private int _correctNumber;
+	private ArrayList<ArrayList<Object>> _database;
+	private ArrayList<String> _listOfWords;
+	private ArrayList<String> _correctCountList;
 	
 
-	protected TestResultModel(ArrayList<String> listOfWords, ArrayList<String> correctCountList, String level,
-			String courseName) {
-		super(listOfWords, correctCountList, level, courseName);
+	protected TestResultModel(ArrayList<String> listOfWords, ArrayList<String> correctCountList) {
 
+		_database= new ArrayList<ArrayList<Object>>();//database can contain Strings, integers or JCheckBox components
+
+		_listOfWords = listOfWords;
+		_correctCountList = correctCountList;
+
+		createDatabase();
 	}
 
-	@Override
+	
 	protected void createDatabase() {
 		
 		_correctNumber = 0;
 		
 		ArrayList<String> _ifCorrect = new ArrayList<String>();
 
-		for (int j = 0; j < _attemptCounts.size(); j ++){
+		for (int j = 0; j < _correctCountList.size(); j ++){
 
-			if (Integer.parseInt(_attemptCounts.get(j)) == 0){
+			if (Integer.parseInt(_correctCountList.get(j)) == 0){
 				//Incorrect
 				_ifCorrect.add("Incorrect");
 			}else{
@@ -97,12 +106,5 @@ public class TestResultModel extends ResultModel{
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return false;
 	}
-
-	@Override
-	public void setValueAt(Object value, int row, int col) {
-		// no implementation, because cells are not editabel
-		
-	}
-
 
 }

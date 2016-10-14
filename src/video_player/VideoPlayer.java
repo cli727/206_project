@@ -23,7 +23,6 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 
 import VoxSpell.HiddenFilesModel;
-import VoxSpell.NewQuizModel;
 import VoxSpell.VoxSpellGui;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -40,7 +39,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 	private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
 	private final EmbeddedMediaPlayer video;
-	
+
 	private final String videoOutput;
 
 	private JPanel vlcButtons;
@@ -64,7 +63,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	private JButton normalBtn;
 	private JButton invertBtn;
 
-	public VideoPlayer(final NewQuizModel quizModel, boolean lastLevel) {
+	public VideoPlayer() {
 		videoOutput = ".output.mpg";
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
@@ -90,15 +89,15 @@ public class VideoPlayer implements ActionListener,MouseListener{
 				});
 
 		frame = new JFrame("Reward Video");
-		//if the video frame is closed, proceed with quizModel activity
+		frame.setAlwaysOnTop(true);
+		//if the video frame is closed, stop video, delete the produced video
 		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				video.stop();
 				_hiddenFilesModel.deleteVideoFile(videoOutput);
 				frame.dispose();
-				VoxSpellGui.enableMain();
-				quizModel.ifLevelUp();
+				VoxSpellGui.getFrame().setEnabled(true);
 			}
 		});
 
@@ -117,10 +116,10 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		ffmpegButtons.setLayout(flowLayout);
 		ffmpegButtons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
-		addButtons(lastLevel);
+		addButtons();
 	}
 
-	public void addButtons(boolean lastLevel){
+	public void addButtons(){
 
 		// add pause button
 		pauseBtn = new JButton("Pause");
@@ -179,35 +178,35 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		//add vlcButtons panel to frame
 		frame.add(vlcButtons,BorderLayout.NORTH);
 
-		if(lastLevel){
-			//add more buttons for manipulating the video if last level i.e. SPECIAL reward video 
-			// using ffmpeg
-			versionLabel = new JLabel("Now you have more versions: ");
-			ffmpegButtons.add(versionLabel);
-			
-			normalBtn = new JButton("Original");
-			normalBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					playVideo("big_buck_bunny_1_minute.avi");
-				}
-			});
-			ffmpegButtons.add(normalBtn);
-			
-			fasterBtn = new JButton("X2 Faster");
-			fasterBtn.addActionListener(this);
-			ffmpegButtons.add(fasterBtn);
 
-			slowerBtn = new JButton("X2 Slower");
-			slowerBtn.addActionListener(this);
-			ffmpegButtons.add(slowerBtn);
-			
-			invertBtn = new JButton("Inverted Colour");
-			invertBtn.addActionListener(this);
-			ffmpegButtons.add(invertBtn);
-			
-			frame.add(ffmpegButtons, BorderLayout.SOUTH);
-		}
+		//add more buttons for manipulating the video if last level i.e. SPECIAL reward video 
+		// using ffmpeg
+		versionLabel = new JLabel("Versions: ");
+		ffmpegButtons.add(versionLabel);
+
+		normalBtn = new JButton("Original");
+		normalBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				playVideo("big_buck_bunny_1_minute.avi");
+			}
+		});
+		ffmpegButtons.add(normalBtn);
+
+		fasterBtn = new JButton("X2 Faster");
+		fasterBtn.addActionListener(this);
+		ffmpegButtons.add(fasterBtn);
+
+		slowerBtn = new JButton("X2 Slower");
+		slowerBtn.addActionListener(this);
+		ffmpegButtons.add(slowerBtn);
+
+		invertBtn = new JButton("Inverted Colour");
+		invertBtn.addActionListener(this);
+		ffmpegButtons.add(invertBtn);
+
+		frame.add(ffmpegButtons, BorderLayout.SOUTH);
+
 		frame.setLocation(100, 100);
 		frame.setSize(800, 550);
 		frame.setContentPane(mediaPlayerComponent);
@@ -255,31 +254,31 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	public void actionPerformed(ActionEvent e) {
 		String command = null;
 		_hiddenFilesModel.deleteVideoFile(videoOutput);
-		
+
 		//Reference source:
 		//https://trac.ffmpeg.org/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
-		
+
 		if (e.getSource() == fasterBtn){
-			
+
 			command = "ffmpeg -i big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
-			
+
 		}else if (e.getSource() == slowerBtn){
-			
+
 			command = "ffmpeg -i big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
-			
+
 		}else if (e.getSource() == invertBtn){
 			command = "ffmpeg -i big_buck_bunny_1_minute.avi -vf lutrgb=\"r=negval:g=negval:b=negval\" "
 					+ videoOutput;
 		}
 
 		// Executes the ffmpeg processes inside a worker thread so the GUI does not freeze while ffmpeg is used  for processing the video
-		
+
 		new Worker(command).execute();;
-		
+
 		//a pop up pane  that tells the user the video is under process, expect the user to wait til process is finished
 		JOptionPane optionPane = new JOptionPane("Just A Moment...", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
 		dialog = new JDialog();
@@ -293,7 +292,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		dialog.setVisible(true);
 	}
-	
+
 	/**
 	 * Swing Worker class that takes a ffmpeg command and put the manipulating process inside doInBackground
 	 * @author chen
@@ -322,14 +321,14 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 			return null;
 		}
-		
+
 		@Override
-        protected void done() {
+		protected void done() {
 			//close dialog
 			dialog.dispose();
 			//play the manipulated video
 			playVideo(videoOutput);
-        }
+		}
 	}
 }
 

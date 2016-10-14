@@ -185,6 +185,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnBack){
 			VoxSpellGui.showCourseChooser("KET");
+			
 		}else if (e.getSource() == _btnUseList){
 			//show card  based on quiz status
 			
@@ -228,6 +229,17 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 				quizView.setModel(quizModel);
 				VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Test Quiz");
 				quizModel.getRandomWords();
+				
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.SCORE)){
+				//show stats view
+				
+				TestScoreView testScoreView = new TestScoreView(courseName,  _hiddenFilesModel.getHighScore(courseName));
+				TestScoreModel testScoreModel = new TestScoreModel(courseName);
+				
+				testScoreView.setModel(testScoreModel);
+				
+				
+				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
 			}
 
 		}else if (e.getSource() == _btnDeleteList){

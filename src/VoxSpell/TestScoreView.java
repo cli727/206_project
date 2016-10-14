@@ -1,0 +1,188 @@
+package VoxSpell;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+public class TestScoreView extends JTableView implements Card, ActionListener{
+	
+	private HiddenFilesModel _hiddenFilesModel;
+
+	private String _courseName;
+	
+	private JLabel _labelTableInfo;
+
+	private JLabel _labelScoreTitle;
+	private JLabel _labelScore;
+	private JLabel _labelQuizMode;
+
+	private JButton _btnChangeCourse;
+	private JButton _btnClearStats;
+
+	public TestScoreView(String courseName,  int score) {
+		_hiddenFilesModel = HiddenFilesModel.getInstance();
+
+		_courseName = courseName;
+
+		_labelQuizMode = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Course: " + _courseName + "</font></html>"));
+		_labelQuizMode.setFont((new Font("SansSerif", Font.ITALIC,30)));
+
+		_labelScoreTitle = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ "Best Score" + "</font></html>"));
+
+		_labelScoreTitle.setFont(new Font("SansSerif", Font.ITALIC,20));
+
+		_labelScore = new JLabel(("<html> <p style='text-align:center;'>"
+				+ "<font color='black'>"
+				+ +score+ "</font></html>"));
+		_labelScore.setFont((new Font("SansSerif", Font.ITALIC,45)));
+		
+		_labelTableInfo = new JLabel(); //info depends on whether the stats is empty
+		_labelTableInfo.setFont(new Font("SansSerif" , Font.PLAIN, 17));
+
+		_tablePanel = new JPanel();
+
+		_btnClearStats = new JButton("Clear");
+		_btnChangeCourse = new JButton("Back");
+	}
+	
+	@Override
+	public JPanel createAndGetPanel() {
+		
+		if (_model.emptyStats){
+			_labelTableInfo.setText("No history available. Let's start a test.");
+		}else{
+			_labelTableInfo.setText("History sorted by most incorrect counts.");
+		}
+		
+		
+
+		JPanel resultPanel = new JPanel();
+		resultPanel.setBackground(Color.white);
+
+		_tablePanel.setBackground(Color.white);
+
+		//create result table from the set model
+		_resultTable = new JTable(_model);
+		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 330));
+		//_resultTable.setFillsViewportHeight(true);
+		_tablePanel.add(_resultTable);
+		JScrollPane scrollPane = new JScrollPane(_resultTable);
+		_tablePanel.add(scrollPane, BorderLayout.NORTH);
+		
+
+		resultPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(20,-85,0,0);
+		resultPanel.add(_labelQuizMode, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(0,300,0,0);
+		resultPanel.add(_labelScoreTitle, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(0,330,0,0);
+		resultPanel.add(_labelScore, c);
+
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridwidth = 2;
+		c.gridheight = 2;
+		c.insets = new Insets(10,0,0,0);
+		resultPanel.add(_tablePanel, c);
+
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		//c.weightx = 0.3;
+		c.insets = new Insets(15,100,0,0);
+		resultPanel.add(_btnClearStats, c);
+		_btnClearStats.addActionListener(this);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		//c.weightx = 0.3;
+		c.insets = new Insets(15,250,0,100);
+		resultPanel.add(_btnChangeCourse, c);
+		_btnChangeCourse.addActionListener(this);
+
+
+		return resultPanel;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == _btnChangeCourse){
+			VoxSpellGui.showCourseChooser(null);
+		}else if(e.getSource() == _btnClearStats){}
+		//warning message
+
+		int dialogResult  = JOptionPane.showOptionDialog(VoxSpellGui.getFrame(), 
+				("<html>Warning: <BR>" + "<BR>" +
+						"Are you sure you want to delete this course?  <BR>" + 
+						"All of its statistics will be deleted.<BR>" + 
+						"   </html>"),
+				"Delete Course", 
+				JOptionPane.OK_CANCEL_OPTION, 
+				JOptionPane.INFORMATION_MESSAGE, 
+				null, 
+				new String[]{"Delete", "Cancel"}, 
+				"default");
+
+		if(dialogResult == JOptionPane.YES_OPTION){
+			//delete its stats
+			if (_hiddenFilesModel.deleteCourseStats(_courseName)){
+				//successful
+				//successful, inform user using pop up pane
+				String message = "Course Deleted! \n";
+
+				JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
+						"Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+
+				//show this card again, refreshing jlist
+				ShowImportedWordListView importedWordListView = new ShowImportedWordListView();
+				VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
+			}
+
+		}
+	}
+}

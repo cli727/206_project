@@ -39,7 +39,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	private JButton _btnImportWordList;
 	private JButton _btnViewImportedWordList;
 	private JButton _btnBack;
-	
+
 	private String _courseNameToGoBackTo;
 
 	private HiddenFilesModel _hiddenFilesModel;
@@ -48,7 +48,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 	public ChooseCourseView(String courseName){
 		_courseNameToGoBackTo = courseName;
-		
+
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		//set background colour for this card
@@ -184,10 +184,10 @@ public class ChooseCourseView implements Card, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnBack){
-			
+
 			//decide which card to go back to based on quiz mode
-			
-			if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST) || VoxSpellGui.STATUS.equals(VoxSpellGui.SCORE)){
 				VoxSpellGui.showMainMenu();
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
 
@@ -196,13 +196,13 @@ public class ChooseCourseView implements Card, ActionListener{
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
-			
+
 				//ChooseLevelReviewView object instead of ChooseLevelView
 				ChooseLevelView cardChooseLevel = new ChooseLevelReviewView(_courseNameToGoBackTo); 
 				VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 			}
-			
+
 		}else if (e.getSource() == _btnImportWordList){
 
 			VoxSpellGui.showImportWordListView();
@@ -213,9 +213,19 @@ public class ChooseCourseView implements Card, ActionListener{
 			VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
 
 		}else if (e.getSource() == _btnKETwords){
-			//test mode, show quiz view after
 
-			if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.SCORE)){
+			
+				//show stats view
+				TestScoreView testScoreView = new TestScoreView("KET",  _hiddenFilesModel.getHighScore("KET"));
+				TestScoreModel testScoreModel = new TestScoreModel("KET");
+				
+				testScoreView.setModel(testScoreModel);
+								
+				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
+				
+				
+			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 				//test view
 
 				QuizView quizView = new TestQuizView(null,"KET", 0);//level not needed for test view
@@ -260,9 +270,16 @@ public class ChooseCourseView implements Card, ActionListener{
 			}
 
 		}else if (e.getSource() == _btnIELTSwords){
-			//new/review mode, show level chooser after
-
-			if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
+			if (VoxSpellGui.STATUS.equals(VoxSpellGui.SCORE)){
+				//show stats view
+				TestScoreView testScoreView = new TestScoreView("IELTS",  _hiddenFilesModel.getHighScore("IELTS"));
+				TestScoreModel testScoreModel = new TestScoreModel("IELTS");
+				
+				testScoreView.setModel(testScoreModel);
+				
+				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
+				
+			}else if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 				//test view
 				QuizView quizView = new TestQuizView(null,"IELTS",0);//level not needed for test view
 				QuizModel quizModel = new TestQuizModel(_hiddenFilesModel.getAllLevelsFromCourse("./.course/IELTS"));

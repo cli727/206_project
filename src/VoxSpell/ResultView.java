@@ -2,7 +2,6 @@ package VoxSpell;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -14,27 +13,21 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import VoxSpell.FestivalModel.Voice;
-
-public class ResultView implements Card, ActionListener {
+public class ResultView extends JTableView implements Card, ActionListener {
 	protected HiddenFilesModel _hiddenFilesModel;
 
 	protected Vector<String> _allLevelNames;
 	protected String _thisLevelName;
 	protected String _courseName;
 
-	protected JLabel _labelHeading;
-	protected JLabel _labelSubheading;
+	private JLabel _labelHeading;
+	private JLabel _labelSubheading;
 	protected JLabel _labelQuizMode;
-
-	protected JPanel _tabelPanel;
-	protected JTable _resultTable;
 
 	protected JLabel _labelTableInfo;
 
@@ -42,7 +35,6 @@ public class ResultView implements Card, ActionListener {
 	private JButton _btnPracticeAgain;
 	private JButton _btnHome;
 
-	protected ResultModel _model;
 
 	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
@@ -67,7 +59,7 @@ public class ResultView implements Card, ActionListener {
 				+ "Subgroup : " + _thisLevelName + "</font></html>"));
 		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,17)));
 
-		_tabelPanel = new JPanel();
+		_tablePanel = new JPanel();
 
 		_labelTableInfo = new JLabel("(Selected Items will be added to your revision list)");
 
@@ -75,26 +67,22 @@ public class ResultView implements Card, ActionListener {
 		_btnNextLevel = new JButton("Practice Next Level");
 		_btnHome = new JButton("Home");
 	}
-
-	public void setModel(ResultModel model){
-		_model = model;
-	}
-
+	
 	@Override
 	public JPanel createAndGetPanel() {
 
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
 
-		_tabelPanel.setBackground(Color.white);
+		_tablePanel.setBackground(Color.white);
 
 		//create result table from the set model
 		_resultTable = new JTable(_model);
 		_resultTable.setPreferredScrollableViewportSize(new Dimension(500, 250));
 		//_resultTable.setFillsViewportHeight(true);
-		_tabelPanel.add(_resultTable);
+		_tablePanel.add(_resultTable);
 		JScrollPane scrollPane = new JScrollPane(_resultTable);
-		_tabelPanel.add(scrollPane, BorderLayout.NORTH);
+		_tablePanel.add(scrollPane, BorderLayout.NORTH);
 		
 
 		resultPanel.setLayout(new GridBagLayout());
@@ -131,7 +119,7 @@ public class ResultView implements Card, ActionListener {
 		c.gridwidth = 3;
 		c.gridheight = 3;
 		c.insets = new Insets(20,0,0,0);
-		resultPanel.add(_tabelPanel, c);
+		resultPanel.add(_tablePanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -183,7 +171,7 @@ public class ResultView implements Card, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//regardless of the button pressed, keep a record of the words to review
-		_model.keepRecordOfSelectedWords();
+		((ResultModel) _model).keepRecordOfSelectedWords();
 
 		if (e.getSource() == _btnPracticeAgain){
 			//show quiz card of this level again

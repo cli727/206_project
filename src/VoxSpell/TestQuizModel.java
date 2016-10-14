@@ -2,10 +2,6 @@ package VoxSpell;
 
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-
 public class TestQuizModel extends QuizModel{
 	private HiddenFilesModel _hiddenFilesModel;
 
@@ -111,15 +107,15 @@ public class TestQuizModel extends QuizModel{
 		
 		
 		//test resultview does not need information about levels : therefore null parameter
-		ResultView testResultView = new TestResultView(null,_quizView.getCourseName(),null,((TestQuizView)_quizView).getScore());
+		TestResultView testResultView = new TestResultView(_quizView.getCourseName(),((TestQuizView)_quizView).getScore());
 
 		//result model for test result view needs different information
 		//i.e. _countCorrectList
-		ResultModel resultModel = new TestResultModel(_randomWords, _countCorrectList,null,_quizView.getCourseName());
+		TestResultModel resultModel = new TestResultModel(_randomWords, _countCorrectList);
 
 		testResultView.setModel(resultModel);
 		
-		VoxSpellGui.getInstance().showCard(testResultView.createAndGetPanel(), "Result");
+		VoxSpellGui.getInstance().showCard(((Card) testResultView).createAndGetPanel(), "Result");
 	}
 
 }

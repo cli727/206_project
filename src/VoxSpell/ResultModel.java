@@ -23,7 +23,6 @@ public class ResultModel extends AbstractTableModel {
 	protected ArrayList<String> _attemptCounts; 
 	private String[] _databaseHeaderNames = { "Revise Later", "Word", "Attempts" };
 	private String[] _reviewDatabaseHeaderNames = { "Remembered", "Word", "Attempts" };
-	protected String[] _testDatabaseHeaderNames = { "Word", "Result"};
 
 
 	protected ResultModel(ArrayList<String> listOfWords, ArrayList<String> attemptCounts, String level,String courseName) {

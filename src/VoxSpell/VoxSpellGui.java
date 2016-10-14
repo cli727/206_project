@@ -43,7 +43,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	private JButton _btnPracticeQuiz;
 	private JButton _btnTestQuiz;
 	private JButton _btnReview;
-	private JButton _btnScoreHistory;
+	private JButton _btnTestScore;
 
 
 	private static JPanel _footerPanel;
@@ -58,6 +58,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	public static final String NEW = "New";
 	public static final String REVIEW = "Review";
 	public static final String TEST = "Test";
+	public static final String SCORE = "Score";
 	/**
 	 * Singleton class, deals with card handling
 	 */
@@ -166,7 +167,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		_btnPracticeQuiz = new JButton("Practice Words");
 		_btnTestQuiz = new JButton("Test Mode");
 		_btnReview = new JButton("Review Mistakes");
-		_btnScoreHistory = new JButton("Score History");
+		_btnTestScore = new JButton("Score History");
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -217,16 +218,19 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridheight = 2;
 		//c.weightx = 0.7;
 		c.insets = new Insets(0,0,5,10);
-		mainPanel.add(_btnScoreHistory, c);
-		_btnScoreHistory.addActionListener(this);
+		mainPanel.add(_btnTestScore, c);
+		_btnTestScore.addActionListener(this);
 
 		return mainPanel;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == _btnScoreHistory) {
+		if (e.getSource() == _btnTestScore) {
 
-			new FullStatsView(_frame);
+			STATUS = SCORE;
+			
+			//show choose course card, so that the score of one course can be shown
+			showCourseChooser(null); // does not need previous course name
 		}else if (e.getSource() == _btnPracticeQuiz){
 			STATUS = NEW;
 
@@ -244,7 +248,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			STATUS = TEST;
 
 			//since no level chooser is needed for test mode (all levels included), just should course chooser
-			showCourseChooser(null);
+			showCourseChooser(null);//does not need previous course name
 		}
 	}
 
