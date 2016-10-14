@@ -333,6 +333,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		JOptionPane.showMessageDialog(this, "Non alphabetical character(s) detected! \n"
 				+ "Make sure you do not have unintended white spaces.", 
 				"Warning: Invalid Input", JOptionPane.INFORMATION_MESSAGE);
+		
 	}
 
 	public void updateWordLabel(int currentWord){

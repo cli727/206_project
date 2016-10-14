@@ -2,6 +2,8 @@ package VoxSpell;
 
 import java.util.Vector;
 
+import audioPlayer.AudioPlayer;
+
 public class TestQuizModel extends QuizModel{
 	private HiddenFilesModel _hiddenFilesModel;
 
@@ -42,8 +44,7 @@ public class TestQuizModel extends QuizModel{
 
 				//allocate score according to time left
 				int timeLeft = ((TestQuizView)_quizView).getTimerValue();
-				System.out.println("time left : " + timeLeft);
-
+	
 				if ((20 >= timeLeft) && (timeLeft >= 16)){
 					//add 5 points
 					((TestQuizView)_quizView).updateScore(5);
@@ -57,8 +58,13 @@ public class TestQuizModel extends QuizModel{
 					//add 2 points
 					((TestQuizView)_quizView).updateScore(2);
 				}
+				
+				((TestQuizView) _quizView).updateFeedback(true);
 
-				_festivalModel.correctVoice();
+				//_festivalModel.correctVoice();
+				//play correct sound effect
+				AudioPlayer audioPlayer = new AudioPlayer();
+				audioPlayer.playAudio("./correct.wav");
 
 				//write word to correct history file
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName(), 
@@ -68,13 +74,19 @@ public class TestQuizModel extends QuizModel{
 				moveOnToNextWord();
 
 			}else {
+				
+				//play incorrect sound effect
+				AudioPlayer audioPlayer = new AudioPlayer();
+				audioPlayer.playAudio("./incorrect.wav");
+				
+				((TestQuizView) _quizView).updateFeedback(false);
 				//word is not spelt correctly 
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testIncorrectFolderPath+_quizView.getCourseName(), 
 						_currentWord);
 
 				//write word to correct history file
 
-				_festivalModel.failedVoice();
+				//_festivalModel.failedVoice();
 				moveOnToNextWord();
 
 			}
@@ -93,6 +105,7 @@ public class TestQuizModel extends QuizModel{
 
 		//reset timer
 		((TestQuizView)_quizView).resetTimer();
+
 	}
 
 	/**

@@ -55,7 +55,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		_labelScore.setFont((new Font("SansSerif", Font.ITALIC,45)));
 		
 		_labelTableInfo = new JLabel(); //info depends on whether the stats is empty
-		_labelTableInfo.setFont(new Font("SansSerif" , Font.PLAIN, 17));
+		_labelTableInfo.setFont(new Font("SansSerif" , Font.PLAIN, 15));
 
 		_tablePanel = new JPanel();
 
@@ -66,10 +66,11 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 	@Override
 	public JPanel createAndGetPanel() {
 		
-		if (_model.emptyStats){
+		if (((TestScoreModel) _model).emptyStats()){
 			_labelTableInfo.setText("No history available. Let's start a test.");
+			_btnClearStats.setEnabled(false);
 		}else{
-			_labelTableInfo.setText("History sorted by most incorrect counts.");
+			_labelTableInfo.setText("Attempted word history in alphabetical order.");
 		}
 		
 		
@@ -96,15 +97,24 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(20,-85,0,0);
+		c.insets = new Insets(20,30,0,0);
 		resultPanel.add(_labelQuizMode, c);
+		
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(30,100,0,0);
+		resultPanel.add(_labelTableInfo, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(0,300,0,0);
+		c.insets = new Insets(0,100,0,0);
 		resultPanel.add(_labelScoreTitle, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -112,7 +122,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(0,330,0,0);
+		c.insets = new Insets(0,130,0,0);
 		resultPanel.add(_labelScore, c);
 
 
@@ -121,7 +131,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 2;
 		c.gridwidth = 2;
 		c.gridheight = 2;
-		c.insets = new Insets(10,0,0,0);
+		c.insets = new Insets(0,0,0,0);
 		resultPanel.add(_tablePanel, c);
 
 
@@ -141,7 +151,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(15,250,0,100);
+		c.insets = new Insets(15,100,0,100);
 		resultPanel.add(_btnChangeCourse, c);
 		_btnChangeCourse.addActionListener(this);
 
@@ -153,36 +163,43 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnChangeCourse){
 			VoxSpellGui.showCourseChooser(null);
-		}else if(e.getSource() == _btnClearStats){}
-		//warning message
+		}else if(e.getSource() == _btnClearStats){
+			
+			//warning message
 
-		int dialogResult  = JOptionPane.showOptionDialog(VoxSpellGui.getFrame(), 
-				("<html>Warning: <BR>" + "<BR>" +
-						"Are you sure you want to delete this course?  <BR>" + 
-						"All of its statistics will be deleted.<BR>" + 
-						"   </html>"),
-				"Delete Course", 
-				JOptionPane.OK_CANCEL_OPTION, 
-				JOptionPane.INFORMATION_MESSAGE, 
-				null, 
-				new String[]{"Delete", "Cancel"}, 
-				"default");
+			int dialogResult  = JOptionPane.showOptionDialog(VoxSpellGui.getFrame(), 
+					("<html>Warning: <BR>" + "<BR>" +
+							"Are you sure you want to clear the statistics of this course?  <BR>" + 
+							"This will affect its revision list and entire test history.  </html>"),
+					"Clear Course Statistics", 
+					JOptionPane.OK_CANCEL_OPTION, 
+					JOptionPane.INFORMATION_MESSAGE, 
+					null, 
+					new String[]{"Clear", "Cancel"}, 
+					"default");
 
-		if(dialogResult == JOptionPane.YES_OPTION){
-			//delete its stats
-			if (_hiddenFilesModel.deleteCourseStats(_courseName)){
-				//successful
-				//successful, inform user using pop up pane
-				String message = "Course Deleted! \n";
+			if(dialogResult == JOptionPane.YES_OPTION){
+				//delete its stats
+				if (_hiddenFilesModel.deleteCourseStats(_courseName)){
+					//successful
+					//successful, inform user using pop up pane
+					String message = "Course Statistics Cleared! \n";
 
-				JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
-						"Deletion Successful", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(VoxSpellGui.getFrame(), message, 
+							"Successful", JOptionPane.INFORMATION_MESSAGE);
 
-				//show this card again, refreshing jlist
-				ShowImportedWordListView importedWordListView = new ShowImportedWordListView();
-				VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
+					//show this card again, refreshing jlist
+					//show stats view
+					TestScoreView testScoreView = new TestScoreView(_courseName,  _hiddenFilesModel.getHighScore(_courseName));
+					TestScoreModel testScoreModel = new TestScoreModel(_courseName);
+					
+					testScoreView.setModel(testScoreModel);
+									
+					VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
+				}
+
 			}
-
 		}
+		
 	}
 }

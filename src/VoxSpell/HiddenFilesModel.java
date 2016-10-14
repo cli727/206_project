@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -259,6 +260,7 @@ public class HiddenFilesModel {
 	public ArrayList<String> getHistroyWords(String _courseName) {
 		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
 		
+		Collections.sort(allWords); //sort in alphabetical order;
 		return allWords;
 	}
 	
@@ -504,14 +506,17 @@ public class HiddenFilesModel {
 	 * @param courseName
 	 * @return 
 	 */
-	public boolean deleteCourseStats(String courseName) {
+	public boolean deleteCourse(String courseName) {
 
 		try {
 			//delete course file
 			Files.deleteIfExists(Paths.get("./.course/"+courseName));
-
+			
 			//delete .review file
-			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName + "Review"));
+			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
+
+			//delete .testHistory file
+			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName));
 
 			//delete .testCorrect file
 			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
@@ -527,6 +532,36 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 			return false;
 		}
+
+		return true;
+	}
+	
+	public boolean deleteCourseStats(String courseName) {
+
+		try {
+			
+			//delete .review file
+			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
+
+			//delete .testHistory file
+			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName));
+
+			//delete .testCorrect file
+			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
+
+			//delete test Incorrect file
+			Files.deleteIfExists(Paths.get(_testIncorrectFolderPath + courseName));
+
+			//delete highScore file
+			Files.deleteIfExists(Paths.get(_highScoreFolderPath + courseName));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		setUpHiddenFiles(); //reset files, i.e. .highscore to 0, testhistory to empty
 
 		return true;
 	}

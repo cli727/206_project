@@ -16,6 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
 import VoxSpell.FestivalModel.Voice;
+import audioPlayer.AudioPlayer;
 
 public class TestQuizView extends QuizView{
 
@@ -25,6 +26,8 @@ public class TestQuizView extends QuizView{
 	private JPanel _scorePanel;
 	private JLabel _scoreTitle;
 	private JLabel _updateScore;
+
+	private JLabel _labelFeedBack;
 
 	private int _counter;
 	private boolean _finished = false;
@@ -42,6 +45,10 @@ public class TestQuizView extends QuizView{
 
 		_scorePanel = new JPanel();
 		_scorePanel.setBackground(Color.white);
+
+		_labelFeedBack = new JLabel("<html> <p style='text-align:center;'>"
+				+ "<font color='white'>"
+				+ " Correct!"+"</font></html>"); //text depends on whether user gets a word correct or not
 
 		_scoreTitle = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
@@ -138,13 +145,14 @@ public class TestQuizView extends QuizView{
 		add(_updateWordPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 4;
-		c.gridwidth = 4;
-		c.gridheight = 2;
+		c.gridheight = 1;
+		c.gridwidth = 3;
+		c.ipadx = 0;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,35,30,0);
-		add(_labelDefinition, c);
+		c.insets = new Insets(10,240,0,0);
+		add(_labelFeedBack, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -165,6 +173,7 @@ public class TestQuizView extends QuizView{
 		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
+
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
@@ -220,11 +229,24 @@ public class TestQuizView extends QuizView{
 			//System.out.println(_counter);
 			_counter--;
 			_timerBar.setValue(_counter);
-			
+
 			if (!_finished){
+
+				_labelFeedBack.setText("<html> <p style='text-align:center;'>"
+						+ "<font color='white'>"
+						+ " Correct!"+"</font></html>");//so that feedback label shows up for 1 second only
+
 				if (_counter<1) {
 					//time up, fail this word and move on to next word
-					_festivalModel.failedVoice();
+					
+					//_festivalModel.failedVoice();
+					AudioPlayer audioPlayer = new AudioPlayer();
+					audioPlayer.playAudio("./incorrect.wav");
+					
+					_labelFeedBack.setText("<html> <p style='text-align:center;'>"
+							+ "<font color=red'>"
+							+ "Incorrect!"+"</font></html>");
+					
 					_quizModel.moveOnToNextWord();
 				} 
 			}else{
@@ -267,11 +289,11 @@ public class TestQuizView extends QuizView{
 	//need to stop timer
 	@Override
 	public void showInvalidInputPopUp(){
-		//_timer.stop();
+		_timer.stop();
 		JOptionPane.showMessageDialog(this, "Non alphabetical character(s) detected! \n"
 				+ "Make sure you do not have unintended white spaces.", 
 				"Warning: Invalid Input", JOptionPane.INFORMATION_MESSAGE);
-		//_timer.start();
+		_timer.start();
 	}
 
 	protected void resetTimer() {
@@ -301,7 +323,20 @@ public class TestQuizView extends QuizView{
 		_updateScore.setText(Integer.toString(score));
 	}
 
-	public int getScore() {
+	protected void updateFeedback(boolean correct){
+		if (correct){
+			_labelFeedBack.setText(("<html> <p style='text-align:center;'>"
+					+ "<font color='green'>"
+					+ " Correct!"+"</font></html>"));
+
+		}else {
+			_labelFeedBack.setText(("<html> <p style='text-align:center;'>"
+					+ "<font color='red'>"
+					+ "Incorrect"+"</font></html>"));
+		}
+	}
+
+	protected int getScore() {
 		return Integer.parseInt(_updateScore.getText()); //get current score
 	}
 }

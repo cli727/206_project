@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import video_player.VideoPlayer;
+import videoPlayer.VideoPlayer;
 
 public class TestResultView extends JTableView implements ActionListener , Card{
 

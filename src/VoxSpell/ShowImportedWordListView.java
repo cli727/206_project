@@ -261,7 +261,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 
 			if(dialogResult == JOptionPane.YES_OPTION){
 				//delete its stats
-				if (_hiddenFilesModel.deleteCourseStats(courseName)){
+				if (_hiddenFilesModel.deleteCourse(courseName)){
 					//successful
 					//successful, inform user using pop up pane
 					String message = "Course Deleted! \n";
