@@ -1,100 +1,62 @@
 package VoxSpell;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Random;
-
-import VoxSpell.HiddenFilesModel.StatsFile;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Parent class for new and review quizzes, offers methods that are used for both mode of games
  * @author chen
  *
  */
-abstract public class QuizModel {
+public class QuizModel {
 
-	public enum WordMastery {
-		MASTERED, FAULTED, FAILED
-	}
-
-	protected int _level;
 	protected QuizView _quizView;
 
-	protected HiddenFilesModel _hiddenFilesModel;
 	protected FestivalModel _festivalModel;
 
-	//arraylist that only stores the words that should be quizzed on for the current level
-	protected List<String> _randomWords;
+	//arraylist that only stores the words that should be quizzed for this game
+	protected ArrayList<String> _randomWords;
 
-	//one arrayList for all words in each level
-	//words can be from either wordlist or failed word file
-	private ArrayList<String> _lvlOneWords;
-	private ArrayList<String> _lvlTwoWords;
-	private ArrayList<String> _lvlThreeWords;
-	private ArrayList<String> _lvlFourWords;
-	private ArrayList<String> _lvlFiveWords;
-	private ArrayList<String> _lvlSixWords;
-	private ArrayList<String> _lvlSevenWords;
-	private ArrayList<String> _lvlEightWords;
-	private ArrayList<String> _lvlNineWords;
-	private ArrayList<String> _lvlTenWords;
-	private ArrayList<String> _lvlElevenWords;
+	//list of list structure for all words of this level
+	private static ArrayList<String> _allWords;
 
-	//list of list structure for all words of all levels
-	private static ArrayList<ArrayList<String>> _allWords;
+	private int _numWordsToQuiz;
 
 	//a word in the randomWord list that is currently being compared
 	protected String _currentWord;
-	protected int _currentIndex;
+	private int _currentIndex;
 
-	protected int _totalCorrectCount;
+	private int _totalCorrectCount;
 	protected int _currentCorrectCount;
 
-	protected int _attemptedCount;
-	protected double _accuracyRate; 
+	private int _attemptedCount;
+	private double _accuracyRate; 
 
 	//the user input that is currently being compared
 	protected String _userInput;
 
 	//keeps track of how many times it took to get the word spelt correctly
 	protected int _countChecks;
+	
+	protected ArrayList<String> _countCheckList; //keeps track of attempted times of every word 
+	protected ArrayList<String> _countCorrectList; //keeps track of correct times of every word, can be 1 or 0, needed for test model
+	
+	private Vector<String> _allLevelNames;
 
-	//Methods to be implemented by child classes, implementation depends on the current quiz mode
-	abstract protected void checkSpelling(String userInput);
-	abstract protected void moveOnToNextWord();
-	abstract protected void endOfLevel();
-
-	public QuizModel(){
+	public QuizModel(Vector<String> allLevelNames){
 		//initialise fields		
+		_countCheckList = new ArrayList<String>();
+		_countCorrectList = new ArrayList<String>();
+		
+		_allLevelNames = allLevelNames; //without % in front
+		
 		_randomWords = new ArrayList<String>();
-		_allWords = new ArrayList<ArrayList<String>>();
 
-		_lvlOneWords = new ArrayList<String>();
-		_lvlTwoWords = new ArrayList<String>();
-		_lvlThreeWords = new ArrayList<String>();
-		_lvlFourWords = new ArrayList<String>();
-		_lvlFiveWords = new ArrayList<String>();
-		_lvlSixWords = new ArrayList<String>();
-		_lvlSevenWords = new ArrayList<String>();
-		_lvlEightWords = new ArrayList<String>();
-		_lvlNineWords = new ArrayList<String>();
-		_lvlTenWords = new ArrayList<String>();
-		_lvlElevenWords = new ArrayList<String>();
-
-		//set up the list of list structure
-		_allWords.add(_lvlOneWords);
-		_allWords.add(_lvlTwoWords);
-		_allWords.add(_lvlThreeWords);
-		_allWords.add(_lvlFourWords);
-		_allWords.add(_lvlFiveWords);
-		_allWords.add(_lvlSixWords);
-		_allWords.add(_lvlSevenWords);
-		_allWords.add(_lvlEightWords);
-		_allWords.add(_lvlNineWords);
-		_allWords.add(_lvlTenWords);
-		_allWords.add(_lvlElevenWords);
-
-		_hiddenFilesModel = HiddenFilesModel.getInstance();
+		_festivalModel = FestivalModel.getInstance();
 
 		_currentIndex = -1;
 
@@ -112,15 +74,115 @@ abstract public class QuizModel {
 		_quizView = view;
 	}
 
-	public void setInitialLevel(int level){
-		_level = level;
-	}
-
-	public void setAllWords(ArrayList<ArrayList<String>> allWords){
+	public void setAllWords(ArrayList<String> allWords, int numWordsToQuiz){
 		_allWords = allWords;
+		_numWordsToQuiz = numWordsToQuiz;
+	}
+
+	/**
+	 * CheckSpelling for Practice mode. No such concept as mastered/faulted/failed
+	 * The quiz moves on only if the user gets a word right / skip the word
+	 * Words written to history (not review)
+	 */
+	protected void checkSpelling(String userInput) {
+
+		//gets called every time the checkSpelling button is clicked
+		_userInput = userInput;
+
+		if (!isValidUserInput()){
+			//check that the input only contains valid letters 
+
+			//tell view to show a pop up window 
+			_quizView.showInvalidInputPopUp();
+
+			_festivalModel.speakCurrentWord(_currentWord);
+
+			return;
+
+		}else{
+			//compare userInput with currentWord
+			_countChecks ++;
+
+			if (isSameWord()){
+				//if word is spelt correctly
+				_festivalModel.correctVoice();
+
+				moveOnToNextWord();//_countChecks cleared!!!
+
+			}else {
+				//word is not spelt correctly 
+
+				_festivalModel.faultedVoice(_currentWord);
+
+			}
+		}
+	}
+
+	/**
+	 * Check if the current word is the last word in the quiz, continues game if not; shows results if yes
+	 */
+	protected void moveOnToNextWord() {
+
+		if (_currentIndex != -1){
+
+			//add current count check in list
+			_countCheckList.add(Integer.toString(_countChecks));
+			
+			//add correct times in list
+			 _countCorrectList.add(Integer.toString(_currentCorrectCount));
+		}
+
+		_countChecks = 0;
+		_currentCorrectCount = 0;
+
+		//System.out.println("currentINdex: "+ _currentIndex + " current word: " + _currentWord);
+
+
+		if ( _currentIndex == (_randomWords.size()-1)){
+
+			//last word in randomWords list
+			endOfLevel();
+		}else if (_currentIndex != (_randomWords.size()-1)){
+
+			//set currentWord to the next word if this is not the last word in randomWords list
+			_currentIndex ++;
+			_attemptedCount ++;
+			_currentWord = _randomWords.get(_currentIndex);
+
+			//updates word progress on the gui, clears input area, disable answer panel
+			_quizView.updateWordLabel(_currentIndex+1);
+			_quizView.clearInputArea();
+			_quizView.disableAnswer();
+
+			//update tips label in case of case sensitivity
+			_quizView.updateTipsLabel(isCaseSensitive());
+
+			_festivalModel.speakCurrentWord(_currentWord);
+		}
 
 	}
 
+	/**
+	 * Manages the end of a level,shows the user the result card
+	 */
+	protected void endOfLevel() {
+		//show result card according to game mode
+		ResultView resultView = null;
+		
+		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+			
+			resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+			
+			resultView = new ReviewResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
+		}
+		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList,_quizView.getLevelName(),_quizView.getCourseName());
+
+		resultView.setModel(resultModel);
+
+		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
+	}
+	
 	/**
 	 * REUSED CODE FROM ASSIGNMENT 2
 	 * MOFIDIED TO SUIT ASSIGENMENT 3
@@ -132,33 +194,57 @@ abstract public class QuizModel {
 	 */
 	protected void getRandomWords(){
 
-		if ((_allWords.get(_level-1).size() < 10) && (_allWords.get(_level-1).size() > 0)){
+		/*System.out.println("numToQuiz " + _numWordsToQuiz);
+		System.out.println("allWORDS size: " +_allWords.size());
+		System.out.println("random size: " +_randomWords.size());*/
 
-			//less than 10 words, just get all of them 
-			_randomWords = _allWords.get(_level-1);
+		//The method aims to avoid duplicates in the randomly generated words, which may lead to infinite loop if
+		//the words within the level are duplicated in the wordlist
+		
+		Set<String> duplicates = new LinkedHashSet<String>();
+	    Set<String> uniques = new HashSet<String>();
 
+	    /*for(String t : _allWords) {
+	        if(!uniques.add(t)) {
+	           System.out.println("duplicate: " + t);
+	        }
+	    }*/
+		
+		//chooses _numWordsToQuiz number of random words from allWords
+	   
+		while (_randomWords.size() < _numWordsToQuiz){
+			//System.out.println("1");
+			Random r = new Random();
+			String randomWord = _allWords.get(r.nextInt(_allWords.size()));//generate a random word
 
-		}else if (_allWords.get(_level-1).size() >= 10){
+			//System.out.println("randomWords: " + randomWord + "randome size: " + _randomWords.size());
 
-			//chooses 10 random words from list from current level array list
-			while (_randomWords.size() < 10){
-				Random r = new Random();
-				String randomWord = _allWords.get(_level-1).get(r.nextInt(_allWords.get(_level-1).size()));//generate a random word
-
-				if (! _randomWords.contains(randomWord)){
-					//only add randomWord if it is not already in the list, avoid repetition
-					_randomWords.add(randomWord);
-				}
+			if (! _randomWords.contains(randomWord)){
+				
+				//only add randomWord if it is not already in the list, avoid repetition
+				_randomWords.add(randomWord);
 			}
 		}
-
-		//for (int j = 0; j < _randomWords.size(); j ++){
-		//System.out.println("Rndome word " + _randomWords.get(j));
-		//}
 
 		//start spelling the FIRST word
 		moveOnToNextWord();
 
+	}
+	/**
+	 * helper method for view to get the number of words, so that it can be shown on the GUI
+	 * @return
+	 */
+	protected int getTotalWordNum(){
+		return _randomWords.size();
+	}
+
+
+	/**
+	 * Helper method for the view to update GUI with correct word spelling when the user chooses "show answer"
+	 * @return
+	 */
+	protected String getCorrectSpelling(){
+		return _currentWord;
 	}
 
 	/**
@@ -172,13 +258,13 @@ abstract public class QuizModel {
 
 		String accuracy = "%"+_accuracyRate;
 
-		if (_accuracyRate == 100){
+		/*if (_accuracyRate == 100){
 			accuracy = "%100"; //no decimal place for formatting purpose
 		}else if (_level < 10){
 			accuracy = accuracy + " "; //add one extra space for formatting purpose
 		}
 
-		_quizView.updateJLabel(_level, accuracy);
+		_quizView.updateJLabel(_level, accuracy);*/
 
 	}
 
@@ -264,24 +350,6 @@ abstract public class QuizModel {
 
 	public void relisten() {
 		_festivalModel.relistenWord(_currentWord);
-	}
-
-	/**
-	 * Depending on whether the user mastered/faulted/failed spelling of word, store in the appropriate file.
-	 * @param masteryLevel
-	 */
-	protected void storeWordInStatsFile(WordMastery masteryLevel) {
-		switch(masteryLevel) {
-		case MASTERED:
-			_hiddenFilesModel.addWordToStatsFile(StatsFile.MASTERED_WORDS, _currentWord);
-			break;
-		case FAULTED:
-			_hiddenFilesModel.addWordToStatsFile(StatsFile.FAULTED_WORDS, _currentWord);
-			break;
-		case FAILED:
-			_hiddenFilesModel.addWordToStatsFile(StatsFile.FAILED_WORDS, _currentWord);
-			break;
-		}
 	}
 
 	protected void setFestivalModel(FestivalModel model) {

@@ -1,8 +1,11 @@
 package VoxSpell;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,7 +13,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * A Singleton class that manages reading/writing actions to the hidden files
@@ -19,30 +26,22 @@ import java.util.List;
  *
  */
 public class HiddenFilesModel {
+	public static final String _reviewFolderPath = "./.review/";
+	public static final String _testHistoryFolderPath = "./.testHistory/";
+	public static final String _testCorrectFolderPath = "./.testCorrect/";
+	public static final String _testIncorrectFolderPath = "./.testIncorrect/";
+	public static final String _highScoreFolderPath = "./.highScore/";
 
 	protected enum StatsFile {
-		MASTERED_WORDS, FAULTED_WORDS, FAILED_WORDS
+		REVIEW, HISTORY
 	}
 
 	private static HiddenFilesModel _hiddenFilesModel;
 
-	protected static Path _reviewFolderPath;
-	protected static Path _reviewWordsLevel01FilePath;
-	protected static Path _reviewWordsLevel02FilePath;
-	protected static Path _reviewWordsLevel03FilePath;
-	protected static Path _reviewWordsLevel04FilePath;
-	protected static Path _reviewWordsLevel05FilePath;
-	protected static Path _reviewWordsLevel06FilePath;
-	protected static Path _reviewWordsLevel07FilePath;
-	protected static Path _reviewWordsLevel08FilePath;
-	protected static Path _reviewWordsLevel09FilePath;
-	protected static Path _reviewWordsLevel10FilePath;
-	protected static Path _reviewWordsLevel11FilePath;	
+	protected static Path _courseFolderPath;
 
-	protected static Path _statsFolderPath;
-	protected static Path _masteredWordsFilePath;
-	protected static Path _faultedWordsFilePath;
-	protected static Path _failedWordsFilePath;
+	protected static Path _reviewFilePath;
+	protected static Path _historyFilePath;
 
 	protected static Path _festivalFolderPath;
 	protected static Path _slowPacedVoiceFilePath;
@@ -70,54 +69,129 @@ public class HiddenFilesModel {
 		try {
 
 			//Create file paths for the hidden files
-			//For hidden files related to review, store file path in an array for ease of access in the future
-			_reviewFolderPath = Paths.get("./.review");
-			_reviewWordsLevel01FilePath = Paths.get("./.review/ReviewWordsLevel01");
-			_reviewWordsLevel02FilePath = Paths.get("./.review/ReviewWordsLevel02");
-			_reviewWordsLevel03FilePath = Paths.get("./.review/ReviewWordsLevel03");
-			_reviewWordsLevel04FilePath = Paths.get("./.review/ReviewWordsLevel04");
-			_reviewWordsLevel05FilePath = Paths.get("./.review/ReviewWordsLevel05");
-			_reviewWordsLevel06FilePath = Paths.get("./.review/ReviewWordsLevel06");
-			_reviewWordsLevel07FilePath = Paths.get("./.review/ReviewWordsLevel07");
-			_reviewWordsLevel08FilePath = Paths.get("./.review/ReviewWordsLevel08");
-			_reviewWordsLevel09FilePath = Paths.get("./.review/ReviewWordsLevel09");
-			_reviewWordsLevel10FilePath = Paths.get("./.review/ReviewWordsLevel10");
-			_reviewWordsLevel11FilePath = Paths.get("./.review/ReviewWordsLevel11");
-			
-			_statsFolderPath = Paths.get("./.stats");
-			_masteredWordsFilePath = Paths.get("./.stats/MasteredWords");
-			_faultedWordsFilePath = Paths.get("./.stats/FaultedWords");
-			_failedWordsFilePath = Paths.get("./.stats/FailedWords");
-			
+
 			_festivalFolderPath = Paths.get("./.festival");
 			_slowPacedVoiceFilePath = Paths.get("./.festival/slowPacedVoice.scm");
 			_americanVoiceFilePath = Paths.get("./.festival/americanVoice.scm");
 			_newZealandVoiceFilePath = Paths.get("./.festival/newZealandVoice.scm");
-			
-			//Create stats folder and mastered/faulted/failed words files only if it doesn't already exists. 
-			//Assumption: if stats folder already exists, then mastered/faulted/failed words file already exists within stats folder too
-			if (Files.notExists(_statsFolderPath)) {
-				Files.createDirectory(_statsFolderPath);
-				Files.createFile(_masteredWordsFilePath);
-				Files.createFile(_faultedWordsFilePath);
-				Files.createFile(_failedWordsFilePath);
+
+
+			//create .review folder if it does not exist
+			if (Files.notExists(Paths.get(_reviewFolderPath))) {
+				Files.createDirectory(Paths.get(_reviewFolderPath));
 			}			
 
-			//Create reviewWords folder only if it doesn't already exists
-			//Assumption: if reviewWords folder already exists, then the reviewWordsLevelXX files for all levels already exists within reviewWords folder too
-			if (Files.notExists(_reviewFolderPath)) {
-				Files.createDirectory(_reviewFolderPath);
-				Files.createFile(_reviewWordsLevel01FilePath);
-				Files.createFile(_reviewWordsLevel02FilePath);
-				Files.createFile(_reviewWordsLevel03FilePath);
-				Files.createFile(_reviewWordsLevel04FilePath);
-				Files.createFile(_reviewWordsLevel05FilePath);
-				Files.createFile(_reviewWordsLevel06FilePath);
-				Files.createFile(_reviewWordsLevel07FilePath);
-				Files.createFile(_reviewWordsLevel08FilePath);
-				Files.createFile(_reviewWordsLevel09FilePath);
-				Files.createFile(_reviewWordsLevel10FilePath);
-				Files.createFile(_reviewWordsLevel11FilePath);				
+			//create .testHistory folder it it does not exist
+			if(Files.notExists(Paths.get(_testHistoryFolderPath))){
+				Files.createDirectories(Paths.get(_testHistoryFolderPath));
+			}
+
+			//create .testCorrect folder if it doesnot exist
+			if(Files.notExists(Paths.get(_testCorrectFolderPath))){
+				Files.createDirectories(Paths.get(_testCorrectFolderPath));
+			}
+
+			//create .testIncorrect folder if it does not exist
+			if(Files.notExists(Paths.get(_testIncorrectFolderPath))){
+				Files.createDirectories(Paths.get(_testIncorrectFolderPath));
+			}
+
+			//create .highScore folder if it does not exist
+			if(Files.notExists(Paths.get(_highScoreFolderPath))){
+				Files.createDirectories(Paths.get(_highScoreFolderPath));
+			}
+
+			File folder = new File("./.course");
+			File[] listOfFiles = folder.listFiles(); //all file names within ./.course folder
+
+			//for every file in the ./course folder
+			for (int i = 0; i < listOfFiles.length; i++ ){
+
+				//==========create each course's review file if it does not exist==========================
+				Path thisReviewFilePath = Paths.get(_reviewFolderPath + listOfFiles[i].getName()+"Review");
+
+				//create the review version of the course file, consisting of only level names to begin with
+				if (Files.notExists(thisReviewFilePath)) {
+
+					//write to this file the level names only, for appending purpose later 
+
+					//read all words from the COURSE file first
+					ArrayList<String> allWords = readFileToArray("./.course/"+ listOfFiles[i].getName());
+					ArrayList<String> levelWords = new ArrayList<String>();
+
+					//find level names
+					for (int j = 0; j < allWords.size(); j ++){
+						if (Character.toString(allWords.get(j).charAt(0)).equals("%")){
+							levelWords.add(allWords.get(j));
+						}
+					}
+
+					//write these level names to file
+					try {
+						File stats = new File(thisReviewFilePath.toString());
+						stats.createNewFile();
+
+						FileWriter writer = new FileWriter(stats); 
+
+						for(int k = 0; k < levelWords.size();k++){
+
+							writer.write(levelWords.get(k)+"\n"); 	
+						}
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
+
+				}
+
+				//==========create each course's test history file if it does not exist==========================
+				Path thisTestHistoryFilePath = Paths.get(_testHistoryFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thisTestHistoryFilePath)) {
+
+					Files.createFile(thisTestHistoryFilePath);
+				}
+
+				//==========create each course's test correct file if it does not exist==========================
+				Path thistestCorrectFilePath = Paths.get(_testCorrectFolderPath+ listOfFiles[i].getName());
+
+				if (Files.notExists(thistestCorrectFilePath)) {
+
+					Files.createFile(thistestCorrectFilePath);
+				}
+
+				//==========create each course's test incorrect file if it does not exist==========================
+				Path thistestIncorrectFilePath = Paths.get(_testIncorrectFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thistestIncorrectFilePath)) {
+
+					Files.createFile(thistestIncorrectFilePath);
+				}
+
+				//==========create each course's high score file if it does not exist==========================
+				Path thisHighScoreFilePath = Paths.get(_highScoreFolderPath + listOfFiles[i].getName());
+
+				if (Files.notExists(thisHighScoreFilePath )) {
+					//recreate the review file with the added word, should replace the original file
+					try {
+						File stats = new File(thisHighScoreFilePath.toString());
+						stats.createNewFile();
+
+						FileWriter writer = new FileWriter(stats); 
+
+						writer.write("0"+"\n"); 	
+
+						writer.flush();
+						writer.close();
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
+				}
+
+
 			}
 
 			//Directory for storing scm files to be given as input to festival
@@ -135,71 +209,127 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Given a word, append it as a new line in the specified file.
-	 * @param file
+	 * searches through ./.course directory and finds course names that are not "KET" or "IELTS"
+	 * @return
+	 */
+	public ArrayList<String> getImportedCourseNames() {
+		ArrayList<String> importedCourse = new ArrayList<String>();
+
+		File folder = new File("./.course");
+		File[] listOfFiles = folder.listFiles(); //all file names within ./.course folder
+
+		//for every file in the ./course folder
+		for (int i = 0; i < listOfFiles.length; i++ ){
+			String thisCourse = listOfFiles[i].getName();
+
+			if (! thisCourse.equals("KET") && ! thisCourse.equals("IELTS")){
+				//not the built in lists
+				importedCourse.add(thisCourse);
+			}
+		}
+		return importedCourse;
+	}
+
+
+	/**
+	 * append a word to end of its course history, avoid duplicates	
+	 * @param courseName
 	 * @param word
 	 */
-	protected void addWordToStatsFile(StatsFile file, String word) {
-		String wordOnNewLine = word + "\n";
+	protected void addWordToHistFile(String courseName, String word) {
+
+		List<String> allWords = new ArrayList<String>();
+
 		try {
-			switch (file) {
-			case MASTERED_WORDS:
-				Files.write(_masteredWordsFilePath, wordOnNewLine.getBytes(), StandardOpenOption.APPEND);
-				break;
-			case FAULTED_WORDS:
-				Files.write(_faultedWordsFilePath, wordOnNewLine.getBytes(), StandardOpenOption.APPEND);
-				break;
-			case FAILED_WORDS:
-				Files.write(_failedWordsFilePath, wordOnNewLine.getBytes(), StandardOpenOption.APPEND);
-				break;
+
+			allWords = Files.readAllLines(Paths.get(_testHistoryFolderPath+courseName), StandardCharsets.ISO_8859_1);
+			if(! allWords.contains(word)){
+
+				BufferedWriter writer = new BufferedWriter(new FileWriter((_testHistoryFolderPath+courseName).toString(), true));
+				writer.append(word+"\n");
+				writer.close();
+
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		}catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-	}	
-
-	protected List<String> getWordsFromStatsFile(StatsFile file) {
-		List<String> words = null;
-		try {
-			switch(file) {
-			case MASTERED_WORDS:
-				words = Files.readAllLines(_masteredWordsFilePath, StandardCharsets.ISO_8859_1);
-				break;
-			case FAULTED_WORDS:
-				words = Files.readAllLines(_faultedWordsFilePath, StandardCharsets.ISO_8859_1);
-				break;
-			case FAILED_WORDS:
-				words = Files.readAllLines(_failedWordsFilePath, StandardCharsets.ISO_8859_1);
-				break;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return words;
-
-
 	}
+	
+	public ArrayList<String> getHistroyWords(String _courseName) {
+		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
+		
+		Collections.sort(allWords); //sort in alphabetical order;
+		return allWords;
+	}
+	
+	/**
+	 * Get correct/incorrect counts of all words in a history file 
+	 * @param _courseName
+	 * @param getCorrect
+	 * @return
+	 */
+	public ArrayList<Integer> getCorrectIncorrectCount (String _courseName, boolean getCorrect){
+		ArrayList<String> histWords = getHistroyWords(_courseName);
+		
+		ArrayList<String> countFile;
+		
+		if(getCorrect){
+			//get correct counts
+			countFile = readFileToArray(_testCorrectFolderPath+_courseName);
+		}else {
+			//get incorrect counts
+			countFile = readFileToArray(_testIncorrectFolderPath+_courseName);
+		}
+		
+		ArrayList<Integer> totalCount = new ArrayList<Integer>();
+		
+		
+		for (int i = 0; i < histWords.size(); i ++){
+			int count = 0;
+			
+			//count appearance of each history word in the count hidden file
+			for(int j = 0; j <countFile.size(); j ++){
+				
+				if (countFile.get(j).equals(histWords.get(i))){
+					count ++;
+				}
+			}
+			
+			totalCount.add(count);
+		}
+		
+		return totalCount;
+	}
+
+	/**
+	 * Adding to correct / incorrect allows duplications, therefore count number of times a word is correct/incorrect
+	 * during a test
+	 * @param filePath
+	 * @param word
+	 */
+	protected void addWordToCorrectIncorrectFile(String filePath, String word){
+
+		try {
+
+			BufferedWriter writer = new BufferedWriter(new FileWriter((filePath).toString(), true));
+			writer.append(word+"\n");
+			writer.close();
+
+
+		}catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	protected void clearStats() {
 		//First delete all files hidden files, then recreate them as blank files.
 		try {
-			Files.deleteIfExists(_masteredWordsFilePath);
-			Files.deleteIfExists(_faultedWordsFilePath);		
-			Files.deleteIfExists(_failedWordsFilePath);
-			Files.deleteIfExists(_statsFolderPath);
+			Files.deleteIfExists(_historyFilePath);
+			Files.deleteIfExists(_reviewFilePath);		
 
-			Files.deleteIfExists(_reviewWordsLevel01FilePath);
-			Files.deleteIfExists(_reviewWordsLevel02FilePath);
-			Files.deleteIfExists(_reviewWordsLevel03FilePath);
-			Files.deleteIfExists(_reviewWordsLevel04FilePath);
-			Files.deleteIfExists(_reviewWordsLevel05FilePath);
-			Files.deleteIfExists(_reviewWordsLevel06FilePath);
-			Files.deleteIfExists(_reviewWordsLevel07FilePath);
-			Files.deleteIfExists(_reviewWordsLevel08FilePath);
-			Files.deleteIfExists(_reviewWordsLevel09FilePath);
-			Files.deleteIfExists(_reviewWordsLevel10FilePath);
-			Files.deleteIfExists(_reviewWordsLevel11FilePath);		
-			Files.deleteIfExists(_reviewFolderPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -207,233 +337,354 @@ public class HiddenFilesModel {
 		setUpHiddenFiles();		
 	}
 
-	protected void removeWordFromReviewWordsFile(String word, int level) {		
-		Path reviewWordsFilePath = getReviewWordsFilePath(level); //Which Review File to remove the word from depends on what level it is.
+	/**
+	 * Removes a word from review file of corresponding course
+	 * ASSUMES NO DUPLICATION OF THE SAME WORD IN REVIEW 
+	 * @param word
+	 * @param level
+	 * @param courseName
+	 */
+	protected void removeWordFromReviewWordsFile(String word, String level, String courseName) {
+
+		String coursePath = "./.review/"+courseName+"Review";
+		ArrayList<String> allWords = new ArrayList<String>();
+		allWords = readFileToArray(coursePath);
+
+		allWords.remove(word);
+
+		//recreate the review file with the added word, should replace the original file
 		try {
-			List<String> reviewWordsAtGivenLevel = Files.readAllLines(reviewWordsFilePath, StandardCharsets.ISO_8859_1);//First read in all words from reviewWords file
-			List<String> tempList = new ArrayList<String>();
-			tempList.add(word); 
-			reviewWordsAtGivenLevel.removeAll(tempList); //Then remove all occurrences of the given word
+			File stats = new File(coursePath);
+			stats.createNewFile();
 
-			//Recreate a blank file in the same path as the reviewWords file & rewrite words into the file.
-			Files.delete(reviewWordsFilePath);
-			Files.createFile(reviewWordsFilePath);			
-			Files.write(reviewWordsFilePath, reviewWordsAtGivenLevel, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
+			FileWriter writer = new FileWriter(stats); 
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected void addWordToReviewWordsFile(String word, int level) {
-		String wordOnNewLine = word + "\n";
-
-		Path reviewWordsFilePath = getReviewWordsFilePath(level);
-
-		try {
-			//First, check if given word already exists in the file
-			List<String> allReviewWords = Files.readAllLines(reviewWordsFilePath, StandardCharsets.ISO_8859_1);
-			if (allReviewWords.contains(wordOnNewLine)) {
-				return; //if it already exists, there is no need to add it to the file.
+			for(int i = 0; i < allWords.size();i++){
+				writer.write(allWords.get(i)+"\n"); 	
 			}
-			else { //if it doesn't already exist, then write it to the file.
-				Files.write(reviewWordsFilePath, wordOnNewLine.getBytes(), StandardOpenOption.APPEND);
-			}
+			writer.flush();
+			writer.close();
 		} catch (IOException e) {
+
 			e.printStackTrace();
 		}
-	}	
-
-	protected BufferedReader getWordsForReview(int level) {
-		BufferedReader br = null;
-		Path reviewWordsFilePath = getReviewWordsFilePath(level); //Words for review depends on what the given level is.
-
-		try {
-			br = Files.newBufferedReader(reviewWordsFilePath, StandardCharsets.ISO_8859_1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return br;
 	}
 
 	/**
-	 * A private helper method to retrieve the reviewWords file at the corresponding level. 
+	 * add a word to review list
+	 * ASSUMES NO DUPLICATION OF WORDS (INTER AND INTRO LEVELS), OTHERWISE ONLY ADDED ONCE
+	 * @param word
 	 * @param level
-	 * @return
+	 * @param courseName
 	 */
-	protected Path getReviewWordsFilePath(int level) {
+	protected void addWordToReviewWordsFile(String word, String level, String courseName) {
 
-		switch (level) {
-		case 1:
-			return _reviewWordsLevel01FilePath;
-		case 2:
-			return _reviewWordsLevel02FilePath;
-		case 3:
-			return _reviewWordsLevel03FilePath;
-		case 4:
-			return _reviewWordsLevel04FilePath;
-		case 5:
-			return _reviewWordsLevel05FilePath;
-		case 6:
-			return _reviewWordsLevel06FilePath;
-		case 7:
-			return _reviewWordsLevel07FilePath;
-		case 8:
-			return _reviewWordsLevel08FilePath;
-		case 9:
-			return _reviewWordsLevel09FilePath;
-		case 10:
-			return _reviewWordsLevel10FilePath;
-		case 11:
-			return _reviewWordsLevel11FilePath;
-		default:
-			return null;
+
+		String coursePath = "./.review/"+courseName+"Review";
+		ArrayList<String> allWords = new ArrayList<String>();
+		allWords = readFileToArray(coursePath);
+
+		if (! allWords.contains(word)){
+			//add word
+
+			//find index of this level
+			int index = allWords.indexOf("%"+level);
+
+			int nextLvlIndex = allWords.size();
+
+			for (int i = index + 1; i < allWords.size(); i ++){
+				//starting after this index, find the position of next level
+				if(Character.toString(allWords.get(i).charAt(0)).equals("%")){
+					nextLvlIndex = i;
+
+					break;
+				}
+			}
+
+			//add word at position of next level (i.e. so it pushes next level further)
+
+			allWords.add(nextLvlIndex, word);
 		}
+
+		//recreate the review file with the added word, should replace the original file
+		try {
+			File stats = new File(coursePath);
+			stats.createNewFile();
+
+			FileWriter writer = new FileWriter(stats); 
+
+			for(int i = 0; i < allWords.size();i++){
+				writer.write(allWords.get(i)+"\n"); 	
+			}
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}	
+
+	/**
+	 * A method that gets the  user selected wordlist and copy it as a wordlist
+	 * Returns a boolean indicating whether the user selected file matches with required wordlist format
+	 * 
+	 * Invalid format include:
+	 * 1. file that does not start with "%" i.e. a level name
+	 * 2. empty file
+	 * 3. file that contains duplicate words in a level (getRandomWords may break, because randomWords keeps
+	 * adding non duplicated words, repeated words may cause infinite while loop)
+	 * 4. file not named KET or IELTS
+	 * 4. file with "" ? i.e. empty entry
+	 * 
+	 * @param path
+	 */
+	public boolean copyToCourse(String userWordListpath, String fileName) {
+
+		ArrayList<String> allWords = new ArrayList<String>();
+		allWords = readFileToArray(userWordListpath);
+
+		//check if the file matches with required format
+		if (allWords.size() == 0){
+			//empty file
+			return false;
+		}else if (! Character.toString(allWords.get(0).charAt(0)).equals("%")){
+			//does not start with a level
+			return false;
+		}else if (fileName.equals("KET") || fileName.equals("IELTS")){
+			//do not want to override the build in lists
+			return false;
+		}
+
+		//check for duplicates in all levels
+
+		Vector<String> allLevelNames = getAllLevelsFromCourse(userWordListpath); //get all level names first
+
+		for(int j = 0; j < allLevelNames.size(); j ++){
+			//get all words from level
+			ArrayList<String> wordsFromLevel = getLevelWordsFromCourse(userWordListpath,allLevelNames.get(j));
+
+			//a quick way to find out whether there are duplicates in the list using sets
+			Set<String> set = new HashSet<String>(wordsFromLevel);
+
+			if(set.size() < wordsFromLevel.size()){
+				//duplicates 
+				return false;
+			}
+
+		}
+
+		//valid file, copy it to .course directory
+
+		try {
+			File newCourse = new File("./.course/"+fileName);
+			newCourse.createNewFile();
+
+			FileWriter writer = new FileWriter(newCourse); 
+
+			for(int k = 0; k < allWords.size();k++){
+
+				writer.write(allWords.get(k)+"\n"); 	
+			}
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+		//set up its review, testHistory, test Correct, testIncorrect , high score hidden files
+		setUpHiddenFiles();
+
+		return true;//successful
+	}
+
+	/**
+	 * Delete a course and all its statistics hidden files
+	 * returns true indicating success, false indicating error
+	 * 
+	 * @param courseName
+	 * @return 
+	 */
+	public boolean deleteCourse(String courseName) {
+
+		try {
+			//delete course file
+			Files.deleteIfExists(Paths.get("./.course/"+courseName));
+			
+			//delete .review file
+			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
+
+			//delete .testHistory file
+			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName));
+
+			//delete .testCorrect file
+			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
+
+			//delete test Incorrect file
+			Files.deleteIfExists(Paths.get(_testIncorrectFolderPath + courseName));
+
+			//delete highScore file
+			Files.deleteIfExists(Paths.get(_highScoreFolderPath + courseName));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+	
+	public boolean deleteCourseStats(String courseName) {
+
+		try {
+			
+			//delete .review file
+			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
+
+			//delete .testHistory file
+			Files.deleteIfExists(Paths.get(_testHistoryFolderPath + courseName));
+
+			//delete .testCorrect file
+			Files.deleteIfExists(Paths.get(_testCorrectFolderPath + courseName));
+
+			//delete test Incorrect file
+			Files.deleteIfExists(Paths.get(_testIncorrectFolderPath + courseName));
+
+			//delete highScore file
+			Files.deleteIfExists(Paths.get(_highScoreFolderPath + courseName));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		setUpHiddenFiles(); //reset files, i.e. .highscore to 0, testhistory to empty
+
+		return true;
 	}
 
 	protected static Path getFestivalFolderPath() {
 		return _festivalFolderPath;
 	}
-	
+
 	/**
-	 * Read the contents of a file according to quizMode, into a list of list of strings
+	 * Read the contents of a file according to quizMode, into a list of strings
 	 * array structure
 	 * 
 	 * CODE REUSED FROM CHEN LI'S ASSIGNMENT 2 SUBMISSION
 	 * @param quizMode
 	 * @return
 	 */
-	protected ArrayList<ArrayList<String>> readFileToArray(String quizMode){ 
-		
+	protected ArrayList<String> readFileToArray(String coursePath){ 
+
 		BufferedReader reader;
-		
-		//Create list of list of strings data structure
-		ArrayList<ArrayList<String>> allWords = new ArrayList<ArrayList<String>>();
-		ArrayList<String> lvlOneWords = new ArrayList<String>();
-		ArrayList<String> lvlTwoWords = new ArrayList<String>();
-		ArrayList<String> lvlThreeWords = new ArrayList<String>();
-		ArrayList<String> lvlFourWords = new ArrayList<String>();
-		ArrayList<String> lvlFiveWords = new ArrayList<String>();
-		ArrayList<String> lvlSixWords = new ArrayList<String>();
-		ArrayList<String> lvlSevenWords = new ArrayList<String>();
-		ArrayList<String> lvlEightWords = new ArrayList<String>();
-		ArrayList<String> lvlNineWords = new ArrayList<String>();
-		ArrayList<String> lvlTenWords = new ArrayList<String>();
-		ArrayList<String> lvlElevenWords = new ArrayList<String>();
 
-		allWords.add(lvlOneWords);
-		allWords.add(lvlTwoWords);
-		allWords.add(lvlThreeWords);
-		allWords.add(lvlFourWords);
-		allWords.add(lvlFiveWords);
-		allWords.add(lvlSixWords);
-		allWords.add(lvlSevenWords);
-		allWords.add(lvlEightWords);
-		allWords.add(lvlNineWords);
-		allWords.add(lvlTenWords);
-		allWords.add(lvlElevenWords);
+		ArrayList<String> allWords = new ArrayList<String>();
 
-		if ( quizMode.equals(VoxSpellGui.NEW)){
+		//fills allWords
+		try {
+			reader = new BufferedReader(new FileReader(coursePath)); 
+			String line = reader.readLine();
 
-			//read from "wordlist" if this is a new quiz
-			int wordListIndex = -1;//keep tracks of which list to update in _allWords
+			while (line != null) {
 
-			//fills allWords
-			try {
-				reader = new BufferedReader(new FileReader("wordlist")); 
-				String line = reader.readLine();
+				allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
 
-				while (line != null) {
-					if (Character.toString(line.charAt(0)).equals("%")){
-						wordListIndex ++;
-					}else{
-						allWords.get(wordListIndex).add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
-					}
-					line = reader.readLine();
-				}
-
-				reader.close();
-
-			} catch (FileNotFoundException e) {
-				//do nothing, the GUI will be telling user about empty word list
-			} catch (IOException e) {
-				//do nothing
+				line = reader.readLine();
 			}
-		} else { //it is the "review mistakes" mode			
-			for (int i = 0; i < 11; i++) { //for each level... (current specifications state there are 11 levels only)
-				try {
-					BufferedReader br = _hiddenFilesModel.getWordsForReview(i+1);
 
-					String line;
-					//add lists of words at each level in corresponding position in allWords (e.g. position 0 of allWords list is review words for level 1
-					while ((line = br.readLine()) != null) {
-						if (allWords.get(i).contains(line)) { //if the word read has already been recorded in allWords previously
-							continue;
-						}
-						else {
-							allWords.get(i).add(line);
-						}						
-					}
-					br.close();
+			reader.close();
 
-				} catch (IOException e) {
-					// do nothing
-				}
+		} catch (FileNotFoundException e) {
 
-			}
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 		return allWords;
 	}
 
-	/**
-	 * Method to check if the wordlist file/review files are empty given the quizMode
-	 * (No quiz words at all for any levels)
-	 * @param quizMode
-	 * @return
-	 */
-	protected boolean allEmpty(String quizMode){
-		int nonEmptyLevel = 0;
+	public Vector<String> getAllLevelsFromCourse(String _coursePath){
+		Vector<String>_allLevelsFromCourse = new Vector<String>();
 
-		ArrayList<ArrayList<String>> allWords = _hiddenFilesModel.readFileToArray(quizMode);
+		for (int i = 0; i < readFileToArray( _coursePath).size(); i ++){
 
-		for (int i = 0; i < allWords.size();i++){
+			if (Character.toString(readFileToArray( _coursePath).get(i).charAt(0)).equals("%")){
+				//if the first char of this string is %, this is a new level
+				//add the level name in without the % sign
+				_allLevelsFromCourse.add(readFileToArray( _coursePath).get(i).substring(1));
+			}
+		}
+		return _allLevelsFromCourse;
+	}
 
-			if (! allWords.get(i).isEmpty()){
-				nonEmptyLevel ++;
+	public ArrayList<String> getLevelWordsFromCourse(String _coursePath,String level) {
+		ArrayList<String> allWords = readFileToArray( _coursePath);
+		ArrayList<String> levelWords = new ArrayList<String>();
+
+		level = "%" + level;
+		int startIndex = 0;
+
+		//find the beginning of the level in the allWord list of the course
+		for (int i = 0; i < allWords.size(); i ++){
+			if (allWords.get(i).equals(level)){
+				startIndex = i;
+				break;
 			}
 		}
 
-		if (nonEmptyLevel == 0){
-			//no level is not empty -> all empty
-			return true;
+		//starting from level position + 1, to the position before the next level
+		//these words are the words needed for this level
+		for (int j = startIndex + 1; j < allWords.size(); j ++){
+			if (Character.toString(allWords.get(j).charAt(0)).equals("%")){
+				break;
+			}else {
+				levelWords.add(allWords.get(j));
+			}
 		}
 
-		return false;
+		return levelWords;
+
 	}
 
 	/**
-	 * Check if there are quiz words for the level chosen
-	 * @param level
-	 * @param quizMode
+	 * Return the current best test score of a course
+	 * @param _courseName
 	 * @return
 	 */
-	protected boolean levelEmpty(int level, String quizMode){
+	public int getHighScore(String _courseName) {
+		String highscore = readFileToArray(_highScoreFolderPath+_courseName).get(0); //Array should have only one number
 
-		if(quizMode.equals(VoxSpellGui.REVIEW)){
+		return Integer.parseInt(highscore);
 
-			ArrayList<ArrayList<String>> allWords = _hiddenFilesModel.readFileToArray(quizMode);
+	}
 
-			if ( allWords.get(level-1).isEmpty()){
-				return true;
-			}
+	/**
+	 * Set new high score in hidden file
+	 */
+	public void setNewScore(String _courseName, int _score) {
+		String coursePath = _highScoreFolderPath + _courseName;
 
-			return false;
+		//recreate the highscore file with the new score, should replace the original file
+		try {
+			File stats = new File(coursePath);
+			stats.createNewFile();
 
-		}else {
-			//NEW should not have empty levels according to assignment3 specification
-			return false;
+			FileWriter writer = new FileWriter(stats); 
+
+			writer.write(_score+"\n"); 	
+
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
 		}
+
 	}
 
 	private void writeSCMCodeToVoiceFiles() {
@@ -442,22 +693,22 @@ public class HiddenFilesModel {
 			ArrayList<String> slowCommand = new ArrayList<String>();
 			slowCommand.add("(Parameter.set 'Duration_Stretch 1.5)");
 			Files.write(_slowPacedVoiceFilePath, slowCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 			//For American voice
 			ArrayList<String> americanVoiceCommand = new ArrayList<String>();
 			americanVoiceCommand.add("(voice_kal_diphone)");
 			Files.write(_americanVoiceFilePath, americanVoiceCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 			//For NZ Voice
 			ArrayList<String> newZealandVoiceCommand = new ArrayList<String>();
 			newZealandVoiceCommand.add("(voice_akl_nz_jdt_diphone)");
 			Files.write(_newZealandVoiceFilePath, newZealandVoiceCommand, StandardCharsets.ISO_8859_1, StandardOpenOption.APPEND);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Delete a temporary video output file generated for ffmpeg in the VideoPlayer
 	 * @param videoPath
@@ -470,4 +721,5 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 		}
 	}
+
 }

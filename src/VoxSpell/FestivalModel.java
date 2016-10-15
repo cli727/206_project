@@ -30,7 +30,7 @@ public class FestivalModel implements ItemListener {
 	private ExecutorService _executorService;
 	
 	private FestivalModel() {
-		_executorService = Executors.newSingleThreadExecutor();
+		_executorService = Executors.newFixedThreadPool(1);
 		createTemplateSCMFilesForFestivalSpeech();
 	}
 	
@@ -58,7 +58,7 @@ public class FestivalModel implements ItemListener {
 		
 		String festivalCommand = "festival -b " + accentVoiceFilePath + " " + HiddenFilesModel._slowPacedVoiceFilePath.toString() + " " + tempFilePath;
 		Runnable workerThread = new FestivalModelWorker(festivalCommand);
-		_executorService.execute(workerThread);		
+		_executorService.execute(workerThread);	
 	}
 	public void correctVoice(){
 		String accentVoiceFilePath = getAccentVoiceFilePathToUse().toString();
@@ -68,7 +68,7 @@ public class FestivalModel implements ItemListener {
 	}
 
 	public void faultedVoice(String currentWord){
-		String speechSCMCmd = "(SayText \"Incorrect! Try once more...... "+ currentWord + "...... " + currentWord + "\")";
+		String speechSCMCmd = "(SayText \"Incorrect! Try again. \")";
 		String tempFilePath = createAndGetTempSCMFileForFestivalSpeech(speechSCMCmd).toString();
 		String accentVoiceFilePath = getAccentVoiceFilePathToUse().toString();
 
@@ -83,6 +83,7 @@ public class FestivalModel implements ItemListener {
 		String festivalCommand = "festival -b " + accentVoiceFilePath + " " + _failedSpeechSCMFilePath;
 		Runnable workerThread = new FestivalModelWorker(festivalCommand);
 		_executorService.execute(workerThread);
+
 	}
 
 	//When user selects a different voice with the JComboBox, _currentVoice field is updated to the selected voice.
