@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,6 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class VoxSpellGui implements Card,ActionListener{
 
@@ -77,7 +80,7 @@ public class VoxSpellGui implements Card,ActionListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		_welcomePanel = new JPanel(){
 			@Override
 			protected void paintComponent(Graphics g){
@@ -94,12 +97,6 @@ public class VoxSpellGui implements Card,ActionListener{
 			}
 		};
 
-		/*ImageIcon banner = new ImageIcon("./banner.jpg");
-		_welcomeLabel = new JLabel(banner);
-		Dimension size = new Dimension(banner.getIconWidth(), banner.getIconHeight());
-		_welcomeLabel.setPreferredSize(size);
-
-		_welcomePanel.add(_welcomeLabel);*/
 
 		_frame.getContentPane().setBackground(Color.white);
 
@@ -141,7 +138,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
-		c.ipady = 60;
+		c.ipady = 50;
 		c.insets = new Insets(0,0,0,0);
 		_frame.add(_footerPanel,c);	
 
@@ -163,11 +160,94 @@ public class VoxSpellGui implements Card,ActionListener{
 		JPanel mainPanel = new JPanel();
 
 		mainPanel.setBackground(Color.WHITE);
+		
+		//set button image
+		final ImageIcon practiceImg = new ImageIcon("./practice.png");
+		final ImageIcon practiceHover = new ImageIcon("./practice_hover.png");
+		_btnPracticeQuiz = new JButton(practiceImg);
+		Dimension size = new Dimension(practiceImg.getIconWidth(), practiceImg.getIconHeight());
+		_btnPracticeQuiz.setPreferredSize(size);
+		_btnPracticeQuiz.setBackground(Color.white);
+		_btnPracticeQuiz.setBorderPainted(false);
+		
+		_btnPracticeQuiz.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnPracticeQuiz.setIcon( practiceHover);
+				
+				}else{
+					_btnPracticeQuiz.setIcon(practiceImg);
+				}
+			}
+		});
 
-		_btnPracticeQuiz = new JButton("Practice Words");
-		_btnTestQuiz = new JButton("Test Mode");
-		_btnReview = new JButton("Review Mistakes");
-		_btnTestScore = new JButton("Score History");
+		final ImageIcon testImg = new ImageIcon("./test.png");
+		final ImageIcon testHover = new ImageIcon("./test_hover.png");
+		_btnTestQuiz  = new JButton( testImg );
+		_btnTestQuiz .setPreferredSize(size);
+		_btnTestQuiz .setBackground(Color.white);
+		_btnTestQuiz.setBorderPainted(false);
+		
+		_btnTestQuiz.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnTestQuiz.setIcon(testHover);
+				
+				}else{
+					_btnTestQuiz.setIcon( testImg);
+				}
+			}
+		});
+
+		
+		final ImageIcon reviewImg = new ImageIcon("./review.png");
+		final ImageIcon reviewHover= new ImageIcon("./review_hover.png");
+		_btnReview = new JButton( reviewImg);
+		_btnReview.setPreferredSize(size);
+		_btnReview.setBackground(Color.white);
+		_btnReview.setBorderPainted(false);
+
+		_btnReview.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnReview.setIcon(reviewHover);
+				
+				}else{
+					_btnReview.setIcon( reviewImg );
+				}
+			}
+		});
+
+		final ImageIcon scoreImg = new ImageIcon("./score.png");
+		final ImageIcon scoreHover = new ImageIcon("./score_hover.png");
+		_btnTestScore = new JButton(scoreImg);
+		_btnTestScore.setPreferredSize(size);
+		_btnTestScore.setBackground(Color.white);
+		_btnTestScore.setBorderPainted(false);
+		
+		_btnTestScore.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnTestScore.setIcon( scoreHover);
+				
+				}else{
+					_btnTestScore.setIcon(scoreImg);
+				}
+			}
+		});
+
 
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
@@ -182,10 +262,10 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 3;
 		c.gridheight = 2;
-		//c.weightx = 0.3;
-		c.ipady = 200;
-		c.ipadx = 300;
-		c.insets = new Insets(0,10,5,5);
+		//c.weightx = 0.3;S
+		/*c.ipady = 200;
+		c.ipadx = 300;*/
+		c.insets = new Insets(0,50,5,5);
 		mainPanel.add(_btnPracticeQuiz, c);
 		_btnPracticeQuiz.addActionListener(this);
 
@@ -195,7 +275,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,5,10);
+		c.insets = new Insets(0,0,5,50);
 		mainPanel.add(_btnTestQuiz, c);
 		_btnTestQuiz.addActionListener(this);
 
@@ -206,7 +286,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(0,10,5,5);
+		c.insets = new Insets(0,50,5,5);
 		mainPanel.add(_btnReview, c);
 		_btnReview.addActionListener(this);
 
@@ -217,7 +297,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,0,5,10);
+		c.insets = new Insets(0,0,5,50);
 		mainPanel.add(_btnTestScore, c);
 		_btnTestScore.addActionListener(this);
 
@@ -228,7 +308,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		if (e.getSource() == _btnTestScore) {
 
 			STATUS = SCORE;
-			
+
 			//show choose course card, so that the score of one course can be shown
 			showCourseChooser(null); // does not need previous course name
 		}else if (e.getSource() == _btnPracticeQuiz){
@@ -274,15 +354,15 @@ public class VoxSpellGui implements Card,ActionListener{
 
 	public static void showCourseChooser(String courseName){
 		ChooseCourseView chooseCourseView = new ChooseCourseView(courseName);
-	
+
 		JPanel cardChooseCourse = chooseCourseView.createAndGetPanel();
 		_cardsPanel.add(cardChooseCourse, "Choose Course");
 		_cardLayout.show(_cardsPanel, "Choose Course");
 		//change main menu footer/header background color so that it is consistent with this background color
-		VoxSpellGui.setHeaderFooterColor(new Color(0,200,200));
+		VoxSpellGui.setHeaderFooterColor(new Color(125,193,249));
 		_currentCard = "Choose Course";
 	}
-	
+
 
 	public static void showImportWordListView(){
 		_cardLayout.show(_cardsPanel, "Import Wordlist");
@@ -290,7 +370,7 @@ public class VoxSpellGui implements Card,ActionListener{
 		VoxSpellGui.setHeaderFooterColor(Color.white);
 		_currentCard = "Import Wordlist";
 	}
-	
+
 	public static void setHeaderFooterColor(Color color){
 		_welcomePanel.setBackground(color);
 		_footerPanel.setBackground(color);

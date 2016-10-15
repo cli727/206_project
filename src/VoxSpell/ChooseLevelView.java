@@ -54,7 +54,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//initialise fields
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
-		_bgColor = new Color(0,200,200); //set background colour
+		_bgColor = new Color(125,193,249); //set background colour
 
 		_courseName = courseName;
 
@@ -309,7 +309,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		}else if (e.getSource() == _btnChangeCourse){
 
-			VoxSpellGui.getInstance().showCourseChooser(_courseName);
+			VoxSpellGui.showCourseChooser(_courseName);
 		}else if (e.getSource() == _comboBox){
 
 			//disable number of word radiobuttons accordingly
@@ -334,12 +334,6 @@ public class ChooseLevelView implements Card, ActionListener{
 		}else if (e.getSource() == _btnStartQuiz){
 
 			String level =  (String) _comboBox.getSelectedItem();
-
-			/*if (_quizAllWords){
-				_numWordsToQuiz = _model.getLevelWordsFromCourse(level).size();
-			}*/
-			/*System.out.println("level "+level);
-			System.out.println("words " + _numWordsToQuiz);*/
 
 			QuizView quizView =null;
 			QuizModel quizModel = null;

@@ -11,11 +11,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -30,9 +27,6 @@ import javax.swing.event.ChangeListener;
 public class ChooseCourseView implements Card, ActionListener{
 
 	private Color _bgColor;
-
-	private static ChooseCourseView _courseChooser;
-
 	private JLabel _labelHeading;
 	private JButton _btnKETwords;
 	private JButton _btnIELTSwords;
@@ -69,7 +63,6 @@ public class ChooseCourseView implements Card, ActionListener{
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
 		 */
 		_btnKETwords = new JButton("KET");
-		//_btnKETwords.setToolTipText("NOOOOO");
 		_btnKETwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e){
@@ -93,7 +86,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	@Override
 	public JPanel createAndGetPanel() {
 
-		_bgColor = new Color(0,200,200);
+		_bgColor = new Color(125,193,249);
 
 		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
 					+ " Welcome To VOXSPELL!</html>", 
