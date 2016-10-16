@@ -1,6 +1,7 @@
 package voxSpell.guiViews.courseViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -69,24 +71,92 @@ public class ChooseCourseView implements Card, ActionListener{
 		 * CODE FOR CHANGING BUTTON BACKGROUND WHEN HOVERED OVER SOURCED FROM STACK OVERFLOW:
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
 		 */
-		_btnKETwords = new JButton("KET");
+		//set button image
+		final ImageIcon ketImg = new ImageIcon("./course-01.png");
+		final ImageIcon practiceHover = new ImageIcon("./course-02.png");
+		_btnKETwords = new JButton(ketImg);
+		Dimension size = new Dimension(ketImg.getIconWidth(), ketImg.getIconHeight());
+		_btnKETwords.setPreferredSize(size);
+		_btnKETwords.setBackground(Color.white);
+		_btnKETwords.setBorderPainted(false);
+
 		_btnKETwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					//_btnKETwords.setIcon(icon());
-					_btnKETwords.setText("choose course..");
+					_btnKETwords.setIcon( practiceHover);
+
 				}else{
-					_btnKETwords.setText("KET");
+					_btnKETwords.setIcon(ketImg);
 				}
 			}
 		});
 
-		_btnIELTSwords = new JButton("IELTS");
-		_btnImportWordList = new JButton("New Course");
-		_btnViewImportedWordList = new JButton("My Course");
+		final ImageIcon IELTSImg = new ImageIcon("./course-03.png");
+		final ImageIcon IELTSHover = new ImageIcon("./course-04.png");
+		_btnIELTSwords = new JButton(IELTSImg);
+		_btnIELTSwords.setPreferredSize(size);
+		_btnIELTSwords.setBackground(Color.white);
+		_btnIELTSwords.setBorderPainted(false);
+
+		_btnIELTSwords.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnIELTSwords.setIcon( IELTSHover);
+
+				}else{
+					_btnIELTSwords.setIcon(IELTSImg);
+				}
+			}
+		});
+
+		final ImageIcon myCourse = new ImageIcon("./course-05.png");
+		final ImageIcon myCourseHover = new ImageIcon("./course-06.png");
+		_btnImportWordList = new JButton(myCourse);
+		_btnImportWordList.setPreferredSize(size);
+		_btnImportWordList.setBackground(Color.white);
+		_btnImportWordList.setBorderPainted(false);
+
+		_btnImportWordList.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnImportWordList.setIcon( myCourseHover);
+
+				}else{
+					_btnImportWordList.setIcon(myCourse);
+				}
+			}
+		});
+
+		final ImageIcon newCourse = new ImageIcon("./course-07.png");
+		final ImageIcon newCourseHover = new ImageIcon("./course-08.png");
+		_btnViewImportedWordList = new JButton(newCourse);
+		_btnViewImportedWordList.setPreferredSize(size);
+		_btnViewImportedWordList.setBackground(Color.white);
+		_btnViewImportedWordList.setBorderPainted(false);
+
+		_btnViewImportedWordList.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnViewImportedWordList.setIcon( newCourseHover);
+
+				}else{
+					_btnViewImportedWordList.setIcon(newCourse);
+				}
+			}
+		});
+
 		_btnBack = new JButton("Back");
 	}
 
@@ -94,6 +164,7 @@ public class ChooseCourseView implements Card, ActionListener{
 	public JPanel createAndGetPanel() {
 
 		_bgColor = new Color(125,193,249);
+		//_bgColor = Color.white;
 
 		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
 					+ " Welcome To VOXSPELL!</html>", 
@@ -117,7 +188,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,40,0,0);
+		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -125,10 +196,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridy = 2;
 		c.gridwidth = 3;
 		c.gridheight = 2;
-		//c.weightx = 0.3;
-		c.ipady = 165;
-		c.ipadx = 290;
-		c.insets = new Insets(20,10,5,5);
+		c.insets = new Insets(15,10,5,10);
 		mainPanel.add(_btnKETwords, c);
 		_btnKETwords.addActionListener(this);
 
@@ -138,7 +206,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(20,0,5,10);
+		c.insets = new Insets(15,0,5,10);
 		mainPanel.add(_btnIELTSwords, c);
 		_btnIELTSwords.addActionListener(this);
 
@@ -149,7 +217,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,10,0,5);
+		c.insets = new Insets(0,10,0,10);
 		mainPanel.add(_btnViewImportedWordList, c);
 		_btnViewImportedWordList.addActionListener(this);
 
@@ -215,16 +283,16 @@ public class ChooseCourseView implements Card, ActionListener{
 		}else if (e.getSource() == _btnKETwords){
 
 			if (VoxSpellGui.STATUS.equals(VoxSpellGui.SCORE)){
-			
+
 				//show stats view
 				TestScoreView testScoreView = new TestScoreView("KET",  _hiddenFilesModel.getHighScore("KET"));
 				TestScoreModel testScoreModel = new TestScoreModel("KET");
-				
+
 				testScoreView.setModel(testScoreModel);
-								
+
 				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
-				
-				
+
+
 			}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 				//test view
 
@@ -274,11 +342,11 @@ public class ChooseCourseView implements Card, ActionListener{
 				//show stats view
 				TestScoreView testScoreView = new TestScoreView("IELTS",  _hiddenFilesModel.getHighScore("IELTS"));
 				TestScoreModel testScoreModel = new TestScoreModel("IELTS");
-				
+
 				testScoreView.setModel(testScoreModel);
-				
+
 				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
-				
+
 			}else if(VoxSpellGui.STATUS.equals(VoxSpellGui.TEST)){
 				//test view
 				QuizView quizView = new TestQuizView(null,"IELTS",0);//level not needed for test view

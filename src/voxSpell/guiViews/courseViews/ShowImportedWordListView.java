@@ -150,7 +150,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridwidth = 3;
 		c.gridheight = 3;
 		c.ipadx = 500;
-		c.ipady = 280;
+		c.ipady = 250;
 		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_coursePane, c);
 
