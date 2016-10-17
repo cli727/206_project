@@ -1,6 +1,7 @@
 package voxSpell.guiViews.levelViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,11 +11,15 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import voxSpell.guiViews.Card;
 import voxSpell.guiViews.VoxSpellGui;
@@ -52,11 +57,14 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	protected  int _numWordsToQuiz;
 
+	private Color _hoverColor;
+
 	public ChooseLevelView (String courseName){
 		//initialise fields
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
-		_bgColor = new Color(125,193,249); //set background colour
+		_bgColor = new Color(17,103,172);
+		_hoverColor =  new Color(0,137,249);
 
 		_courseName = courseName;
 
@@ -75,15 +83,56 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		_labelHeading.setFont(headingFont);
 
-		_labelViewChangeCourse = new JLabel("Course: " + _courseName);
-		_btnViewWordList = new JButton("View Words");
-		_btnChangeCourse = new JButton("Change Course");
+		_labelViewChangeCourse = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'><font color=white>"+
+				"Course: " + _courseName+"</font></html>");
 
-		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
-				"<font color='white'>"
-				+ "Choose a subgroup</font></html>");
+		//set button image
+		final ImageIcon viewWords = new ImageIcon("./view_words.png");
+		//final ImageIcon practiceHover = new ImageIcon("./practice_hover.png");
+		_btnViewWordList = new JButton(viewWords);
+		Dimension size = new Dimension(viewWords.getIconWidth(), viewWords.getIconHeight());
+		_btnViewWordList.setPreferredSize(size);
+		_btnViewWordList.setBackground(_bgColor);
+		_btnViewWordList.setBorderPainted(false);
+		
+		_btnViewWordList.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnViewWordList.setBackground(_hoverColor);
+				
+				}else{
+					_btnViewWordList.setBackground(_bgColor);
+				}
+			}
+		});
+		
+		final ImageIcon changeCourse = new ImageIcon("./change_course.png");
+		_btnChangeCourse = new JButton(changeCourse);
+		 size = new Dimension(changeCourse.getIconWidth(), changeCourse.getIconHeight());
+		_btnChangeCourse.setPreferredSize(size);
+		_btnChangeCourse.setBackground(_bgColor);
+		_btnChangeCourse.setBorderPainted(false);
+		
+		_btnChangeCourse.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnChangeCourse.setBackground(_hoverColor);
+				
+				}else{
+					_btnChangeCourse.setBackground(_bgColor);
+				}
+			}
+		});
 
-		_labelChooseNumWords = new JLabel("How many words would you like:");
+		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
+				"Choose a subgroup:"+"</font></html>");
+
+		_labelChooseNumWords = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
+		"How many words would you like:"+"</font></html>");
 
 		_btnTenWords = new JRadioButton("10 Random Words");
 		_btnTwentyWords = new JRadioButton("20 Random Words");
@@ -164,7 +213,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(50,90,10,0);
+		c.insets = new Insets(20,90,10,0);
 		_chooseLevelPanel.add(_labelViewChangeCourse, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -197,7 +246,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		//c.weightx = 0.3;
 		//c.ipady = 200;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(20,90,10,0);
 		_chooseLevelPanel.add(_labelChooseLevel, c);
 		//	_btnViewWordList.addActionListener(this);
 
@@ -217,7 +266,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 5;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(20,90,10,0);
 		_chooseLevelPanel.add(_labelChooseNumWords, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -391,15 +440,13 @@ public class ChooseLevelView implements Card, ActionListener{
 			_btnStartQuiz.setEnabled(false);
 
 			//tell user that there is no word to quiz 
-			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
-					"<font color='white'>"
-					+ "This subgroup has no available words!</font></html>");
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>>"+
+					"This subgroup has no available words!"+"</font></html>");
 		}else{
 			_btnAllWords.setEnabled(true);
 			_btnStartQuiz.setEnabled(true);
-			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:11px;padding:2;'>"+
-					"<font color='white'>"
-					+ "Choose a subgroup</font></html>");
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
+				"Choose a subgroup:"+"</font></html>");
 		}
 	}
 }

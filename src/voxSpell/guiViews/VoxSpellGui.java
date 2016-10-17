@@ -350,14 +350,14 @@ public class VoxSpellGui implements Card,ActionListener{
 		_cardsPanel.add(cardChooseCourse, "Choose Course");
 		_cardLayout.show(_cardsPanel, "Choose Course");
 		//change main menu footer/header background color so that it is consistent with this background color
-		VoxSpellGui.setHeaderFooterColor(new Color(125,193,249));
+		setHeaderFooterColor(new Color(17,103,172));
 	}
 
 
 	public static void showImportWordListView(){
 		_cardLayout.show(_cardsPanel, "Import Wordlist");
 		//change main menu footer/header background color so that it is consistent with this background color
-		VoxSpellGui.setHeaderFooterColor(Color.white);
+		setHeaderFooterColor(Color.white);
 	}
 
 	public static void setHeaderFooterColor(Color color){

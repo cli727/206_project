@@ -38,6 +38,7 @@ import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 public class ChooseCourseView implements Card, ActionListener{
 
 	private Color _bgColor;
+	private Color _hoverColor;
 	private JLabel _labelHeading;
 	private JButton _btnKETwords;
 	private JButton _btnIELTSwords;
@@ -54,10 +55,8 @@ public class ChooseCourseView implements Card, ActionListener{
 
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
-		//set background colour for this card
-		//_bgColor = new Color(129,224,253);
-
-
+		_bgColor = new Color(17,103,172);
+		_hoverColor =  new Color(0,137,249);
 		//create new Font
 		Font headingFont = new Font("SansSerif", Font.ITALIC,30);
 
@@ -73,11 +72,11 @@ public class ChooseCourseView implements Card, ActionListener{
 		 */
 		//set button image
 		final ImageIcon ketImg = new ImageIcon("./course-01.png");
-		final ImageIcon practiceHover = new ImageIcon("./course-02.png");
+		final ImageIcon ketHoverImg = new ImageIcon("./course-02.png");
 		_btnKETwords = new JButton(ketImg);
 		Dimension size = new Dimension(ketImg.getIconWidth(), ketImg.getIconHeight());
 		_btnKETwords.setPreferredSize(size);
-		_btnKETwords.setBackground(Color.white);
+		_btnKETwords.setBackground(_bgColor);
 		_btnKETwords.setBorderPainted(false);
 
 		_btnKETwords.getModel().addChangeListener(new ChangeListener(){
@@ -85,11 +84,12 @@ public class ChooseCourseView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					//change to another image
-					_btnKETwords.setIcon( practiceHover);
+					_btnKETwords.setIcon(ketHoverImg);
+					_btnKETwords.setBackground(_hoverColor);
 
 				}else{
 					_btnKETwords.setIcon(ketImg);
+					_btnKETwords.setBackground(_bgColor);
 				}
 			}
 		});
@@ -98,7 +98,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		final ImageIcon IELTSHover = new ImageIcon("./course-04.png");
 		_btnIELTSwords = new JButton(IELTSImg);
 		_btnIELTSwords.setPreferredSize(size);
-		_btnIELTSwords.setBackground(Color.white);
+		_btnIELTSwords.setBackground(_bgColor);
 		_btnIELTSwords.setBorderPainted(false);
 
 		_btnIELTSwords.getModel().addChangeListener(new ChangeListener(){
@@ -108,18 +108,19 @@ public class ChooseCourseView implements Card, ActionListener{
 				if (model.isRollover()){
 					//change to another image
 					_btnIELTSwords.setIcon( IELTSHover);
+					_btnIELTSwords.setBackground(_hoverColor);
 
 				}else{
 					_btnIELTSwords.setIcon(IELTSImg);
+					_btnIELTSwords.setBackground(_bgColor);
 				}
 			}
 		});
 
-		final ImageIcon myCourse = new ImageIcon("./course-05.png");
-		final ImageIcon myCourseHover = new ImageIcon("./course-06.png");
+		final ImageIcon myCourse = new ImageIcon("./course-07.png");
 		_btnImportWordList = new JButton(myCourse);
 		_btnImportWordList.setPreferredSize(size);
-		_btnImportWordList.setBackground(Color.white);
+		_btnImportWordList.setBackground(_bgColor);
 		_btnImportWordList.setBorderPainted(false);
 
 		_btnImportWordList.getModel().addChangeListener(new ChangeListener(){
@@ -127,20 +128,18 @@ public class ChooseCourseView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					//change to another image
-					_btnImportWordList.setIcon( myCourseHover);
+					_btnImportWordList.setBackground(_hoverColor);
 
 				}else{
-					_btnImportWordList.setIcon(myCourse);
+					_btnImportWordList.setBackground(_bgColor);
 				}
 			}
 		});
 
-		final ImageIcon newCourse = new ImageIcon("./course-07.png");
-		final ImageIcon newCourseHover = new ImageIcon("./course-08.png");
+		final ImageIcon newCourse = new ImageIcon("./course-05.png");
 		_btnViewImportedWordList = new JButton(newCourse);
 		_btnViewImportedWordList.setPreferredSize(size);
-		_btnViewImportedWordList.setBackground(Color.white);
+		_btnViewImportedWordList.setBackground(_bgColor);
 		_btnViewImportedWordList.setBorderPainted(false);
 
 		_btnViewImportedWordList.getModel().addChangeListener(new ChangeListener(){
@@ -149,26 +148,39 @@ public class ChooseCourseView implements Card, ActionListener{
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					_btnViewImportedWordList.setIcon( newCourseHover);
-
+					_btnViewImportedWordList.setBackground(_hoverColor);
 				}else{
-					_btnViewImportedWordList.setIcon(newCourse);
+					_btnViewImportedWordList.setBackground(_bgColor);
 				}
 			}
 		});
 
-		_btnBack = new JButton("Back");
+		final ImageIcon back = new ImageIcon("./back.png");
+		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
+		_btnBack = new JButton(back);
+		_btnBack.setBackground(_bgColor);
+		_btnBack.setPreferredSize(btnSize);
+		_btnBack.setBorderPainted(false);
+
+		_btnBack.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnBack.setIcon(new ImageIcon("./back_hover.png"));
+
+				}else{
+					_btnBack.setIcon(back);
+				}
+			}
+		});
+
 	}
 
 	@Override
 	public JPanel createAndGetPanel() {
-
-		_bgColor = new Color(125,193,249);
-		//_bgColor = Color.white;
-
-		/*add(new JLabel("<html> <p style='text-align: center;font-size:13px;padding:8;'>"
-					+ " Welcome To VOXSPELL!</html>", 
-					JLabel.CENTER),BorderLayout.NORTH);*/
+	
 		JPanel mainPanel = new JPanel();
 
 		mainPanel.setBackground(_bgColor);
@@ -186,8 +198,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 6;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
+		
 		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_labelHeading, c);
 
@@ -196,7 +207,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridy = 2;
 		c.gridwidth = 3;
 		c.gridheight = 2;
-		c.insets = new Insets(15,10,5,10);
+		c.insets = new Insets(50,20,10,15);
 		mainPanel.add(_btnKETwords, c);
 		_btnKETwords.addActionListener(this);
 
@@ -206,7 +217,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.2;
-		c.insets = new Insets(15,0,5,10);
+		c.insets = new Insets(50,0,10,20);
 		mainPanel.add(_btnIELTSwords, c);
 		_btnIELTSwords.addActionListener(this);
 
@@ -217,7 +228,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 3;
 		c.gridheight = 2;
 		//c.weightx = 0.7;
-		c.insets = new Insets(0,10,0,10);
+		c.insets = new Insets(0,20,0,15);
 		mainPanel.add(_btnViewImportedWordList, c);
 		_btnViewImportedWordList.addActionListener(this);
 
@@ -228,7 +239,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridheight = 2;
 		c.gridwidth = 3;
 		//c.weightx = 0.3;
-		c.insets = new Insets(0,0,0,10);
+		c.insets = new Insets(0,0,0,20);
 		mainPanel.add(_btnImportWordList, c);
 		_btnImportWordList.addActionListener(this);
 
@@ -240,7 +251,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		c.gridwidth = 1;
 		c.ipadx = 0;
 		c.ipady = 0;
-		c.insets = new Insets(20,150,0,10);
+		c.insets = new Insets(20,250,0,0);
 		mainPanel.add(_btnBack, c);
 		_btnBack.addActionListener(this);
 
