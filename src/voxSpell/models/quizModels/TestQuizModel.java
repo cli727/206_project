@@ -2,12 +2,12 @@ package voxSpell.models.quizModels;
 
 import java.util.Vector;
 
-import voxSpell.guiViews.resultViews.TestResultView;
+import voxSpell.views.resultViews.TestResultView;
 import voxSpell.models.resultModels.TestResultModel;
 import voxSpell.audioPlayer.AudioPlayer;
-import voxSpell.guiViews.Card;
-import voxSpell.guiViews.VoxSpellGui;
-import voxSpell.guiViews.quizViews.TestQuizView;
+import voxSpell.views.Card;
+import voxSpell.views.VoxSpellGui;
+import voxSpell.views.quizViews.TestQuizView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 
 public class TestQuizModel extends QuizModel{

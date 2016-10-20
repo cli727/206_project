@@ -27,7 +27,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
-import voxSpell.guiViews.VoxSpellGui;
+import voxSpell.views.VoxSpellGui;
 /**
  * A video player that has an embedded media player using the vlcj external library
  * @author chen

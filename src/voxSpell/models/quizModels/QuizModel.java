@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
-import voxSpell.guiViews.resultViews.ResultView;
-import voxSpell.guiViews.resultViews.ReviewResultView;
+import voxSpell.views.resultViews.ResultView;
+import voxSpell.views.resultViews.ReviewResultView;
 import voxSpell.models.resultModels.ResultModel;
-import voxSpell.guiViews.VoxSpellGui;
-import voxSpell.guiViews.quizViews.QuizView;
+import voxSpell.status.QuizStatus;
+import voxSpell.views.VoxSpellGui;
+import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.festivalManager.FestivalModel;
 
 /**
@@ -173,10 +174,10 @@ public class QuizModel {
 		//show result card according to game mode
 		ResultView resultView = null;
 		
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
 			
 			resultView = new ResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 			
 			resultView = new ReviewResultView(_quizView.getLevelName(), _quizView.getCourseName(),_allLevelNames);
 		}

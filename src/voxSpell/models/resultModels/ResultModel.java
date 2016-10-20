@@ -3,8 +3,9 @@ package voxSpell.models.resultModels;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-import voxSpell.guiViews.VoxSpellGui;
+import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
+import voxSpell.status.QuizStatus;
 
 
 public class ResultModel extends AbstractTableModel {
@@ -70,13 +71,13 @@ public class ResultModel extends AbstractTableModel {
 	 */
 	private boolean selectCheckBox(int index) {
 
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
 			//if practice mode, automatically select items that are likely to be added to review
 			if (Integer.parseInt(_attemptCounts.get(index)) > 1){
 				return true;
 			}
 			return false;
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 			//if review mode, automatically select items that are likely to be removed from review
 			if (Integer.parseInt(_attemptCounts.get(index)) <= 1){
 				return true;
@@ -89,10 +90,10 @@ public class ResultModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int col) {
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
 
 			return _databaseHeaderNames[col];
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 
 			return _reviewDatabaseHeaderNames[col];
 		}
@@ -153,7 +154,7 @@ public class ResultModel extends AbstractTableModel {
 	//method that writes all selected words into review file using hidden files manager
 	public void keepRecordOfSelectedWords(){
 
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW ) ){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW ) ){
 			//if practice mode, add selected items to review list
 			for (int i = 0; i < _listOfButtons.size(); i ++){
 
@@ -162,7 +163,7 @@ public class ResultModel extends AbstractTableModel {
 					_hiddenFilesModel.addWordToReviewWordsFile(_listOfWords.get(i), _level, _courseName);
 				}
 			}
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 			//if review mode, delete selected items from review list
 			for (int i = 0; i < _listOfButtons.size(); i ++){
 
