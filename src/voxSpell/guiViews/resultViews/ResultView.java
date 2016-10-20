@@ -38,9 +38,13 @@ public class ResultView extends JTableView implements Card, ActionListener {
 
 	protected JLabel _labelTableInfo;
 
-	private JButton _btnNextLevel;
-	private JButton _btnPracticeAgain;
-	private JButton _btnHome;
+	protected JButton _btnNextLevel;
+	protected JButton _btnPracticeAgain;
+	protected JButton _btnHome;
+
+	protected int _numWordsToQuiz;
+
+	protected ArrayList<String> _nextLevelWords;
 
 
 	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
@@ -71,13 +75,33 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		_labelTableInfo = new JLabel("(Selected Items will be added to your revision list)");
 
 		_btnPracticeAgain = new JButton("Practice Again");
+
 		_btnNextLevel = new JButton("Practice Next Level");
+
+		
+		_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+		
+		_numWordsToQuiz = 0;
+
 		_btnHome = new JButton("Home");
 	}
-	
+
 	@Override
 	public JPanel createAndGetPanel() {
+		//=================setting button tool tip
+		
+		//tell user information about next level when hovered over
+		int nextLevelWordcount = _nextLevelWords.size();
+		if(nextLevelWordcount < _model.getRowCount()){
+			//use all words next level has, if it is not as much as this level's word count
+			_numWordsToQuiz = nextLevelWordcount;
+		}else{
+			_numWordsToQuiz = _model.getRowCount();
+		}
+		_btnNextLevel.setToolTipText(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)+" ,"+_numWordsToQuiz + " Words");
 
+		
+		//===================================================================
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
 
@@ -90,7 +114,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		_tablePanel.add(_resultTable);
 		JScrollPane scrollPane = new JScrollPane(_resultTable);
 		_tablePanel.add(scrollPane, BorderLayout.NORTH);
-		
+
 
 		resultPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -198,16 +222,14 @@ public class ResultView extends JTableView implements Card, ActionListener {
 			//this button is clicked so this button must not be disabled
 			//show quizView of next level
 
-			//get words for next level
-			ArrayList<String> newWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
-
 			QuizView quizView = new QuizView(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1), _courseName);
 			QuizModel quizModel = new QuizModel(_allLevelNames);
 
 			quizModel.setView(quizView);
 			quizView.setModel(quizModel);
 
-			quizModel.setAllWords(newWords, _model.getRowCount()); //num of row in table is the same num as word to quiz
+
+			quizModel.setAllWords(_nextLevelWords, _numWordsToQuiz); 
 
 			//show next level quiz card
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Next Level Quiz");

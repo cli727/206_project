@@ -139,6 +139,17 @@ public class ResultModel extends AbstractTableModel {
 		_listOfButtons.set(row, (Boolean) value);
 	}
 
+	public int getSelectedButtons(){
+		int count = 0;
+		for (int i = 0; i < _listOfButtons.size(); i ++){
+			if (_listOfButtons.get(i)){
+				//item is selected
+				count ++;
+			}
+		}
+		return count;
+	}
+	
 	//method that writes all selected words into review file using hidden files manager
 	public void keepRecordOfSelectedWords(){
 

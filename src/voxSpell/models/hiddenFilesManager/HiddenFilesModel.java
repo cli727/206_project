@@ -435,7 +435,7 @@ public class HiddenFilesModel {
 	 * 3. file that contains duplicate words in a level (getRandomWords may break, because randomWords keeps
 	 * adding non duplicated words, repeated words may cause infinite while loop)
 	 * 4. file not named KET or IELTS
-	 * 4. file with "" ? i.e. empty entry
+	 * 5. file should not have an empty level
 	 * 
 	 * @param path
 	 */
@@ -456,7 +456,7 @@ public class HiddenFilesModel {
 			return false;
 		}
 
-		//check for duplicates in all levels
+		//check for duplicates in all levels, also check for empty levels
 
 		Vector<String> allLevelNames = getAllLevelsFromCourse(userWordListpath); //get all level names first
 
@@ -469,6 +469,11 @@ public class HiddenFilesModel {
 
 			if(set.size() < wordsFromLevel.size()){
 				//duplicates 
+				return false;
+			}
+			
+			if(set.size() == 0){
+				//empty level
 				return false;
 			}
 
