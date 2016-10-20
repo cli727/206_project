@@ -57,14 +57,12 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	protected  int _numWordsToQuiz;
 
-	private Color _hoverColor;
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		_bgColor = new Color(17,103,172);
-		_hoverColor =  new Color(0,137,249);
 
 		_courseName = courseName;
 
@@ -88,7 +86,6 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		//set button image
 		final ImageIcon viewWords = new ImageIcon("./view_words.png");
-		//final ImageIcon practiceHover = new ImageIcon("./practice_hover.png");
 		_btnViewWordList = new JButton(viewWords);
 		Dimension size = new Dimension(viewWords.getIconWidth(), viewWords.getIconHeight());
 		_btnViewWordList.setPreferredSize(size);
@@ -100,10 +97,9 @@ public class ChooseLevelView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					_btnViewWordList.setBackground(_hoverColor);
-				
+					_btnViewWordList.setIcon(new ImageIcon("./view_words_hover.png"));				
 				}else{
-					_btnViewWordList.setBackground(_bgColor);
+					_btnViewWordList.setIcon(viewWords);
 				}
 			}
 		});
@@ -120,10 +116,10 @@ public class ChooseLevelView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					_btnChangeCourse.setBackground(_hoverColor);
+					_btnChangeCourse.setIcon(new ImageIcon("./change_course_hover.png"));
 				
 				}else{
-					_btnChangeCourse.setBackground(_bgColor);
+					_btnChangeCourse.setIcon(changeCourse);
 				}
 			}
 		});
@@ -135,10 +131,15 @@ public class ChooseLevelView implements Card, ActionListener{
 		"How many words would you like:"+"</font></html>");
 
 		_btnTenWords = new JRadioButton("10 Random Words");
+		_btnTenWords.setForeground(Color.white);
 		_btnTwentyWords = new JRadioButton("20 Random Words");
+		_btnTwentyWords.setForeground(Color.white);
 		_btnFortyWords = new JRadioButton("40 Random Words");
-		_btnFiftyWords = new JRadioButton("50 Random Words");
+		_btnFortyWords.setForeground(Color.white);
+		_btnFiftyWords = new JRadioButton( "50 Random Words");
+		_btnFiftyWords.setForeground(Color.white);
 		_btnAllWords = new JRadioButton("All words from this subgroup");
+		_btnAllWords.setForeground(Color.white);
 		_btnAllWords.setSelected(true);//default select this option
 
 		_btnTenWords.setBackground(_bgColor);
@@ -155,10 +156,46 @@ public class ChooseLevelView implements Card, ActionListener{
 		group.add(_btnFiftyWords);
 		group.add(_btnAllWords);
 
-		_btnStartQuiz = new JButton("Start!");
+		final ImageIcon start = new ImageIcon("./start.png");
+		_btnStartQuiz = new JButton(start);
+		 size = new Dimension(start.getIconWidth(), start.getIconHeight());
+		 _btnStartQuiz.setPreferredSize(size);
+		 _btnStartQuiz.setBackground(_bgColor);
+		 _btnStartQuiz.setBorderPainted(false);
+		
+		 _btnStartQuiz.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnStartQuiz.setIcon(new ImageIcon("./start_hover.png"));				
+				}else{
+					
+					_btnStartQuiz.setIcon(start);
+				}
+			}
+		});
 
-		//_btnBackToPrevious = new JButton("Back");
-		_btnBackToMain = new JButton("Home");
+		final ImageIcon back = new ImageIcon("./back.png");
+		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
+		_btnBackToMain = new JButton(back);
+		_btnBackToMain.setBackground(_bgColor);
+		_btnBackToMain.setPreferredSize(btnSize);
+		_btnBackToMain.setBorderPainted(false);
+
+		_btnBackToMain.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnBackToMain.setIcon(new ImageIcon("./back_hover.png"));
+
+				}else{
+					_btnBackToMain.setIcon(back);
+				}
+			}
+		});
 
 
 		//items in combo box are all levels that are NOT empty
@@ -175,6 +212,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		}
 		
 		_comboBox = new JComboBox<String>(nonEmptyLevels);
+		_comboBox.setPreferredSize(new Dimension(220, 25));
 	
 
 		//change main menu footer/header background color so that it is consistent with this background color
@@ -199,37 +237,30 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,-164,10,0);
+		c.insets = new Insets(0,-10,10,0);
 		//c.ipady = 200;
 		//c.ipadx = 190;
-
 		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
-		c.insets = new Insets(20,90,10,0);
+		c.insets = new Insets(20,150,10,0);
 		_chooseLevelPanel.add(_labelViewChangeCourse, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(0,80,10,0);
 		_chooseLevelPanel.add(_btnViewWordList, c);
 		_btnViewWordList.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
+		c.gridx = 1;
 		c.gridy = 2;
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -237,103 +268,99 @@ public class ChooseLevelView implements Card, ActionListener{
 		_chooseLevelPanel.add(_btnChangeCourse, c);
 		_btnChangeCourse.addActionListener(this);
 
-
+		
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 3;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		//c.weightx = 0.3;
-		//c.ipady = 200;
-		//c.ipadx = 190;
-		c.insets = new Insets(20,90,10,0);
+		c.insets = new Insets(20,150,10,0);
 		_chooseLevelPanel.add(_labelChooseLevel, c);
-		//	_btnViewWordList.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 4;
-		c.gridwidth = 2;
+		c.gridwidth = 1;
 		c.gridheight = 1;
 
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(0,160,10,0);
 		_chooseLevelPanel.add(_comboBox, c);
 		_comboBox.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 5;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(20,90,10,0);
+		c.insets = new Insets(20,150,10,0);
 		_chooseLevelPanel.add(_labelChooseNumWords, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 6;
 		c.gridwidth = 2;
 		c.gridheight = 1;
 
-		c.insets = new Insets(0,90,5,0);
+		c.insets = new Insets(0,160,5,0);
 		_chooseLevelPanel.add(_btnTenWords, c);
 		_btnTenWords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 7;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,90,5,0);
+		c.insets = new Insets(0,160,5,0);
 		_chooseLevelPanel.add(_btnTwentyWords, c);
 		_btnTwentyWords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 8;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,90,5,0);
+		c.insets = new Insets(0,160,5,0);
 		_chooseLevelPanel.add(_btnFortyWords, c);
 		_btnFortyWords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 9;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,90,5,0);
+		c.insets = new Insets(0,160,5,0);
 		_chooseLevelPanel.add(_btnFiftyWords, c);
 		_btnFiftyWords.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 10;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(0,160,10,0);
 		_chooseLevelPanel.add(_btnAllWords, c);
 		_btnAllWords.addActionListener(this);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
+		c.gridx = 0;
 		c.gridy = 11;
 		c.gridwidth = 2;
 		c.gridheight = 2;
 		//c.weightx = 0.3;
 		c.ipady = 10;
 		//c.ipadx = 190;
-		c.insets = new Insets(0,90,10,0);
+		c.insets = new Insets(25,90,0,0);
 		_chooseLevelPanel.add(_btnStartQuiz, c);
 		_btnStartQuiz.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 3;
-		c.gridy = 13;
+		c.gridx = 2;
+		c.gridy = 11;
 		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.insets = new Insets(0,10,0,0);
+		c.gridheight = 2;
+		c.insets = new Insets(25,84,0,0);
 		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
 
@@ -411,26 +438,34 @@ public class ChooseLevelView implements Card, ActionListener{
 		//disable buttons accordingly based on numWOrds
 		if (_numWordsToQuiz < 50){
 			_btnFiftyWords.setEnabled(false);
+			_btnFiftyWords.setForeground(Color.gray);
 		}else{
 			_btnFiftyWords.setEnabled(true);
+			_btnFiftyWords.setForeground(Color.white);
 		}
 
 		if (_numWordsToQuiz < 40){
 			_btnFortyWords.setEnabled(false);
+			_btnFortyWords.setForeground(Color.gray);
 		}else{
 			_btnFortyWords.setEnabled(true);
+			_btnFortyWords.setForeground(Color.white);
 		}
 
 		if (_numWordsToQuiz < 20){
 			_btnTwentyWords.setEnabled(false);
+			_btnTwentyWords.setForeground(Color.gray);
 		}else{
 			_btnTwentyWords.setEnabled(true);
+			_btnTwentyWords.setForeground(Color.white);
 		}
 
 		if (_numWordsToQuiz < 10){
 			_btnTenWords.setEnabled(false);
+			_btnTenWords.setForeground(Color.gray);
 		}else{
 			_btnTenWords.setEnabled(true);
+			_btnTenWords.setForeground(Color.white);
 		}
 
 		//always enable 'get all words' button, unless there is no words
@@ -440,7 +475,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			_btnStartQuiz.setEnabled(false);
 
 			//tell user that there is no word to quiz 
-			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>>"+
+			_labelChooseLevel.setText("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
 					"This subgroup has no available words!"+"</font></html>");
 		}else{
 			_btnAllWords.setEnabled(true);

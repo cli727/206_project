@@ -158,7 +158,7 @@ public class ImportWordListView implements Card , ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == _btnBack){
-			VoxSpellGui.showCourseChooser(null);
+			VoxSpellGui.showCourseChooser("KET");
 		}else if (e.getSource() == _btnImport){
 			/**
 			 * Code copied and modified from oracle jfile chooser demo:
