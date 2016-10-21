@@ -72,8 +72,8 @@ public class ChooseCourseView implements Card, ActionListener{
 		 * http://stackoverflow.com/questions/18574375/jbutton-with-background-image-changing-on-mouse-hover
 		 */
 		//set button image
-		final ImageIcon ketImg = new ImageIcon("./course-01.png");
-		final ImageIcon ketHoverImg = new ImageIcon("./course-02.png");
+		final ImageIcon ketImg = new ImageIcon("./media/course-01.png");
+		final ImageIcon ketHoverImg = new ImageIcon("./media/course-02.png");
 		_btnKETwords = new JButton(ketImg);
 		Dimension size = new Dimension(ketImg.getIconWidth(), ketImg.getIconHeight());
 		_btnKETwords.setPreferredSize(size);
@@ -95,8 +95,8 @@ public class ChooseCourseView implements Card, ActionListener{
 			}
 		});
 
-		final ImageIcon IELTSImg = new ImageIcon("./course-03.png");
-		final ImageIcon IELTSHover = new ImageIcon("./course-04.png");
+		final ImageIcon IELTSImg = new ImageIcon("./media/course-03.png");
+		final ImageIcon IELTSHover = new ImageIcon("./media/course-04.png");
 		_btnIELTSwords = new JButton(IELTSImg);
 		_btnIELTSwords.setPreferredSize(size);
 		_btnIELTSwords.setBackground(_bgColor);
@@ -118,7 +118,7 @@ public class ChooseCourseView implements Card, ActionListener{
 			}
 		});
 
-		final ImageIcon myCourse = new ImageIcon("./course-07.png");
+		final ImageIcon myCourse = new ImageIcon("./media/course-07.png");
 		_btnImportWordList = new JButton(myCourse);
 		_btnImportWordList.setPreferredSize(size);
 		_btnImportWordList.setBackground(_bgColor);
@@ -137,7 +137,7 @@ public class ChooseCourseView implements Card, ActionListener{
 			}
 		});
 
-		final ImageIcon newCourse = new ImageIcon("./course-05.png");
+		final ImageIcon newCourse = new ImageIcon("./media/course-05.png");
 		_btnViewImportedWordList = new JButton(newCourse);
 		_btnViewImportedWordList.setPreferredSize(size);
 		_btnViewImportedWordList.setBackground(_bgColor);
@@ -156,7 +156,7 @@ public class ChooseCourseView implements Card, ActionListener{
 			}
 		});
 
-		final ImageIcon back = new ImageIcon("./back.png");
+		final ImageIcon back = new ImageIcon("./media/back.png");
 		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
 		_btnBack = new JButton(back);
 		_btnBack.setBackground(_bgColor);
@@ -169,7 +169,7 @@ public class ChooseCourseView implements Card, ActionListener{
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					_btnBack.setIcon(new ImageIcon("./back_hover.png"));
+					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
 
 				}else{
 					_btnBack.setIcon(back);
@@ -291,6 +291,7 @@ public class ChooseCourseView implements Card, ActionListener{
 
 			ShowImportedWordListView importedWordListView = new ShowImportedWordListView();
 			VoxSpellGui.getInstance().showCard(importedWordListView.createAndGetPanel(), "Show Imported WordList");
+			VoxSpellGui.setHeaderFooterColor(Color.white);
 
 		}else if (e.getSource() == _btnKETwords){
 
@@ -303,7 +304,7 @@ public class ChooseCourseView implements Card, ActionListener{
 				testScoreView.setModel(testScoreModel);
 
 				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
-
+				VoxSpellGui.setHeaderFooterColor(Color.white);
 
 			}else if (VoxSpellGui.STATUS.equals(QuizStatus.TEST)){
 				//test view
@@ -358,6 +359,7 @@ public class ChooseCourseView implements Card, ActionListener{
 				testScoreView.setModel(testScoreModel);
 
 				VoxSpellGui.getInstance().showCard(testScoreView.createAndGetPanel(), "Test Scores");
+				VoxSpellGui.setHeaderFooterColor(Color.white);
 
 			}else if(VoxSpellGui.STATUS.equals(QuizStatus.TEST)){
 				//test view

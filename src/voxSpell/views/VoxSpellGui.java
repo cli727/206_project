@@ -67,8 +67,8 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		//header session that stays throughout all menus
 		try {
-			_banner = ImageIO.read(new File("./banner-01.png"));
-			_footer = ImageIO.read(new File("./footer-02.png"));
+			_banner = ImageIO.read(new File("./media/banner-01.png"));
+			_footer = ImageIO.read(new File("./media/footer-02.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,8 +154,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		mainPanel.setBackground(Color.WHITE);
 		
 		//set button image
-		final ImageIcon practiceImg = new ImageIcon("./practice.png");
-		final ImageIcon practiceHover = new ImageIcon("./practice_hover.png");
+		final ImageIcon practiceImg = new ImageIcon("./media/practice.png");
+		final ImageIcon practiceHover = new ImageIcon("./media/practice_hover.png");
 		_btnPracticeQuiz = new JButton(practiceImg);
 		Dimension size = new Dimension(practiceImg.getIconWidth(), practiceImg.getIconHeight());
 		_btnPracticeQuiz.setPreferredSize(size);
@@ -176,8 +176,8 @@ public class VoxSpellGui implements Card,ActionListener{
 			}
 		});
 
-		final ImageIcon testImg = new ImageIcon("./test.png");
-		final ImageIcon testHover = new ImageIcon("./test_hover.png");
+		final ImageIcon testImg = new ImageIcon("./media/test.png");
+		final ImageIcon testHover = new ImageIcon("./media/test_hover.png");
 		_btnTestQuiz  = new JButton( testImg );
 		_btnTestQuiz .setPreferredSize(size);
 		_btnTestQuiz .setBackground(Color.white);
@@ -198,8 +198,8 @@ public class VoxSpellGui implements Card,ActionListener{
 		});
 
 		
-		final ImageIcon reviewImg = new ImageIcon("./review.png");
-		final ImageIcon reviewHover= new ImageIcon("./review_hover.png");
+		final ImageIcon reviewImg = new ImageIcon("./media/review.png");
+		final ImageIcon reviewHover= new ImageIcon("./media/review_hover.png");
 		_btnReview = new JButton( reviewImg);
 		_btnReview.setPreferredSize(size);
 		_btnReview.setBackground(Color.white);
@@ -219,8 +219,8 @@ public class VoxSpellGui implements Card,ActionListener{
 			}
 		});
 
-		final ImageIcon scoreImg = new ImageIcon("./score.png");
-		final ImageIcon scoreHover = new ImageIcon("./score_hover.png");
+		final ImageIcon scoreImg = new ImageIcon("./media/score.png");
+		final ImageIcon scoreHover = new ImageIcon("./media/score_hover.png");
 		_btnTestScore = new JButton(scoreImg);
 		_btnTestScore.setPreferredSize(size);
 		_btnTestScore.setBackground(Color.white);
@@ -303,18 +303,19 @@ public class VoxSpellGui implements Card,ActionListener{
 
 			//show choose course card, so that the score of one course can be shown
 			showCourseChooser(null); // does not need previous course name
+			
 		}else if (e.getSource() == _btnPracticeQuiz){
 			STATUS = QuizStatus.NEW;
 
 			//show card to select number of words / levels(headings)
 			ChooseLevelView cardChooseLevel = new ChooseLevelView("KET"); //KET is the default course
-			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 		}else if (e.getSource() == _btnReview){
 			STATUS = QuizStatus.REVIEW;
 			//ChooseLevelReviewView object instead of ChooseLevelView
 			ChooseLevelView cardChooseLevel = new ChooseLevelReviewView("KET"); //default course to review
-			VoxSpellGui.getInstance().showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
+			showCard(cardChooseLevel.createAndGetPanel(), "Choose Level");
 
 		}else if (e.getSource() == _btnTestQuiz){
 			STATUS = QuizStatus.TEST;

@@ -1,6 +1,7 @@
 package voxSpell.views.levelViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 		//redefine some fields
 		_labelHeading.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='white'>"
-				+ "Set up your review quiz...</font></html>"));
+				+ "Set up your review quiz...  </font></html>"));
 
 		//items in combo box are all levels that are NOT empty
 		Vector<String> allLevels = _hiddenFilesModel.getAllLevelsFromCourse("./.review/"+_courseName+"Review");
@@ -59,6 +60,7 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 		}
 
 		_comboBox = new JComboBox<String>(nonEmptyLevels);
+		_comboBox.setPreferredSize(new Dimension(220, 25));
 
 	}
 

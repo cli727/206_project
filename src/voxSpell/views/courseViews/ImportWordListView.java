@@ -1,6 +1,7 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -13,11 +14,15 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
@@ -60,7 +65,7 @@ public class ImportWordListView implements Card , ActionListener{
 		
 		_exampleImgPanel.setBackground(Color.white);
 
-		_labelHeading = new JLabel("Customised wordlist format...");
+		_labelHeading = new JLabel("Customised course format...");
 		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,30));
 		
 		_exampleHeading= new JLabel("Example:");
@@ -68,15 +73,56 @@ public class ImportWordListView implements Card , ActionListener{
 
 		_labelMessage= new JLabel("<html>Please make sure your wordlist meets the <BR>following requirements:"
 				+ "<BR><BR><BR> 1) It must contain at least one subgroup. "
-				+ "<BR><BR> 2) Each subgroup must begin with '%', <BR>followed by its name. (i.e. %Subgroup One)"
-				+ "<BR><BR> 3) The File must begin with the name of a subgroup."
-				+ "<BR><BR> 4) It must not be an empty file. <BR><BR>"
-				+"5) It should not be named 'KET' or 'IELTS', <BR> as those are reserved names <BR><BR>" 
-				+ "The image to the left is an example of a wordlist of <BR>3 subgroups.");
-		_labelMessage.setFont(new Font("SansSerif", Font.PLAIN,15));;
+				+ "<BR><BR> 2) Each subgroup must begin with '%', <BR> "
+				+ "followed by its name. (i.e. %Subgroup One)"
+				+ "<BR><BR> 3) The File must begin with the name of <BR>a subgroup."
+				+ "<BR><BR> 4) It must not be an empty file."
+				+ "<BR><BR> 5) It must not contain an empty level."
+				+"<BR><BR>6) It should not be named 'KET' or 'IELTS', <BR> as those are reserved names <BR><BR>" 
+				+ "<BR><BR>The image to the left is an example of a wordlist <BR>of 3 subgroups.");
 		
-		_btnImport = new JButton("Upload Now");
-		_btnBack = new JButton("Back");
+		final ImageIcon upload = new ImageIcon("./media/upload_course.png");
+		Dimension btnSize = new Dimension(upload.getIconWidth(), upload.getIconHeight());
+		_btnImport = new JButton(upload);
+		_btnImport.setPreferredSize(btnSize);
+		 _btnImport.setBorderPainted(false);
+		 _btnImport.setBackground(Color.white);
+		 
+		 _btnImport.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnImport.setIcon(new ImageIcon("./media/upload_course_hover.png"));
+
+				}else{
+					_btnImport.setIcon(upload);
+				}
+			}
+		});
+		
+		
+		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
+		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
+		 _btnBack = new JButton(back);
+		 _btnBack.setPreferredSize(btnSize);
+		 _btnBack.setBorderPainted(false);
+		 _btnBack.setBackground(Color.white);
+		 
+		 _btnBack.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
+
+				}else{
+					_btnBack.setIcon(back);
+				}
+			}
+		});
 		
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 	}
@@ -140,7 +186,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.gridy = 4;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(30,120,0,0);
+		c.insets = new Insets(30,50,0,0);
 		mainPanel.add(_btnImport, c);
 		_btnImport.addActionListener(this);
 		
@@ -149,7 +195,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.gridy = 4;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(30,50,0,0);
+		c.insets = new Insets(30,40,0,0);
 		mainPanel.add(_btnBack, c);
 		_btnBack.addActionListener(this);
 

@@ -64,7 +64,7 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	public ChooseLevelView (String courseName){
 		//initialise fields
-		
+
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		_bgColor = new Color(17,103,172);
@@ -90,7 +90,7 @@ public class ChooseLevelView implements Card, ActionListener{
 				"Course: " + _courseName+"</font></html>");
 
 		//set button image
-		final ImageIcon viewWords = new ImageIcon("./view_words.png");
+		final ImageIcon viewWords = new ImageIcon("./media/view_words.png");
 		_btnViewWordList = new JButton(viewWords);
 		Dimension size = new Dimension(viewWords.getIconWidth(), viewWords.getIconHeight());
 		_btnViewWordList.setPreferredSize(size);
@@ -102,14 +102,14 @@ public class ChooseLevelView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					_btnViewWordList.setIcon(new ImageIcon("./view_words_hover.png"));				
+					_btnViewWordList.setIcon(new ImageIcon("./media/view_words_hover.png"));				
 				}else{
 					_btnViewWordList.setIcon(viewWords);
 				}
 			}
 		});
 
-		final ImageIcon changeCourse = new ImageIcon("./change_course.png");
+		final ImageIcon changeCourse = new ImageIcon("./media/change_course.png");
 		_btnChangeCourse = new JButton(changeCourse);
 		size = new Dimension(changeCourse.getIconWidth(), changeCourse.getIconHeight());
 		_btnChangeCourse.setPreferredSize(size);
@@ -121,7 +121,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					_btnChangeCourse.setIcon(new ImageIcon("./change_course_hover.png"));
+					_btnChangeCourse.setIcon(new ImageIcon("./media/change_course_hover.png"));
 
 				}else{
 					_btnChangeCourse.setIcon(changeCourse);
@@ -131,22 +131,22 @@ public class ChooseLevelView implements Card, ActionListener{
 
 		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
 				"Choose a subgroup:"+"</font></html>");
-		
+
 		//items in combo box are all levels that are NOT empty
-				Vector<String> nonEmptyLevels = _hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName);
+		Vector<String> nonEmptyLevels = _hiddenFilesModel.getAllLevelsFromCourse("./.course/"+_courseName);
 
-				for (int i = 0; i < nonEmptyLevels.size(); i ++){
-					//get words within this level, check if empty
+		for (int i = 0; i < nonEmptyLevels.size(); i ++){
+			//get words within this level, check if empty
 
-					if (_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName, nonEmptyLevels.get(i)).isEmpty()){
-						//remove from list because it has no words to quiz
+			if (_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName, nonEmptyLevels.get(i)).isEmpty()){
+				//remove from list because it has no words to quiz
 
-						nonEmptyLevels.remove(i);
-					};
-				}
+				nonEmptyLevels.remove(i);
+			};
+		}
 
-				_comboBox = new JComboBox<String>(nonEmptyLevels);
-				_comboBox.setPreferredSize(new Dimension(220, 25));
+		_comboBox = new JComboBox<String>(nonEmptyLevels);
+		_comboBox.setPreferredSize(new Dimension(220, 25));
 
 		_labelChooseNumWords = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
 				"How many words would you like:"+"</font></html>");
@@ -180,7 +180,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		group.add(_btnFiftyWords);
 		group.add(_btnAllWords);
 
-		final ImageIcon start = new ImageIcon("./start.png");
+		final ImageIcon start = new ImageIcon("./media/start.png");
 		_btnStartQuiz = new JButton(start);
 		size = new Dimension(start.getIconWidth(), start.getIconHeight());
 		_btnStartQuiz.setPreferredSize(size);
@@ -192,7 +192,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			public void stateChanged(ChangeEvent e){
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
-					_btnStartQuiz.setIcon(new ImageIcon("./start_hover.png"));				
+					_btnStartQuiz.setIcon(new ImageIcon("./media/start_hover.png"));				
 				}else{
 
 					_btnStartQuiz.setIcon(start);
@@ -200,7 +200,7 @@ public class ChooseLevelView implements Card, ActionListener{
 			}
 		});
 
-		final ImageIcon back = new ImageIcon("./back.png");
+		final ImageIcon back = new ImageIcon("./media/back.png");
 		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
 		_btnBackToMain = new JButton(back);
 		_btnBackToMain.setBackground(_bgColor);
@@ -213,7 +213,7 @@ public class ChooseLevelView implements Card, ActionListener{
 				ButtonModel model = (ButtonModel) e.getSource();
 				if (model.isRollover()){
 					//change to another image
-					_btnBackToMain.setIcon(new ImageIcon("./back_hover.png"));
+					_btnBackToMain.setIcon(new ImageIcon("./media/back_hover.png"));
 
 				}else{
 					_btnBackToMain.setIcon(back);
@@ -243,7 +243,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,-10,10,0);
+		c.insets = new Insets(0,0,10,0);
 		//c.ipady = 200;
 		//c.ipadx = 190;
 		_chooseLevelPanel.add(_labelHeading, c);
@@ -354,9 +354,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 11;
 		c.gridwidth = 2;
 		c.gridheight = 2;
-		//c.weightx = 0.3;
 		c.ipady = 10;
-		//c.ipadx = 190;
 		c.insets = new Insets(25,90,0,0);
 		_chooseLevelPanel.add(_btnStartQuiz, c);
 		_btnStartQuiz.addActionListener(this);
@@ -366,7 +364,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridy = 11;
 		c.gridwidth = 1;
 		c.gridheight = 2;
-		c.insets = new Insets(25,84,0,0);
+		c.insets = new Insets(25,65,0,0);
 		_chooseLevelPanel.add(_btnBackToMain, c);
 		_btnBackToMain.addActionListener(this);
 

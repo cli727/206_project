@@ -9,12 +9,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
@@ -62,8 +67,47 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 
 		_tablePanel = new JPanel();
 
-		_btnClearStats = new JButton("Clear");
-		_btnChangeCourse = new JButton("Back");
+		final ImageIcon clearStats = new ImageIcon("./media/clear_statistics.png");
+		Dimension btnSize = new Dimension(clearStats.getIconWidth(), clearStats.getIconHeight());
+		_btnClearStats = new JButton(clearStats);
+		_btnClearStats.setPreferredSize(btnSize);
+		_btnClearStats.setBorderPainted(false);
+		_btnClearStats.setBackground(Color.white);
+
+		_btnClearStats.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnClearStats.setIcon(new ImageIcon("./media/clear_statistics_hover.png"));
+
+				}else{
+					_btnClearStats.setIcon(clearStats);
+				}
+			}
+		});
+		
+		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
+		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
+		_btnChangeCourse = new JButton(back);
+		_btnChangeCourse.setPreferredSize(btnSize);
+		_btnChangeCourse.setBorderPainted(false);
+		_btnChangeCourse.setBackground(Color.white);
+
+		_btnChangeCourse.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnChangeCourse.setIcon(new ImageIcon("./media/back_hover.png"));
+
+				}else{
+					_btnChangeCourse.setIcon(back);
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -75,8 +119,6 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		}else{
 			_labelTableInfo.setText("Attempted word history in alphabetical order.");
 		}
-		
-		
 
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
@@ -100,16 +142,16 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(20,30,0,0);
+		c.insets = new Insets(20,-15,0,0);
 		resultPanel.add(_labelQuizMode, c);
 		
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 1;
+		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(30,100,0,0);
+		c.insets = new Insets(30,60,0,0);
 		resultPanel.add(_labelTableInfo, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -117,7 +159,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(0,100,0,0);
+		c.insets = new Insets(0,180,0,0);
 		resultPanel.add(_labelScoreTitle, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -125,7 +167,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(0,130,0,0);
+		c.insets = new Insets(0,205,0,0);
 		resultPanel.add(_labelScore, c);
 
 
@@ -134,7 +176,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridy = 2;
 		c.gridwidth = 2;
 		c.gridheight = 2;
-		c.insets = new Insets(0,0,0,0);
+		c.insets = new Insets(0,-10,0,0);
 		resultPanel.add(_tablePanel, c);
 
 
@@ -144,7 +186,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(15,100,0,0);
+		c.insets = new Insets(15,150,0,0);
 		resultPanel.add(_btnClearStats, c);
 		_btnClearStats.addActionListener(this);
 
@@ -154,7 +196,7 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(15,100,0,100);
+		c.insets = new Insets(15,50,0,150);
 		resultPanel.add(_btnChangeCourse, c);
 		_btnChangeCourse.addActionListener(this);
 

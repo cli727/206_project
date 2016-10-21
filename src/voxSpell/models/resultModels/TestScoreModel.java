@@ -8,7 +8,7 @@ import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 
 public class TestScoreModel extends AbstractTableModel{
 	private HiddenFilesModel _hiddenFilesModel;
-	private String[] _scoreDatabaseHeaderNames = { "Word", "Corredt","Incorrect"};
+	private String[] _scoreDatabaseHeaderNames = { "Word", "Correct","Incorrect"};
 
 	private String _courseName;
 	private ArrayList<ArrayList<Object>> _database;

@@ -12,12 +12,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
@@ -107,17 +111,68 @@ public class ResultView extends JTableView implements Card, ActionListener {
 
 		_labelTableInfo = new JLabel("(Selected Items will be added to your revision list)");
 
-		_btnPracticeAgain = new JButton("Practice Again");
+		final ImageIcon retry = new ImageIcon("./media/retry.png");
+		_btnPracticeAgain = new JButton(retry);
+		Dimension size = new Dimension(retry.getIconWidth(), retry.getIconHeight());
+		_btnPracticeAgain.setPreferredSize(size);
+		_btnPracticeAgain.setBackground(Color.white);
+		_btnPracticeAgain.setBorderPainted(false);
 
-		_btnNextLevel = new JButton("Practice Next Level");
+		_btnPracticeAgain.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnPracticeAgain.setIcon(new ImageIcon("./media/retry_hover.png"));				
+				}else{
+					_btnPracticeAgain.setIcon(retry);
+				}
+			}
+		});
+
+		final ImageIcon next = new ImageIcon("./media/next.png");
+		_btnNextLevel = new JButton(next);
+		_btnNextLevel.setPreferredSize(size);
+		_btnNextLevel.setBackground(Color.white);
+		_btnNextLevel.setBorderPainted(false);
+
+		_btnNextLevel.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnNextLevel.setIcon(new ImageIcon("./media/next_hover.png"));				
+				}else{
+					_btnNextLevel.setIcon(next);
+				}
+			}
+		});
+		
+
+		final ImageIcon home = new ImageIcon("./media/home.png");
+		_btnHome = new JButton(home);
+		_btnHome.setPreferredSize(size);
+		_btnHome.setBackground(Color.white);
+		_btnHome.setBorderPainted(false);
+
+		_btnHome.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnHome.setIcon(new ImageIcon("./media/home_hover.png"));				
+				}else{
+					_btnHome.setIcon(home);
+				}
+			}
+		});
+		
 
 		if (! ifDisableNextLevel()){ //only get next words if not last level
 			_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
 		}
 		
 		_numWordsToQuiz = 0;
-
-		_btnHome = new JButton("Home");
 	}
 
 	@Override
@@ -170,7 +225,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		c.gridy = 3;
 		c.gridwidth = 3;
 		c.gridheight = 3;
-		c.insets = new Insets(20,0,0,0);
+		c.insets = new Insets(20,0,0,10);
 		resultPanel.add(_tablePanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -188,7 +243,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(25,0,0,5);
+		c.insets = new Insets(25,40,0,0);
 		resultPanel.add(_btnPracticeAgain, c);
 		_btnPracticeAgain.addActionListener(this);
 
@@ -198,7 +253,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(25,0,0,5);
+		c.insets = new Insets(25,60,0,0);
 		resultPanel.add(_btnNextLevel, c);
 		_btnNextLevel.addActionListener(this);
 
@@ -208,7 +263,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(25,0,0,5);
+		c.insets = new Insets(25,55,0,28);
 		resultPanel.add(_btnHome, c);
 		_btnHome.addActionListener(this);
 

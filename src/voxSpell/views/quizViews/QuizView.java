@@ -1,18 +1,24 @@
 package voxSpell.views.quizViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import voxSpell.views.levelViews.ChooseLevelReviewView;
 import voxSpell.views.levelViews.ChooseLevelView;
@@ -47,8 +53,6 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	protected JLabel _labelTotalWord;
 
 	protected JTextField _inputArea ;
-
-	protected JLabel _labelDefinition;
 
 	private JPanel _answerPanel;
 	private JLabel _labelCorrectSpelling; //"correct spelling:"
@@ -110,23 +114,109 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_answerPanel.add(_labelCorrectSpelling);
 		_answerPanel.add(_labelAnswer);
 
-		//definition of word
-		_labelDefinition = new JLabel("<html> v. some definition <BR> will probably <BR> go here in the future</html>");
-
 		_inputArea = new JTextField();
-
+		_inputArea.setPreferredSize(new Dimension(50,30));
 		//=======buttons==============================================
-		_btnRelisten = new JButton("Relisten");
-		_btnCheckWord = new JButton("Check spelling");
-		_btnSkipWord = new JButton("Skip");
-		_btnShowAnswer = new JButton ("Answer");
-		/*
- _labelFesVoice = new JLabel("Choose your preferred voice below :");
-	 _labelAccuracy = new JLabel("Accuracy Rates:     ");*/
+		final ImageIcon relisten = new ImageIcon("./media/relisten.jpg");
+		_btnRelisten = new JButton(relisten);
+		Dimension size = new Dimension(relisten.getIconWidth(), relisten.getIconHeight());
+		_btnRelisten.setPreferredSize(size);
+		_btnRelisten.setBackground(Color.white);
+		_btnRelisten.setBorderPainted(false);
+		_btnRelisten.setFocusable(false);
+
+		_btnRelisten.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnRelisten.setIcon(new ImageIcon("./media/relisten_hover.jpg"));				
+				}else{
+					_btnRelisten.setIcon(relisten);
+				}
+			}
+		});
+		
+		final ImageIcon check = new ImageIcon("./media/check_spelling.png");
+		_btnCheckWord = new JButton(check);
+		size = new Dimension(check.getIconWidth(), check.getIconHeight());
+		_btnCheckWord.setPreferredSize(size);
+		_btnCheckWord.setBackground(Color.white);
+		_btnCheckWord.setBorderPainted(false);
+
+		_btnCheckWord.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnCheckWord.setIcon(new ImageIcon("./media/check_spelling_hover.png"));				
+				}else{
+					_btnCheckWord.setIcon(check);
+				}
+			}
+		});
+		
+		final ImageIcon skip = new ImageIcon("./media/skip.png");
+		_btnSkipWord = new JButton(skip);
+		 size = new Dimension(skip.getIconWidth(), skip.getIconHeight());
+		_btnSkipWord.setPreferredSize(size);
+		_btnSkipWord.setBackground(Color.white);
+		_btnSkipWord.setBorderPainted(false);
+
+		_btnSkipWord.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnSkipWord.setIcon(new ImageIcon("./media/skip_hover.png"));				
+				}else{
+					_btnSkipWord.setIcon(skip);
+				}
+			}
+		});
+		
+		final ImageIcon answer = new ImageIcon("./media/answer.png");
+		_btnShowAnswer = new JButton(answer);
+		 size = new Dimension(answer.getIconWidth(), answer.getIconHeight());
+		 _btnShowAnswer.setPreferredSize(size);
+		_btnShowAnswer.setBackground(Color.white);
+		_btnShowAnswer.setBorderPainted(false);
+
+		_btnShowAnswer.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					_btnShowAnswer.setIcon(new ImageIcon("./media/answer_hover.png"));				
+				}else{
+					_btnShowAnswer.setIcon(answer);
+				}
+			}
+		});
+		
+		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
+		 size = new Dimension(back.getIconWidth(), back.getIconHeight());
+		 _btnBack = new JButton(back);
+		 _btnBack.setPreferredSize(size);
+		 _btnBack.setBorderPainted(false);
+		 _btnBack.setBackground(Color.white);
+		 
+		 _btnBack.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
+
+				}else{
+					_btnBack.setIcon(back);
+				}
+			}
+		});
 
 		_tipsLabel = new JLabel();
 		_cb = new JComboBox<String>(_comboBoxItems);
-		_btnBack = new JButton("Back");
 
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(Color.white);
@@ -183,18 +273,10 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.insets = new Insets(25,0,20,0);
 		add(_updateWordPanel, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 4;
-		c.gridheight = 2;
-		//c.weightx = 0.3;
-		c.insets = new Insets(5,55,30,0);
-		add(_labelDefinition, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 5;
+		c.gridy = 3;
 		c.gridwidth = 3;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
@@ -203,20 +285,19 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 6;
+		c.gridy = 4;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		//c.weightx = 0.2;
 		c.insets = new Insets(0,55,10,0);
 		add(_btnRelisten, c);
 		_btnRelisten.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 6;
+		c.gridy = 4;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		//c.weightx = 0.5;
+		c.ipadx = 0;
 		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
@@ -224,7 +305,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
 		c.gridx = 4;
-		c.gridy = 6;
+		c.gridy = 4;
 		c.gridwidth = 2;
 		c.gridheight = 1;
 		//c.weightx = 0.7;
@@ -233,7 +314,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 7;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
@@ -243,27 +324,25 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
-		c.gridy = 7;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		//c.weightx = 0.2;
 		c.insets = new Insets(10,5,60,0);
 		add(_btnCheckWord, c);
 		_btnCheckWord.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
-		c.gridy = 7;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		//c.weightx = 0.2;
 		c.insets = new Insets(10,5,60,0);
 		add(_btnSkipWord, c);
 		_btnSkipWord.addActionListener(this);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
-		c.gridy = 7;
+		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
@@ -273,7 +352,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 4;
-		c.gridy = 8;
+		c.gridy = 6;
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;

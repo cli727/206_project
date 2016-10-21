@@ -1,6 +1,7 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,12 +11,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
+import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -63,16 +68,71 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 
 		_coursePane= new JScrollPane();
 
-		_btnUseList = new JButton("Set Course");
-		_btnDeleteList = new JButton ("Delete Course");
-		_btnBack = new JButton("Back");
+		final ImageIcon setCourse = new ImageIcon("./media/set_course.png");
+		Dimension btnSize = new Dimension(setCourse.getIconWidth(), setCourse.getIconHeight());
+		_btnUseList = new JButton(setCourse);
+		_btnUseList.setPreferredSize(btnSize);
+		_btnUseList.setBorderPainted(false);
+		_btnUseList.setBackground(Color.white);
 
-		//_coursePane.setBounds(113, 63, 151, 184);
+		_btnUseList.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnUseList.setIcon(new ImageIcon("./media/set_course_hover.png"));
+
+				}else{
+					_btnUseList.setIcon(setCourse);
+				}
+			}
+		});
+		
+		final ImageIcon deleteCourse = new ImageIcon("./media/delete_course.png");
+		 btnSize = new Dimension(deleteCourse.getIconWidth(), deleteCourse.getIconHeight());
+		_btnDeleteList = new JButton(deleteCourse);
+		_btnDeleteList.setPreferredSize(btnSize);
+		_btnDeleteList.setBorderPainted(false);
+		_btnDeleteList.setBackground(Color.white);
+
+		_btnDeleteList.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnDeleteList.setIcon(new ImageIcon("./media/delete_course_hover.png"));
+
+				}else{
+					_btnDeleteList.setIcon(deleteCourse);
+				}
+			}
+		});
+		
+		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
+		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
+		 _btnBack = new JButton(back);
+		 _btnBack.setPreferredSize(btnSize);
+		 _btnBack.setBorderPainted(false);
+		 _btnBack.setBackground(Color.white);
+		 
+		 _btnBack.getModel().addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){
+				ButtonModel model = (ButtonModel) e.getSource();
+				if (model.isRollover()){
+					//change to another image
+					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
+
+				}else{
+					_btnBack.setIcon(back);
+				}
+			}
+		});
 
 		//get list of imported courses from hiddenFilesModel and display them
 		final ArrayList<String> courseNames =  _hiddenFilesModel.getImportedCourseNames();
-
-		//final String[] courseNamesArray = (String[]) courseNames.toArray();
 
 		_courseList = new JList();
 		_courseList.addListSelectionListener(this);
@@ -134,7 +194,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 0;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		c.insets = new Insets(0,-150,0,0);
+		c.insets = new Insets(0,-80,0,0);
 		mainPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -150,7 +210,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 2;
 		c.gridwidth = 3;
 		c.gridheight = 3;
-		c.ipadx = 500;
+		c.ipadx = 450;
 		c.ipady = 250;
 		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_coursePane, c);
@@ -164,7 +224,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(30,0,0,0);
+		c.insets = new Insets(30,40,0,0);
 		mainPanel.add(_btnUseList, c);
 		_btnUseList.addActionListener(this);
 
@@ -173,7 +233,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(30,10,0,0);
+		c.insets = new Insets(30,40,0,0);
 		mainPanel.add(_btnDeleteList, c);
 		_btnDeleteList.addActionListener(this);
 
@@ -182,7 +242,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(30,10,0,0);
+		c.insets = new Insets(30,40,0,10);
 		mainPanel.add(_btnBack, c);
 		_btnBack.addActionListener(this);
 
