@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JPanel;
+
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.quizModels.QuizModel;
@@ -17,17 +19,23 @@ public class ReviewResultView extends ResultView{
 		_labelQuizMode.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
 				+ "Revision Completed!"+ "</font></html>"));
-		
-		_labelTableInfo.setText("(Selected items will be removed from revision list)");
-	}
 
+		_labelTableInfo.setText("(Selected items will be removed from revision list)");
+
+		if (! ifDisableNextLevel()){ //only get next words if not last level
+			_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+		}
+		
+	}
+	
+	
 	/**
 	 * this method needs to be different from its parent for review mode
 	 * next level is disabled when next level review words are empty
 	 */
 	@Override
 	protected boolean ifDisableNextLevel(){
-		
+
 		if ( _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)).size() != 0 ){
 			// if next level word size is not 0
 			return false;
@@ -36,7 +44,7 @@ public class ReviewResultView extends ResultView{
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Review mode reads from a different file when buttons are pressed
 	 * Review mode also needs to disable the 'next level' button if the user selects all words in the table
@@ -48,7 +56,7 @@ public class ReviewResultView extends ResultView{
 		((ResultModel) _model).keepRecordOfSelectedWords();
 
 		if (e.getSource() == _btnPracticeAgain){
-			//show quiz card of this level again
+			//show quiz card of this level again, with the remaining words 
 
 			QuizView quizView = new QuizView(_thisLevelName, _courseName);
 			QuizModel quizModel = new QuizModel(_allLevelNames);
@@ -66,7 +74,6 @@ public class ReviewResultView extends ResultView{
 			//show quizView of next level
 
 			//get words for next level
-			ArrayList<String> newWords = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
 
 			QuizView quizView = new QuizView(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1), _courseName);
 			QuizModel quizModel = new QuizModel(_allLevelNames);
@@ -74,7 +81,7 @@ public class ReviewResultView extends ResultView{
 			quizModel.setView(quizView);
 			quizView.setModel(quizModel);
 
-			quizModel.setAllWords(newWords, _model.getRowCount()); 
+			quizModel.setAllWords(_nextLevelWords, _numWordsToQuiz); 
 
 			//show next level quiz card
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Next Level Quiz");
@@ -82,6 +89,15 @@ public class ReviewResultView extends ResultView{
 
 		}else if (e.getSource() == _btnHome){
 			VoxSpellGui.showMainMenu();
+		}
+	}
+	
+	@Override
+	public void ifDisableRetry(int count){
+		if (count == _model.getRowCount()){
+			_btnPracticeAgain.setEnabled(false);
+		}else{
+			_btnPracticeAgain.setEnabled(true);
 		}
 	}
 }

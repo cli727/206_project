@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
@@ -35,7 +36,11 @@ public class ResultView extends JTableView implements Card, ActionListener {
 	protected String _courseName;
 
 	private JLabel _labelHeading;
+	
+	private JPanel _subheadingPanel;
 	private JLabel _labelSubheading;
+	private JLabel _labelNextLevelSubheading;
+	
 	protected JLabel _labelQuizMode;
 
 	protected JLabel _labelTableInfo;
@@ -66,11 +71,37 @@ public class ResultView extends JTableView implements Card, ActionListener {
 				+ "Course: " + _courseName + "</font></html>"));
 
 		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,17));
+		
+		//====subheading area==============================================
+		_subheadingPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		_subheadingPanel.setBackground(Color.white);
 
 		_labelSubheading = new JLabel(("<html> <p style='text-align:center;'>"
 				+ "<font color='black'>"
 				+ "Subgroup : " + _thisLevelName + "</font></html>"));
 		_labelSubheading.setFont((new Font("SansSerif", Font.ITALIC,17)));
+		
+		_labelNextLevelSubheading = new JLabel();
+		_labelNextLevelSubheading.setFont((new Font("SansSerif", Font.ITALIC,17)));
+		_labelNextLevelSubheading.setBorder( new EmptyBorder(0, 50, 0, 0) );//give some space between two labels
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.insets = new Insets(0,0,0,0);
+		_subheadingPanel.add(_labelSubheading, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.weightx = 1;
+		_subheadingPanel.add(_labelNextLevelSubheading, c);
+		//======================================================================
 
 		_tablePanel = new JPanel();
 
@@ -80,8 +111,9 @@ public class ResultView extends JTableView implements Card, ActionListener {
 
 		_btnNextLevel = new JButton("Practice Next Level");
 
-		
-		_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+		if (! ifDisableNextLevel()){ //only get next words if not last level
+			_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+		}
 		
 		_numWordsToQuiz = 0;
 
@@ -90,31 +122,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 
 	@Override
 	public JPanel createAndGetPanel() {
-		//=================setting button tool tip
 		
-		//tell user information about next level when hovered over
-		int nextLevelWordCount = _nextLevelWords.size();
-		
-		
-		if(ChooseLevelView._numWordStatus.equals(NumWordStatus.ALL)){
-			_numWordsToQuiz = nextLevelWordCount;
-		}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.TEN)){
-			_numWordsToQuiz = 10;
-		}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.TWENTY)){
-			_numWordsToQuiz = 20;
-		}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.FORTY)){
-			_numWordsToQuiz = 40;
-		}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.FIFTY)){
-			_numWordsToQuiz = 50;
-		}
-		
-		if (nextLevelWordCount < _numWordsToQuiz ){
-			_numWordsToQuiz = nextLevelWordCount;
-		}
-		_btnNextLevel.setToolTipText(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)+" ,"+_numWordsToQuiz + " Words");
-
-		
-		//===================================================================
 		JPanel resultPanel = new JPanel();
 		resultPanel.setBackground(Color.white);
 
@@ -154,7 +162,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		c.gridwidth = 3;
 		c.gridheight = 1;
 		c.insets = new Insets(0,-85,0,0);
-		resultPanel.add(_labelSubheading, c);
+		resultPanel.add(_subheadingPanel, c);
 
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -205,11 +213,46 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		_btnHome.addActionListener(this);
 
 		//check if the next level button needs to be disabled
+		//also next level label should not be visible
 		if (ifDisableNextLevel()){
 			_btnNextLevel.setEnabled(false);
+			_labelNextLevelSubheading.setText(" ");
+		}else{
+			//tell user information about next level
+			int nextLevelWordCount = _nextLevelWords.size();
+			
+			if(ChooseLevelView._numWordStatus.equals(NumWordStatus.ALL)){
+				_numWordsToQuiz = nextLevelWordCount;
+			}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.TEN)){
+				_numWordsToQuiz = 10;
+			}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.TWENTY)){
+				_numWordsToQuiz = 20;
+			}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.FORTY)){
+				_numWordsToQuiz = 40;
+			}else if (ChooseLevelView._numWordStatus.equals(NumWordStatus.FIFTY)){
+				_numWordsToQuiz = 50;
+			}
+			
+			if (nextLevelWordCount < _numWordsToQuiz ){
+				_numWordsToQuiz = nextLevelWordCount;
+			}
+			_labelNextLevelSubheading.setText("<html> <p style='text-align:center;'>"
+					+ "<font color='black'>"
+					+ "Next: "+ _allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)+", "+_numWordsToQuiz + " Words</font></html>");
+			
 		}
+		
+		ifDisableRetry(((ResultModel) _model).getNumSelectedWords()); //check if retry button should be disabled initially
 
 		return resultPanel;
+	}
+
+	/**
+	 * This only a stub method for result view, overriden in reviewResultView
+	 * @param count
+	 */
+	public void ifDisableRetry(int count){
+		//
 	}
 
 	@Override

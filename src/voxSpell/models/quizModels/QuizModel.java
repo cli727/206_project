@@ -184,6 +184,7 @@ public class QuizModel {
 		ResultModel resultModel = new ResultModel(_randomWords,_countCheckList,_quizView.getLevelName(),_quizView.getCourseName());
 
 		resultView.setModel(resultModel);
+		resultModel.setView(resultView);
 
 		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}

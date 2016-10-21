@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import voxSpell.views.VoxSpellGui;
+import voxSpell.views.resultViews.ResultView;
+import voxSpell.views.resultViews.ReviewResultView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 import voxSpell.status.QuizStatus;
 
@@ -21,6 +23,7 @@ public class ResultModel extends AbstractTableModel {
 	private String[] _databaseHeaderNames = { "Revise Later", "Word", "Attempts" };
 	private String[] _reviewDatabaseHeaderNames = { "Remembered", "Word", "Attempts" };
 
+	private ResultView _view;
 
 	public ResultModel(ArrayList<String> listOfWords, ArrayList<String> attemptCounts, String level,String courseName) {
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
@@ -36,6 +39,10 @@ public class ResultModel extends AbstractTableModel {
 		_listOfButtons = new ArrayList<Boolean>();
 
 		createDatabase();
+	}
+
+	public void setView(ResultView view){
+		_view = view;
 	}
 
 	/**
@@ -138,9 +145,25 @@ public class ResultModel extends AbstractTableModel {
 		//update boolean value in both database and listOfButtons when user changes the cells
 		_database.get(row).set(col, value); 
 		_listOfButtons.set(row, (Boolean) value);
-	}
 
-	public int getSelectedButtons(){
+		if(VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
+			int count = 0;
+			for (int i = 0; i < _listOfButtons.size(); i ++){
+				if (_listOfButtons.get(i)){
+					//item is selected
+					count ++;
+				}
+			}
+			((ReviewResultView) _view).ifDisableRetry(count);
+		}
+	}
+	
+	/**
+	 * This method is for views to get automatically selected words,
+	 * so that the view knows whether to disable the retry button
+	 * @return
+	 */
+	public int getNumSelectedWords(){
 		int count = 0;
 		for (int i = 0; i < _listOfButtons.size(); i ++){
 			if (_listOfButtons.get(i)){
@@ -150,7 +173,7 @@ public class ResultModel extends AbstractTableModel {
 		}
 		return count;
 	}
-	
+
 	//method that writes all selected words into review file using hidden files manager
 	public void keepRecordOfSelectedWords(){
 
