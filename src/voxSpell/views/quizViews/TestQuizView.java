@@ -107,7 +107,7 @@ public class TestQuizView extends QuizView{
 		c.gridheight = 1;
 		c.gridwidth = 4;
 		c.ipadx = 80;
-		c.insets = new Insets(25,0,20,0);
+		c.insets = new Insets(15,10,20,0);
 		add(_timerBar, c);
 
 		_scorePanel.add(_scoreTitle,BorderLayout.EAST);
@@ -120,7 +120,7 @@ public class TestQuizView extends QuizView{
 		c.gridwidth = 2;
 		c.ipadx = 0;
 		//c.weightx = 0.3;
-		c.insets = new Insets(-70,120,5,0);
+		c.insets = new Insets(-120,50,5,0);
 		add(_scoreTitle, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -129,7 +129,7 @@ public class TestQuizView extends QuizView{
 		c.gridheight = 2;
 		c.gridwidth = 2;
 		//c.weightx = 0.3;
-		c.insets = new Insets(-60,120,5,0);
+		c.insets = new Insets(-120,55,5,0);
 		add(_updateScore, c);
 
 
@@ -161,7 +161,7 @@ public class TestQuizView extends QuizView{
 		c.gridwidth = 3;
 		c.ipadx = 0;
 		//c.weightx = 0.3;
-		c.insets = new Insets(10,240,0,0);
+		c.insets = new Insets(10,240,-20,0);
 		add(_labelFeedBack, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -198,7 +198,7 @@ public class TestQuizView extends QuizView{
 		c.gridy = 7;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(10,180,60,0);
+		c.insets = new Insets(10,200,60,0);
 		add(_btnCheckWord, c);
 		_btnCheckWord.addActionListener(this);
 
