@@ -64,7 +64,9 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	private JButton _btnSkipWord;
 	private JButton _btnShowAnswer;
 
-	protected JLabel _tipsLabel;
+	protected JPanel _tipsPanel;
+	protected JLabel _caseLabel;
+	protected JLabel _specialCharLabel;
 
 	protected JButton _btnBack;
 
@@ -215,7 +217,28 @@ public class QuizView extends JPanel implements Card, ActionListener {
 			}
 		});
 
-		_tipsLabel = new JLabel();
+		_tipsPanel = new JPanel(new GridBagLayout());
+		_tipsPanel.setBackground(Color.white);
+		_caseLabel = new JLabel();
+		_specialCharLabel = new JLabel();
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		_tipsPanel.add(_caseLabel, c);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		_tipsPanel.add(_specialCharLabel, c);
+		
+		//=======================================================
+		
 		_cb = new JComboBox<String>(_comboBoxItems);
 
 		//change main menu footer/header background color so that it is consistent with this background color
@@ -272,7 +295,16 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		//c.weightx = 0.3;
 		c.insets = new Insets(25,0,20,0);
 		add(_updateWordPanel, c);
-
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.weightx = 0.33;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		//c.weightx = 0.7;
+		c.insets = new Insets(25,15,20,0);
+		add(_tipsPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -280,7 +312,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 3;
 		c.gridheight = 1;
 		//c.weightx = 0.3;
-		c.insets = new Insets(5,55,0,0);
+		c.insets = new Insets(5,55,-20,0);
 		add(_answerPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -297,20 +329,10 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridy = 4;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		c.ipadx = 0;
+		
 		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.weightx = 0.33;
-		c.gridx = 4;
-		c.gridy = 4;
-		c.gridwidth = 2;
-		c.gridheight = 1;
-		//c.weightx = 0.7;
-		c.insets = new Insets(0,5,10,0);
-		add(_tipsLabel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -327,7 +349,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(10,5,60,0);
+		c.insets = new Insets(10,15,60,0);
 		add(_btnCheckWord, c);
 		_btnCheckWord.addActionListener(this);
 
@@ -336,7 +358,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridy = 5;
 		c.gridwidth = 1;
 		c.gridheight = 1;
-		c.insets = new Insets(10,5,60,0);
+		c.insets = new Insets(10,10,60,0);
 		add(_btnSkipWord, c);
 		_btnSkipWord.addActionListener(this);
 
@@ -346,7 +368,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		//c.weightx = 0.2;
-		c.insets = new Insets(10,5,60,0);
+		c.insets = new Insets(10,10,60,0);
 		add(_btnShowAnswer, c);
 		_btnShowAnswer.addActionListener(this);
 
@@ -458,22 +480,18 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	}
 
-	public void showReviewEndPopUp(int correct, int incorrect){
-
-		String message = "Level " + _level +" Review Completed: \n" + "\n" +
-				"You got " + correct+ " words correct.\n" + 
-				"You got " + incorrect + " words incorrect. \n\n"+
-				"Good Effort! \n";
-
-		JOptionPane.showMessageDialog(this, message, 
-				"Review Completed", JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public void updateTipsLabel(boolean caseSensitive){
+	public void updateTipsLabel(boolean caseSensitive, boolean specialChar){
 		if (caseSensitive){
-			_tipsLabel.setText("<html><font color='gray'>(Hint: this word is case sensitive!)</font></html>");
-		}else {
-			_tipsLabel.setText("<html><font color='white'>(Hint: this word is case sensitive!)</font></html>");
+			_caseLabel.setText("<html><font color='gray'>( Hint: this word is case sensitive! )</font></html>");
+		}else{
+			_caseLabel.setText("<html><font color='white'>( Hint: this word is case sensitive! )</font></html>");
+		}
+			
+		if(specialChar){
+			_specialCharLabel.setText("<html><font color='gray'>( Hint: this word has special character(s)! )</font></html>");
+		}else{
+			_specialCharLabel.setText("<html><font color='white'>( Hint: this word has special character(s)! )</font></html>");
+
 		}
 	}
 

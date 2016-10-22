@@ -160,7 +160,7 @@ public class QuizModel {
 			_quizView.disableAnswer();
 
 			//update tips label in case of case sensitivity
-			_quizView.updateTipsLabel(isCaseSensitive());
+			_quizView.updateTipsLabel(isCaseSensitive(), containsSpecialCharacter());
 
 			_festivalModel.speakCurrentWord(_currentWord);
 		}
@@ -318,6 +318,21 @@ public class QuizModel {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Checks if a word has special characters. Update tips on view if so.
+	 * @return
+	 */
+	protected boolean containsSpecialCharacter(){
+		for (int i = 0; i < _currentWord.length(); i ++){
+			if (! Character.isLetter(_currentWord.charAt(i))){
+				//this word contains special characters
+				return true;
+			}
+		}
+		return false;
+		
 	}
 
 	public void relisten() {

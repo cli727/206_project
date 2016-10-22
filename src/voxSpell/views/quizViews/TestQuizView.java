@@ -143,6 +143,16 @@ public class TestQuizView extends QuizView{
 		c.ipady = 0;
 		c.insets = new Insets(25,0,20,0);
 		add(_updateWordPanel, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.weightx = 0.33;
+		c.gridx = 1;
+		c.gridy = 3;
+		c.gridwidth = 3;
+		c.gridheight = 1;
+		//c.weightx = 0.7;
+		c.insets = new Insets(25,15,20,0);
+		add(_tipsPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -169,22 +179,9 @@ public class TestQuizView extends QuizView{
 		c.gridy = 6;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		c.ipadx = 320;
 		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
-
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.weightx = 0.33;
-		c.gridx = 4;
-		c.gridy = 6;
-		c.gridwidth = 2;
-		c.gridheight = 1;
-		c.ipadx = 0;
-		//c.weightx = 0.7;
-		c.insets = new Insets(0,5,10,0);
-		add(_tipsLabel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
