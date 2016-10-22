@@ -314,6 +314,7 @@ public class ChooseLevelView implements Card, ActionListener{
 		if (e.getSource() == _btnBackToMain){
 
 			VoxSpellGui.showMainMenu();
+			
 
 		}else if(e.getSource() == _btnViewWordList) {
 
@@ -330,6 +331,10 @@ public class ChooseLevelView implements Card, ActionListener{
 			//disable number of word radiobuttons accordingly
 			//get number of words in selected level
 			disableNumWordsButtons();
+			
+			_btnAllWords.setSelected(true); //all words is the default option when a new subgroup is selected
+			_numWordStatus = NumWordStatus.ALL;
+			_numWordsToQuiz = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,(String) _comboBox.getSelectedItem()).size();
 
 		}else if (e.getSource() == _btnTenWords){
 
