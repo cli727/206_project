@@ -1,1 +1,0 @@
-(SayText "Chen's")
