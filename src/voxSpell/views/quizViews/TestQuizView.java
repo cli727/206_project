@@ -252,7 +252,7 @@ public class TestQuizView extends QuizView{
 					
 					//_festivalModel.failedVoice();
 					AudioPlayer audioPlayer = new AudioPlayer();
-					audioPlayer.playAudio("./incorrect.wav");
+					audioPlayer.playAudio("./media/incorrect.wav");
 					
 					_labelFeedBack.setText("<html> <p style='text-align:center;'>"
 							+ "<font color=red'>"
