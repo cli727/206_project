@@ -18,6 +18,7 @@ import javax.swing.JTable;
 
 import voxSpell.videoPlayer.VideoPlayer;
 import voxSpell.models.resultModels.TestResultModel;
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.quizViews.QuizView;
@@ -80,6 +81,7 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 		_labelScore.setFont(new Font("SansSerif", Font.ITALIC,45));
 
 		_labelNewBest = new JLabel(" ");//only visible when user has created new best score
+		_labelNewBest.setFont(new Font("SansSerif", Font.BOLD,18));
 
 		if(_hiddenFilesModel.getHighScore(_courseName) < _score){
 			//new best score
@@ -91,10 +93,19 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 			_hiddenFilesModel.setNewScore(_courseName, _score);
 		}
 
-		_btnKeepGoing = new JButton("Continue Test");
-		_btnTestAgain = new JButton("Try Again");
-		_btnVideoReward = new JButton ("Video Reward");
-		_btnHome = new JButton("Home");
+		ButtonFactory btnFactory = new ButtonFactory();
+		
+		_btnKeepGoing = btnFactory.getButton("./media/continue.png", "./media/continue_hover.png");
+		_btnKeepGoing.setBackground(Color.white);
+		
+		_btnTestAgain = btnFactory.getButton("./media/retry.png", "./media/retry_hover.png");
+		_btnTestAgain.setBackground(Color.white);
+		
+		_btnVideoReward = btnFactory.getButton("./media/video_reward.png", "./media/video_reward_hover.png");
+		_btnVideoReward.setBackground(Color.white);
+		
+		_btnHome = btnFactory.getButton("./media/home.png", "./media/home_hover.png");
+		_btnHome.setBackground(Color.white);
 	}
 
 
@@ -151,7 +162,7 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 		c.gridy = 0;
 		c.gridwidth = 2;
 		c.gridheight = 1;
-		c.insets = new Insets(0,200,0,0);
+		c.insets = new Insets(0,80,0,0);
 		resultPanel.add(_labelNewBest, c);
 
 
@@ -304,7 +315,6 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 
 	protected boolean ifDisableNextLevel(){
 		//next 'level' is enabled if the user has gotten 8/10 words correct
-		System.out.println(((TestResultModel) _model).getCorrectNumber());
 		if (((TestResultModel) _model).getCorrectNumber() >= 8){
 
 			return false;

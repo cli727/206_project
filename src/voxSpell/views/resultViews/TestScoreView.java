@@ -10,17 +10,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
@@ -67,47 +63,14 @@ public class TestScoreView extends JTableView implements Card, ActionListener{
 
 		_tablePanel = new JPanel();
 
-		final ImageIcon clearStats = new ImageIcon("./media/clear_statistics.png");
-		Dimension btnSize = new Dimension(clearStats.getIconWidth(), clearStats.getIconHeight());
-		_btnClearStats = new JButton(clearStats);
-		_btnClearStats.setPreferredSize(btnSize);
-		_btnClearStats.setBorderPainted(false);
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnClearStats = btnFactory.getButton("./media/clear_statistics.png","./media/clear_statistics_hover.png");
 		_btnClearStats.setBackground(Color.white);
 
-		_btnClearStats.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnClearStats.setIcon(new ImageIcon("./media/clear_statistics_hover.png"));
 
-				}else{
-					_btnClearStats.setIcon(clearStats);
-				}
-			}
-		});
-		
-		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
-		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
-		_btnChangeCourse = new JButton(back);
-		_btnChangeCourse.setPreferredSize(btnSize);
-		_btnChangeCourse.setBorderPainted(false);
+		_btnChangeCourse = btnFactory.getButton("./media/back_whitebg.png", "./media/back_hover.png");
 		_btnChangeCourse.setBackground(Color.white);
 
-		_btnChangeCourse.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnChangeCourse.setIcon(new ImageIcon("./media/back_hover.png"));
-
-				}else{
-					_btnChangeCourse.setIcon(back);
-				}
-			}
-		});
 	}
 	
 	@Override

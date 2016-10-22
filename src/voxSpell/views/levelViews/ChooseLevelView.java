@@ -11,16 +11,12 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.courseViews.ShowAllCourseWordsView;
@@ -90,45 +86,14 @@ public class ChooseLevelView implements Card, ActionListener{
 				"Course: " + _courseName+"</font></html>");
 
 		//set button image
-		final ImageIcon viewWords = new ImageIcon("./media/view_words.png");
-		_btnViewWordList = new JButton(viewWords);
-		Dimension size = new Dimension(viewWords.getIconWidth(), viewWords.getIconHeight());
-		_btnViewWordList.setPreferredSize(size);
+
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnViewWordList = btnFactory.getButton("./media/view_words.png","./media/view_words_hover.png");
 		_btnViewWordList.setBackground(_bgColor);
-		_btnViewWordList.setBorderPainted(false);
-
-		_btnViewWordList.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnViewWordList.setIcon(new ImageIcon("./media/view_words_hover.png"));				
-				}else{
-					_btnViewWordList.setIcon(viewWords);
-				}
-			}
-		});
-
-		final ImageIcon changeCourse = new ImageIcon("./media/change_course.png");
-		_btnChangeCourse = new JButton(changeCourse);
-		size = new Dimension(changeCourse.getIconWidth(), changeCourse.getIconHeight());
-		_btnChangeCourse.setPreferredSize(size);
+		
+		_btnChangeCourse = btnFactory.getButton("./media/change_course.png","./media/change_course_hover.png");
 		_btnChangeCourse.setBackground(_bgColor);
-		_btnChangeCourse.setBorderPainted(false);
-
-		_btnChangeCourse.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnChangeCourse.setIcon(new ImageIcon("./media/change_course_hover.png"));
-
-				}else{
-					_btnChangeCourse.setIcon(changeCourse);
-				}
-			}
-		});
-
+		
 		_labelChooseLevel = new JLabel("<html> <p style='text-align: center;font-size:13px;padding:2;'<font color=white>"+
 				"Choose a subgroup:"+"</font></html>");
 
@@ -167,10 +132,15 @@ public class ChooseLevelView implements Card, ActionListener{
 
 
 		_btnTenWords.setBackground(_bgColor);
+		_btnTenWords.setFocusable(false);
 		_btnTwentyWords.setBackground(_bgColor);
+		_btnTwentyWords.setFocusable(false);
 		_btnFortyWords.setBackground(_bgColor);
+		_btnFortyWords.setFocusable(false);
 		_btnFiftyWords.setBackground(_bgColor);
+		_btnFiftyWords.setFocusable(false);
 		_btnAllWords.setBackground(_bgColor);
+		_btnAllWords.setFocusable(false);
 
 		//only allow one radio button selection at a time
 		ButtonGroup group = new ButtonGroup();
@@ -180,46 +150,11 @@ public class ChooseLevelView implements Card, ActionListener{
 		group.add(_btnFiftyWords);
 		group.add(_btnAllWords);
 
-		final ImageIcon start = new ImageIcon("./media/start.png");
-		_btnStartQuiz = new JButton(start);
-		size = new Dimension(start.getIconWidth(), start.getIconHeight());
-		_btnStartQuiz.setPreferredSize(size);
+		_btnStartQuiz = btnFactory.getButton("./media/start.png","./media/start_hover.png");
 		_btnStartQuiz.setBackground(_bgColor);
-		_btnStartQuiz.setBorderPainted(false);
-
-		_btnStartQuiz.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnStartQuiz.setIcon(new ImageIcon("./media/start_hover.png"));				
-				}else{
-
-					_btnStartQuiz.setIcon(start);
-				}
-			}
-		});
-
-		final ImageIcon back = new ImageIcon("./media/back.png");
-		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
-		_btnBackToMain = new JButton(back);
+		
+		_btnBackToMain = btnFactory.getButton("./media/back.png", "./media/back_hover.png");
 		_btnBackToMain.setBackground(_bgColor);
-		_btnBackToMain.setPreferredSize(btnSize);
-		_btnBackToMain.setBorderPainted(false);
-
-		_btnBackToMain.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnBackToMain.setIcon(new ImageIcon("./media/back_hover.png"));
-
-				}else{
-					_btnBackToMain.setIcon(back);
-				}
-			}
-		});
 
 		//change main menu footer/header background color so that it is consistent with this background color
 		VoxSpellGui.setHeaderFooterColor(_bgColor);
@@ -244,8 +179,6 @@ public class ChooseLevelView implements Card, ActionListener{
 		c.gridwidth = 2;
 		c.gridheight = 1;
 		c.insets = new Insets(0,0,10,0);
-		//c.ipady = 200;
-		//c.ipadx = 190;
 		_chooseLevelPanel.add(_labelHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;

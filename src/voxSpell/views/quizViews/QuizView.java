@@ -9,19 +9,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import voxSpell.views.levelViews.ChooseLevelReviewView;
 import voxSpell.views.levelViews.ChooseLevelView;
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.festivalManager.FestivalModel;
@@ -98,7 +94,8 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_labelToUpdateWordNum = new JLabel();
 		_labelTotalWord = new JLabel();
 
-		_labelToUpdateWordNum.setFont(new Font("SansSerif", Font.BOLD,17));
+		_labelToUpdateWordNum.setFont(new Font("SansSerif", Font.BOLD,25));
+		_labelTotalWord.setFont(new Font("SansSerif", Font.BOLD,17));
 
 		_updateWordPanel.add(_labelToUpdateWordNum);
 		_updateWordPanel.add(_labelTotalWord);
@@ -119,103 +116,21 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		_inputArea = new JTextField();
 		_inputArea.setPreferredSize(new Dimension(50,30));
 		//=======buttons==============================================
-		final ImageIcon relisten = new ImageIcon("./media/relisten.jpg");
-		_btnRelisten = new JButton(relisten);
-		Dimension size = new Dimension(relisten.getIconWidth(), relisten.getIconHeight());
-		_btnRelisten.setPreferredSize(size);
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnRelisten = btnFactory.getButton("./media/relisten.jpg","./media/relisten_hover.jpg");
 		_btnRelisten.setBackground(Color.white);
-		_btnRelisten.setBorderPainted(false);
-		_btnRelisten.setFocusable(false);
-
-		_btnRelisten.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnRelisten.setIcon(new ImageIcon("./media/relisten_hover.jpg"));				
-				}else{
-					_btnRelisten.setIcon(relisten);
-				}
-			}
-		});
 		
-		final ImageIcon check = new ImageIcon("./media/check_spelling.png");
-		_btnCheckWord = new JButton(check);
-		size = new Dimension(check.getIconWidth(), check.getIconHeight());
-		_btnCheckWord.setPreferredSize(size);
+		_btnCheckWord = btnFactory.getButton("./media/check_spelling.png","./media/check_spelling_hover.png");
 		_btnCheckWord.setBackground(Color.white);
-		_btnCheckWord.setBorderPainted(false);
-
-		_btnCheckWord.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnCheckWord.setIcon(new ImageIcon("./media/check_spelling_hover.png"));				
-				}else{
-					_btnCheckWord.setIcon(check);
-				}
-			}
-		});
-		
-		final ImageIcon skip = new ImageIcon("./media/skip.png");
-		_btnSkipWord = new JButton(skip);
-		 size = new Dimension(skip.getIconWidth(), skip.getIconHeight());
-		_btnSkipWord.setPreferredSize(size);
+	
+		_btnSkipWord = btnFactory.getButton("./media/skip.png","./media/skip_hover.png");
 		_btnSkipWord.setBackground(Color.white);
-		_btnSkipWord.setBorderPainted(false);
-
-		_btnSkipWord.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnSkipWord.setIcon(new ImageIcon("./media/skip_hover.png"));				
-				}else{
-					_btnSkipWord.setIcon(skip);
-				}
-			}
-		});
 		
-		final ImageIcon answer = new ImageIcon("./media/answer.png");
-		_btnShowAnswer = new JButton(answer);
-		 size = new Dimension(answer.getIconWidth(), answer.getIconHeight());
-		 _btnShowAnswer.setPreferredSize(size);
+		_btnShowAnswer = btnFactory.getButton("./media/answer.png","./media/answer_hover.png");
 		_btnShowAnswer.setBackground(Color.white);
-		_btnShowAnswer.setBorderPainted(false);
-
-		_btnShowAnswer.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnShowAnswer.setIcon(new ImageIcon("./media/answer_hover.png"));				
-				}else{
-					_btnShowAnswer.setIcon(answer);
-				}
-			}
-		});
 		
-		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
-		 size = new Dimension(back.getIconWidth(), back.getIconHeight());
-		 _btnBack = new JButton(back);
-		 _btnBack.setPreferredSize(size);
-		 _btnBack.setBorderPainted(false);
-		 _btnBack.setBackground(Color.white);
-		 
-		 _btnBack.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
-
-				}else{
-					_btnBack.setIcon(back);
-				}
-			}
-		});
+		_btnBack = btnFactory.getButton("./media/back_whitebg.png", "./media/back_hover.png");
+		_btnBack.setBackground(Color.white);
 
 		_tipsPanel = new JPanel(new GridBagLayout());
 		_tipsPanel.setBackground(Color.white);

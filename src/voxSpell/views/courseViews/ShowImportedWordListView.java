@@ -1,7 +1,6 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,16 +10,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -31,6 +26,7 @@ import voxSpell.models.quizModels.TestQuizModel;
 import voxSpell.models.resultModels.TestScoreModel;
 import voxSpell.status.QuizStatus;
 import voxSpell.views.levelViews.ChooseLevelView;
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.quizViews.QuizView;
@@ -67,69 +63,16 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		_courseHeading.setFont(new Font("SansSerif", Font.BOLD,15));;
 
 		_coursePane= new JScrollPane();
-
-		final ImageIcon setCourse = new ImageIcon("./media/set_course.png");
-		Dimension btnSize = new Dimension(setCourse.getIconWidth(), setCourse.getIconHeight());
-		_btnUseList = new JButton(setCourse);
-		_btnUseList.setPreferredSize(btnSize);
-		_btnUseList.setBorderPainted(false);
+		
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnUseList = btnFactory.getButton("./media/set_course.png","./media/set_course_hover.png");
 		_btnUseList.setBackground(Color.white);
-
-		_btnUseList.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnUseList.setIcon(new ImageIcon("./media/set_course_hover.png"));
-
-				}else{
-					_btnUseList.setIcon(setCourse);
-				}
-			}
-		});
 		
-		final ImageIcon deleteCourse = new ImageIcon("./media/delete_course.png");
-		 btnSize = new Dimension(deleteCourse.getIconWidth(), deleteCourse.getIconHeight());
-		_btnDeleteList = new JButton(deleteCourse);
-		_btnDeleteList.setPreferredSize(btnSize);
-		_btnDeleteList.setBorderPainted(false);
+		_btnDeleteList = btnFactory.getButton("./media/delete_course.png","./media/delete_course_hover.png");
 		_btnDeleteList.setBackground(Color.white);
-
-		_btnDeleteList.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnDeleteList.setIcon(new ImageIcon("./media/delete_course_hover.png"));
-
-				}else{
-					_btnDeleteList.setIcon(deleteCourse);
-				}
-			}
-		});
 		
-		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
-		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
-		 _btnBack = new JButton(back);
-		 _btnBack.setPreferredSize(btnSize);
-		 _btnBack.setBorderPainted(false);
-		 _btnBack.setBackground(Color.white);
-		 
-		 _btnBack.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
-
-				}else{
-					_btnBack.setIcon(back);
-				}
-			}
-		});
+		_btnBack = btnFactory.getButton("./media/back_whitebg.png", "./media/back_hover.png");
+		_btnBack.setBackground(Color.white);
 
 		//get list of imported courses from hiddenFilesModel and display them
 		final ArrayList<String> courseNames =  _hiddenFilesModel.getImportedCourseNames();

@@ -2,7 +2,6 @@ package voxSpell.views;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,15 +13,10 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import voxSpell.models.festivalManager.FestivalModel;
 import voxSpell.status.QuizStatus;
 import voxSpell.views.levelViews.ChooseLevelView;
@@ -153,94 +147,20 @@ public class VoxSpellGui implements Card,ActionListener{
 
 		mainPanel.setBackground(Color.WHITE);
 		
-		//set button image
-		final ImageIcon practiceImg = new ImageIcon("./media/practice.png");
-		final ImageIcon practiceHover = new ImageIcon("./media/practice_hover.png");
-		_btnPracticeQuiz = new JButton(practiceImg);
-		Dimension size = new Dimension(practiceImg.getIconWidth(), practiceImg.getIconHeight());
-		_btnPracticeQuiz.setPreferredSize(size);
+		//set button image using button factory
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnPracticeQuiz = btnFactory.getButton("./media/practice.png", "./media/practice_hover.png");
 		_btnPracticeQuiz.setBackground(Color.white);
-		_btnPracticeQuiz.setBorderPainted(false);
 		
-		_btnPracticeQuiz.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnPracticeQuiz.setIcon( practiceHover);
-				
-				}else{
-					_btnPracticeQuiz.setIcon(practiceImg);
-				}
-			}
-		});
-
-		final ImageIcon testImg = new ImageIcon("./media/test.png");
-		final ImageIcon testHover = new ImageIcon("./media/test_hover.png");
-		_btnTestQuiz  = new JButton( testImg );
-		_btnTestQuiz .setPreferredSize(size);
-		_btnTestQuiz .setBackground(Color.white);
-		_btnTestQuiz.setBorderPainted(false);
-		
-		_btnTestQuiz.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnTestQuiz.setIcon(testHover);
-				
-				}else{
-					_btnTestQuiz.setIcon( testImg);
-				}
-			}
-		});
-
-		
-		final ImageIcon reviewImg = new ImageIcon("./media/review.png");
-		final ImageIcon reviewHover= new ImageIcon("./media/review_hover.png");
-		_btnReview = new JButton( reviewImg);
-		_btnReview.setPreferredSize(size);
+		_btnTestQuiz = btnFactory.getButton("./media/test.png","./media/test_hover.png");
+		_btnTestQuiz.setBackground(Color.white);
+	
+		_btnReview = btnFactory.getButton("./media/review.png","./media/review_hover.png");
 		_btnReview.setBackground(Color.white);
-		_btnReview.setBorderPainted(false);
-
-		_btnReview.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnReview.setIcon(reviewHover);
-				
-				}else{
-					_btnReview.setIcon( reviewImg );
-				}
-			}
-		});
-
-		final ImageIcon scoreImg = new ImageIcon("./media/score.png");
-		final ImageIcon scoreHover = new ImageIcon("./media/score_hover.png");
-		_btnTestScore = new JButton(scoreImg);
-		_btnTestScore.setPreferredSize(size);
-		_btnTestScore.setBackground(Color.white);
-		_btnTestScore.setBorderPainted(false);
 		
-		_btnTestScore.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnTestScore.setIcon( scoreHover);
-				
-				}else{
-					_btnTestScore.setIcon(scoreImg);
-				}
-			}
-		});
-
-
+		_btnTestScore = btnFactory.getButton("./media/score.png","./media/score_hover.png");
+		_btnTestScore.setBackground(Color.white);
+		
 		/**
 		 * DECLARATION: THE FOLLOWING METHOD ON JAVA GRIDBAG LAYOUT ARE SOURCED 
 		 * AND EDITED FROM THE ORACLE TUTORIAL WEBPAGE

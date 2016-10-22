@@ -12,17 +12,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.levelViews.ChooseLevelView;
@@ -111,62 +107,16 @@ public class ResultView extends JTableView implements Card, ActionListener {
 
 		_labelTableInfo = new JLabel("(Selected Items will be added to your revision list)");
 
-		final ImageIcon retry = new ImageIcon("./media/retry.png");
-		_btnPracticeAgain = new JButton(retry);
-		Dimension size = new Dimension(retry.getIconWidth(), retry.getIconHeight());
-		_btnPracticeAgain.setPreferredSize(size);
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnPracticeAgain = btnFactory.getButton("./media/retry.png","./media/retry_hover.png");
 		_btnPracticeAgain.setBackground(Color.white);
-		_btnPracticeAgain.setBorderPainted(false);
-
-		_btnPracticeAgain.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnPracticeAgain.setIcon(new ImageIcon("./media/retry_hover.png"));				
-				}else{
-					_btnPracticeAgain.setIcon(retry);
-				}
-			}
-		});
-
-		final ImageIcon next = new ImageIcon("./media/next.png");
-		_btnNextLevel = new JButton(next);
-		_btnNextLevel.setPreferredSize(size);
+		
+		_btnNextLevel = btnFactory.getButton("./media/next.png","./media/next_hover.png");
 		_btnNextLevel.setBackground(Color.white);
-		_btnNextLevel.setBorderPainted(false);
 
-		_btnNextLevel.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnNextLevel.setIcon(new ImageIcon("./media/next_hover.png"));				
-				}else{
-					_btnNextLevel.setIcon(next);
-				}
-			}
-		});
-		
-
-		final ImageIcon home = new ImageIcon("./media/home.png");
-		_btnHome = new JButton(home);
-		_btnHome.setPreferredSize(size);
+		_btnHome = btnFactory.getButton("./media/home.png","./media/home_hover.png");
 		_btnHome.setBackground(Color.white);
-		_btnHome.setBorderPainted(false);
 
-		_btnHome.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					_btnHome.setIcon(new ImageIcon("./media/home_hover.png"));				
-				}else{
-					_btnHome.setIcon(home);
-				}
-			}
-		});
-		
 		//===============================================
 		
 		if (! ifDisableNextLevel()){ //only get next words if not last level

@@ -27,6 +27,7 @@ import voxSpell.views.quizViews.TestQuizView;
 import voxSpell.models.quizModels.TestQuizModel;
 import voxSpell.models.quizModels.QuizModel;
 import voxSpell.views.levelViews.ChooseLevelView;
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
@@ -79,6 +80,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnKETwords.setPreferredSize(size);
 		_btnKETwords.setBackground(_bgColor);
 		_btnKETwords.setBorderPainted(false);
+		_btnKETwords.setFocusable(false);
 
 		_btnKETwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
@@ -101,6 +103,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnIELTSwords.setPreferredSize(size);
 		_btnIELTSwords.setBackground(_bgColor);
 		_btnIELTSwords.setBorderPainted(false);
+		_btnIELTSwords.setFocusable(false);
 
 		_btnIELTSwords.getModel().addChangeListener(new ChangeListener(){
 			@Override
@@ -123,6 +126,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnImportWordList.setPreferredSize(size);
 		_btnImportWordList.setBackground(_bgColor);
 		_btnImportWordList.setBorderPainted(false);
+		_btnImportWordList.setFocusable(false);
 
 		_btnImportWordList.getModel().addChangeListener(new ChangeListener(){
 			@Override
@@ -142,6 +146,7 @@ public class ChooseCourseView implements Card, ActionListener{
 		_btnViewImportedWordList.setPreferredSize(size);
 		_btnViewImportedWordList.setBackground(_bgColor);
 		_btnViewImportedWordList.setBorderPainted(false);
+		_btnViewImportedWordList.setFocusable(false);
 
 		_btnViewImportedWordList.getModel().addChangeListener(new ChangeListener(){
 			@Override
@@ -155,28 +160,10 @@ public class ChooseCourseView implements Card, ActionListener{
 				}
 			}
 		});
-
-		final ImageIcon back = new ImageIcon("./media/back.png");
-		Dimension btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
-		_btnBack = new JButton(back);
+		
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnBack = btnFactory.getButton("./media/back.png", "./media/back_hover.png");
 		_btnBack.setBackground(_bgColor);
-		_btnBack.setPreferredSize(btnSize);
-		_btnBack.setBorderPainted(false);
-
-		_btnBack.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
-
-				}else{
-					_btnBack.setIcon(back);
-				}
-			}
-		});
-
 	}
 
 	@Override

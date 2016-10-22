@@ -1,7 +1,6 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -14,16 +13,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
+import voxSpell.views.ButtonFactory;
 import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
@@ -34,15 +29,15 @@ public class ImportWordListView implements Card , ActionListener{
 	private JLabel _labelMessage;
 	private JLabel _exampleHeading;
 	private JPanel _exampleImgPanel;
-	
+
 	private JButton _btnImport;
 	private JButton _btnBack;
 
 	private Image _example;
-	
+
 	private JFileChooser fc;
 	private HiddenFilesModel _hiddenFilesModel;
-	
+
 	private static ImportWordListView _importWordListView;
 
 	private ImportWordListView(){
@@ -62,12 +57,12 @@ public class ImportWordListView implements Card , ActionListener{
 				g.drawImage(_example, 0, 0,226,408, null);
 			}
 		};
-		
+
 		_exampleImgPanel.setBackground(Color.white);
 
 		_labelHeading = new JLabel("Customised course format...");
 		_labelHeading.setFont(new Font("SansSerif", Font.ITALIC,30));
-		
+
 		_exampleHeading= new JLabel("Example:");
 		_exampleHeading.setFont(new Font("SansSerif", Font.BOLD,15));;
 
@@ -80,53 +75,17 @@ public class ImportWordListView implements Card , ActionListener{
 				+ "<BR><BR> 5) It must not contain an empty level."
 				+"<BR><BR>6) It should not be named 'KET' or 'IELTS', <BR> as those are reserved names <BR><BR>" 
 				+ "<BR><BR>The image to the left is an example of a wordlist <BR>of 3 subgroups.");
-		
-		final ImageIcon upload = new ImageIcon("./media/upload_course.png");
-		Dimension btnSize = new Dimension(upload.getIconWidth(), upload.getIconHeight());
-		_btnImport = new JButton(upload);
-		_btnImport.setPreferredSize(btnSize);
-		 _btnImport.setBorderPainted(false);
-		 _btnImport.setBackground(Color.white);
-		 
-		 _btnImport.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnImport.setIcon(new ImageIcon("./media/upload_course_hover.png"));
 
-				}else{
-					_btnImport.setIcon(upload);
-				}
-			}
-		});
-		
-		
-		final ImageIcon back = new ImageIcon("./media/back_whitebg.png");
-		 btnSize = new Dimension(back.getIconWidth(), back.getIconHeight());
-		 _btnBack = new JButton(back);
-		 _btnBack.setPreferredSize(btnSize);
-		 _btnBack.setBorderPainted(false);
-		 _btnBack.setBackground(Color.white);
-		 
-		 _btnBack.getModel().addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e){
-				ButtonModel model = (ButtonModel) e.getSource();
-				if (model.isRollover()){
-					//change to another image
-					_btnBack.setIcon(new ImageIcon("./media/back_hover.png"));
+		ButtonFactory btnFactory = new ButtonFactory();
+		_btnImport = btnFactory.getButton("./media/upload_course.png","./media/upload_course_hover.png");
+		_btnImport.setBackground(Color.white);
 
-				}else{
-					_btnBack.setIcon(back);
-				}
-			}
-		});
-		
+		_btnBack = btnFactory.getButton("./media/back_whitebg.png", "./media/back_hover.png");
+		_btnBack.setBackground(Color.white);
+
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 	}
-	
+
 	public static synchronized ImportWordListView getInstance(){
 
 		if (_importWordListView == null){
@@ -134,11 +93,11 @@ public class ImportWordListView implements Card , ActionListener{
 		}
 		return _importWordListView ;
 	}
-	
+
 	@Override
 	public JPanel createAndGetPanel() {
 		JPanel mainPanel = new JPanel();
-		
+
 		mainPanel.setBackground(Color.white);
 		mainPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -150,7 +109,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.gridheight = 1;
 		c.insets = new Insets(0,-50,20,0);
 		mainPanel.add(_labelHeading, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -158,7 +117,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.gridheight = 1;
 		c.insets = new Insets(10,0,2,0);
 		mainPanel.add(_exampleHeading, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -168,11 +127,11 @@ public class ImportWordListView implements Card , ActionListener{
 		c.ipady = 408;
 		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_exampleImgPanel, c);
-		
+
 
 		c.ipadx = 0;
 		c.ipady = 0;
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 2;
@@ -180,7 +139,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.gridheight = 2;
 		c.insets = new Insets(0,40,0,0);
 		mainPanel.add(_labelMessage, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 4;
@@ -189,7 +148,7 @@ public class ImportWordListView implements Card , ActionListener{
 		c.insets = new Insets(30,50,0,0);
 		mainPanel.add(_btnImport, c);
 		_btnImport.addActionListener(this);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 4;
