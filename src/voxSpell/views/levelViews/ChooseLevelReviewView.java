@@ -74,10 +74,6 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 
 		}else if(e.getSource() == _btnViewWordList) {
 
-			System.out.println("./.review/"+_courseName);
-			for(int i = 0; i < _hiddenFilesModel.readFileToArray("./.review/"+_courseName+"Review").size();i++){
-				System.out.println("whats in list"+_hiddenFilesModel.readFileToArray("./.review/"+_courseName+"Review").get(i));
-			}
 			//create frame to show all words in the selected course
 			new ShowAllCourseWordsView(_courseName, _hiddenFilesModel.readFileToArray("./.review/"+_courseName+"Review"), _chooseLevelPanel);			
 			//disable this frame
@@ -111,9 +107,6 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 		}else if (e.getSource() == _btnStartQuiz){
 
 			String level =  (String) _comboBox.getSelectedItem();
-
-			System.out.println("level "+level);
-			System.out.println("words " + _numWordsToQuiz);
 
 			QuizView quizView =null;
 			QuizModel quizModel = null;

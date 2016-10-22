@@ -226,7 +226,6 @@ public class TestQuizView extends QuizView{
 		super.actionPerformed(e);
 		//with the addition of timer listener
 		if (e.getSource() == _timer){
-			//System.out.println(_counter);
 			_counter--;
 			_timerBar.setValue(_counter);
 

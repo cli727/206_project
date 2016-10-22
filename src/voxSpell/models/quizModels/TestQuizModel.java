@@ -76,7 +76,6 @@ public class TestQuizModel extends QuizModel{
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName(), 
 						_currentWord);
 
-				//System.out.println(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName());
 				moveOnToNextWord();
 
 			}else {
