@@ -104,6 +104,8 @@ public class QuizModel {
 
 			return;
 
+		}else if (userInput.isEmpty()){
+			//user has not typed anything, do nothing and wait for user to type again
 		}else{
 			//compare userInput with currentWord
 			_countChecks ++;
