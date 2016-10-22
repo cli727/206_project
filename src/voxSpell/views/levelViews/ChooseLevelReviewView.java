@@ -75,7 +75,7 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 		}else if(e.getSource() == _btnViewWordList) {
 
 			//create frame to show all words in the selected course
-			new ShowAllCourseWordsView(_courseName, _hiddenFilesModel.readFileToArray("./.review/"+_courseName+"Review"), _chooseLevelPanel);			
+			new ShowAllCourseWordsView(_courseName, _chooseLevelPanel);			
 			//disable this frame
 			VoxSpellGui.getFrame().setEnabled(false);
 
