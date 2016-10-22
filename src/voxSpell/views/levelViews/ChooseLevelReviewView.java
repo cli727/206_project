@@ -107,14 +107,11 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 			_numWordsToQuiz = 50;
 		}else if (e.getSource() == _btnAllWords){
 
-			_numWordsToQuiz = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName,(String) _comboBox.getSelectedItem()).size();
+			_numWordsToQuiz = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",(String) _comboBox.getSelectedItem()).size();
 		}else if (e.getSource() == _btnStartQuiz){
 
 			String level =  (String) _comboBox.getSelectedItem();
 
-			/*if (_quizAllWords){
-				_numWordsToQuiz = _model.getLevelWordsFromCourse(level).size();
-			}*/
 			System.out.println("level "+level);
 			System.out.println("words " + _numWordsToQuiz);
 

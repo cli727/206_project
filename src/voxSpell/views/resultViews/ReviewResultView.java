@@ -1,18 +1,14 @@
 package voxSpell.views.resultViews;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.Vector;
-
-import javax.swing.JPanel;
-
 import voxSpell.views.VoxSpellGui;
 import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.quizModels.QuizModel;
 import voxSpell.models.resultModels.ResultModel;
 
 public class ReviewResultView extends ResultView{
-
+	
 	public ReviewResultView(String levelName, String courseName, Vector<String> allLevelNames) {
 		super(levelName, courseName, allLevelNames);
 
@@ -23,28 +19,20 @@ public class ReviewResultView extends ResultView{
 		_labelTableInfo.setText("(Selected items will be removed from revision list)");
 
 		if (! ifDisableNextLevel()){ //only get next words if not last level
-			_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+
+			for(int i = _allLevelNames.indexOf(_thisLevelName)+1; i < _allLevelNames.size(); i++){ //loop through to find the next non empty level
+				
+				if (! _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(i)).isEmpty()){
+					//if non empty level found, this is the next level
+					_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(i));
+					_nextNonEmptyLevel = _allLevelNames.get(i);
+					break;
+				}
+			}
 		}
 		
 	}
 	
-	
-	/**
-	 * this method needs to be different from its parent for review mode
-	 * next level is disabled when next level review words are empty
-	 */
-	@Override
-	protected boolean ifDisableNextLevel(){
-
-		if ( _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)).size() != 0 ){
-			// if next level word size is not 0
-			return false;
-		}else {
-			//disable this button
-			return true;
-		}
-	}
-
 	/**
 	 * Review mode reads from a different file when buttons are pressed
 	 * Review mode also needs to disable the 'next level' button if the user selects all words in the table
@@ -64,7 +52,11 @@ public class ReviewResultView extends ResultView{
 			quizModel.setView(quizView);
 			quizView.setModel(quizModel);
 
-			quizModel.setAllWords(_hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_thisLevelName), _model.getRowCount());
+			//only words not remembered are quizzed, therefore number of NON SELECTED sells
+			//NON SELECTED = TOTAL ROW COUNT - SELECTED
+			int numWordToQuiz = _resultTable.getRowCount() - ((ResultModel) _model).getNumSelectedWords();
+			
+			quizModel.setAllWords(_hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_thisLevelName), numWordToQuiz);
 
 			VoxSpellGui.getInstance().showCard(quizView.createAndGetPanel(), "Practice Again Quiz");
 			quizModel.getRandomWords();
@@ -75,7 +67,7 @@ public class ReviewResultView extends ResultView{
 
 			//get words for next level
 
-			QuizView quizView = new QuizView(_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1), _courseName);
+			QuizView quizView = new QuizView(_nextNonEmptyLevel, _courseName);
 			QuizModel quizModel = new QuizModel(_allLevelNames);
 
 			quizModel.setView(quizView);

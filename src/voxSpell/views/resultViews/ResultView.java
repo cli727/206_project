@@ -56,7 +56,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 	protected int _numWordsToQuiz;
 
 	protected ArrayList<String> _nextLevelWords;
-
+	protected String _nextNonEmptyLevel;
 
 	public ResultView(String levelName, String courseName, Vector<String> allLevelNames){
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
@@ -167,9 +167,19 @@ public class ResultView extends JTableView implements Card, ActionListener {
 			}
 		});
 		
-
+		//===============================================
+		
 		if (! ifDisableNextLevel()){ //only get next words if not last level
-			_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1));
+
+			for(int i = _allLevelNames.indexOf(_thisLevelName)+1; i < _allLevelNames.size(); i++){ //loop through to find the next non empty level
+				
+				if (! _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(i)).isEmpty()){
+					//if non empty level found, this is the next level
+					_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(i));
+					_nextNonEmptyLevel = _allLevelNames.get(i);
+					break;
+				}
+			}
 		}
 		
 		_numWordsToQuiz = 0;
@@ -293,7 +303,7 @@ public class ResultView extends JTableView implements Card, ActionListener {
 			}
 			_labelNextLevelSubheading.setText("<html> <p style='text-align:center;'>"
 					+ "<font color='black'>"
-					+ "Next: "+ _allLevelNames.get(_allLevelNames.indexOf(_thisLevelName)+1)+", "+_numWordsToQuiz + " Words</font></html>");
+					+ "Next: "+ _nextNonEmptyLevel+", "+_numWordsToQuiz + " Words</font></html>");
 			
 		}
 		

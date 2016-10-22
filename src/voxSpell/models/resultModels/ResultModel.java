@@ -159,8 +159,7 @@ public class ResultModel extends AbstractTableModel {
 	}
 	
 	/**
-	 * This method is for views to get automatically selected words,
-	 * so that the view knows whether to disable the retry button
+	 * This method is for views to get currently selected words
 	 * @return
 	 */
 	public int getNumSelectedWords(){
