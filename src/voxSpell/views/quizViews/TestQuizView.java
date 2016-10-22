@@ -26,6 +26,7 @@ public class TestQuizView extends QuizView{
 	private JPanel _scorePanel;
 	private JLabel _scoreTitle;
 	private JLabel _updateScore;
+	private JLabel _incrementScore;
 
 	private JLabel _labelFeedBack;
 
@@ -57,8 +58,13 @@ public class TestQuizView extends QuizView{
 		_scoreTitle.setFont(new Font("SansSerif", Font.ITALIC,25));
 
 		_updateScore = new JLabel(Integer.toString(score));
-
 		_updateScore.setFont(new Font("SansSerif", Font.ITALIC,45));
+		
+		_incrementScore = new JLabel("<html> <p style='text-align:center;'>"
+				+ "<font color='white'>"
+				+ "+ 0"+"</font></html>");
+		_incrementScore.setFont(new Font("SansSerif", Font.ITALIC,17));
+		
 
 	}
 
@@ -110,18 +116,24 @@ public class TestQuizView extends QuizView{
 		c.insets = new Insets(15,10,20,0);
 		add(_timerBar, c);
 
-		_scorePanel.add(_scoreTitle,BorderLayout.EAST);
-		_scorePanel.add(_updateScore, BorderLayout.SOUTH);
-
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 4;
 		c.gridy = 2;
 		c.gridheight = 1;
-		c.gridwidth = 2;
+		c.gridwidth = 1;
 		c.ipadx = 0;
 		//c.weightx = 0.3;
 		c.insets = new Insets(-120,50,5,0);
 		add(_scoreTitle, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 5;
+		c.gridy = 2;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		//c.weightx = 0.3;
+		c.insets = new Insets(-120,5,5,0);
+		add(_incrementScore, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 4;
@@ -131,7 +143,6 @@ public class TestQuizView extends QuizView{
 		//c.weightx = 0.3;
 		c.insets = new Insets(-120,55,5,0);
 		add(_updateScore, c);
-
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -231,6 +242,10 @@ public class TestQuizView extends QuizView{
 				_labelFeedBack.setText("<html> <p style='text-align:center;'>"
 						+ "<font color='white'>"
 						+ " Correct!"+"</font></html>");//so that feedback label shows up for 1 second only
+				
+				_incrementScore.setText("<html> <p style='text-align:center;'>"
+						+ "<font color='white'>"
+						+ "+ 0"+"</font></html>");//so that increment score label shows up for 1 second only
 
 				if (_counter<1) {
 					//time up, fail this word and move on to next word
@@ -317,6 +332,8 @@ public class TestQuizView extends QuizView{
 
 		score = score + addMarks;
 		_updateScore.setText(Integer.toString(score));
+		
+		_incrementScore.setText("<html><font><font color='orange'>+ " +addMarks+"</font></html>");
 	}
 
 	public void updateFeedback(boolean correct){

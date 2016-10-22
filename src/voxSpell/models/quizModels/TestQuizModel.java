@@ -70,7 +70,7 @@ public class TestQuizModel extends QuizModel{
 				//_festivalModel.correctVoice();
 				//play correct sound effect
 				AudioPlayer audioPlayer = new AudioPlayer();
-				audioPlayer.playAudio("./correct.wav");
+				audioPlayer.playAudio("./media/correct.wav");
 
 				//write word to correct history file
 				_hiddenFilesModel.addWordToCorrectIncorrectFile(HiddenFilesModel._testCorrectFolderPath+_quizView.getCourseName(), 
@@ -82,7 +82,7 @@ public class TestQuizModel extends QuizModel{
 				
 				//play incorrect sound effect
 				AudioPlayer audioPlayer = new AudioPlayer();
-				audioPlayer.playAudio("./incorrect.wav");
+				audioPlayer.playAudio("./media/incorrect.wav");
 				
 				((TestQuizView) _quizView).updateFeedback(false);
 				//word is not spelt correctly 
