@@ -303,7 +303,7 @@ public class VoxSpellGui implements Card,ActionListener{
 	private static void createAndShowGUI() {
 		//create and show GUI window
 		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//_frame.setResizable(false);
+		_frame.setResizable(false);
 		_frame.pack(); //Layout frame's components according to their preferred sizes.
 		_frame.setLocationRelativeTo(null); //puts window at the center of screen
 		_frame.setVisible(true);//Display the window

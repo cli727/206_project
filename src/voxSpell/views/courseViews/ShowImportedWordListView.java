@@ -1,6 +1,7 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -63,6 +64,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		_courseHeading.setFont(new Font("SansSerif", Font.BOLD,15));;
 
 		_coursePane= new JScrollPane();
+		//_coursePane.setPreferredSize(new Dimension(400, 330));
 		
 		ButtonFactory btnFactory = new ButtonFactory();
 		_btnUseList = btnFactory.getButton("./media/set_course.png","./media/set_course_hover.png");
@@ -145,7 +147,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridy = 1;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		c.insets = new Insets(10,0,2,0);
+		c.insets = new Insets(30,0,2,0);
 		mainPanel.add(_courseHeading, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -154,7 +156,7 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		c.gridwidth = 3;
 		c.gridheight = 3;
 		c.ipadx = 450;
-		c.ipady = 250;
+		c.ipady = 200;
 		c.insets = new Insets(0,0,0,0);
 		mainPanel.add(_coursePane, c);
 
