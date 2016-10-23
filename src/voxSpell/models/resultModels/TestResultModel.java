@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * This class extends ResultModel
- * The test result models does not have the functionality to add words to the review list
- * It shows the result of the test indicating the words that was spelt correct/incorrect
- * It also shows whether user has passes/failed the test
+ * This class is a model that deals with the test results, it is a table model for the JTable shown on its view
+
  * @author chen
  *
  */
@@ -31,7 +29,10 @@ public class TestResultModel extends AbstractTableModel  {
 		createDatabase();
 	}
 
-	
+	/**
+	 * Create the entire table's data base, it has two columns showing the word and whether it has been corrected/incorrected
+	 * Neither colume is editable
+	 */
 	protected void createDatabase() {
 		
 		_correctNumber = 0;
@@ -67,11 +68,15 @@ public class TestResultModel extends AbstractTableModel  {
 		}
 	}
 	
+	/**
+	 * The method is called by view to know how many words have been corrected for this test
+	 * @return
+	 */
 	public int getCorrectNumber(){
 		return _correctNumber;
 	}
 
-
+	//======================= method to override for Java to create Jtable based on this table model ========
 	@Override
 	public String getColumnName(int col) {
 		 

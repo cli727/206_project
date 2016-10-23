@@ -20,9 +20,11 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * A Singleton class that manages reading/writing actions to the hidden files
- * necessary for running the SpellingAidApp.
- * @author echa232
+ * A singleton class dedicated to all hidden files management.
+ * 
+ * IMPORTANT: 
+ * The original code belongs to Emily Chan, who was my partner for assignment 3.
+ * The current class has been modified by Chen Li, therefore some lines would still be similar to Emily's.
  *
  */
 public class HiddenFilesModel {
@@ -62,8 +64,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Create the necessary hidden files/folders for running the SpellingAidApp
-	 * These hidden files/folders are created in the same directory where the SpellingAidApp is executed.
+	 * Create the necessary hidden files/folders for running VOXSPELL
+	 * These hidden files/folders are created in the same directory where VOXSPELL is executed.
 	 */
 	private void setUpHiddenFiles() {
 		try {
@@ -209,8 +211,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * searches through ./.course directory and finds course names that are not "KET" or "IELTS"
-	 * @return
+	 * Searches through ./.course directory and finds course names that are not "KET" or "IELTS"
+	 * @return A list of imported course names. 
 	 */
 	public ArrayList<String> getImportedCourseNames() {
 		ArrayList<String> importedCourse = new ArrayList<String>();
@@ -232,7 +234,7 @@ public class HiddenFilesModel {
 
 
 	/**
-	 * append a word to end of its course history, avoid duplicates	
+	 * Append a word to end of its course history, avoiding duplicates	
 	 * @param courseName
 	 * @param word
 	 */
@@ -256,25 +258,30 @@ public class HiddenFilesModel {
 			e1.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Returns the history of attempted words of a given course in alphabetical order.
+	 * @param _courseName
+	 * @return
+	 */
 	public ArrayList<String> getHistroyWords(String _courseName) {
 		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
-		
+
 		Collections.sort(allWords); //sort in alphabetical order;
 		return allWords;
 	}
-	
+
 	/**
 	 * Get correct/incorrect counts of all words in a history file 
 	 * @param _courseName
-	 * @param getCorrect
-	 * @return
+	 * @param getCorrect If true, get correct counts, otherwise get incorrect counts
+	 * @return A list of integers representing the correct/incorrect of all attempted words
 	 */
 	public ArrayList<Integer> getCorrectIncorrectCount (String _courseName, boolean getCorrect){
 		ArrayList<String> histWords = getHistroyWords(_courseName);
-		
+
 		ArrayList<String> countFile;
-		
+
 		if(getCorrect){
 			//get correct counts
 			countFile = readFileToArray(_testCorrectFolderPath+_courseName);
@@ -282,30 +289,29 @@ public class HiddenFilesModel {
 			//get incorrect counts
 			countFile = readFileToArray(_testIncorrectFolderPath+_courseName);
 		}
-		
+
 		ArrayList<Integer> totalCount = new ArrayList<Integer>();
-		
-		
+
+
 		for (int i = 0; i < histWords.size(); i ++){
 			int count = 0;
-			
+
 			//count appearance of each history word in the count hidden file
 			for(int j = 0; j <countFile.size(); j ++){
-				
+
 				if (countFile.get(j).equals(histWords.get(i))){
 					count ++;
 				}
 			}
-			
+
 			totalCount.add(count);
 		}
-		
+
 		return totalCount;
 	}
 
 	/**
-	 * Adding to correct / incorrect allows duplications, therefore count number of times a word is correct/incorrect
-	 * during a test
+	 * Adding given word to correct / incorrect allows duplications
 	 * @param filePath
 	 * @param word
 	 */
@@ -322,19 +328,6 @@ public class HiddenFilesModel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-
-	protected void clearStats() {
-		//First delete all files hidden files, then recreate them as blank files.
-		try {
-			Files.deleteIfExists(_historyFilePath);
-			Files.deleteIfExists(_reviewFilePath);		
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		setUpHiddenFiles();		
 	}
 
 	/**
@@ -371,7 +364,7 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * add a word to review list
+	 * Add a word to review list of a course
 	 * ASSUMES NO DUPLICATION OF WORDS (INTER AND INTRO LEVELS), OTHERWISE ONLY ADDED ONCE
 	 * @param word
 	 * @param level
@@ -435,7 +428,7 @@ public class HiddenFilesModel {
 	 * 3. file that contains duplicate words in a level (getRandomWords may break, because randomWords keeps
 	 * adding non duplicated words, repeated words may cause infinite while loop)
 	 * 4. file not named KET or IELTS
-	 * 4. file with "" ? i.e. empty entry
+	 * 5. file should not have an empty level
 	 * 
 	 * @param path
 	 */
@@ -456,7 +449,7 @@ public class HiddenFilesModel {
 			return false;
 		}
 
-		//check for duplicates in all levels
+		//check for duplicates in all levels, also check for empty levels
 
 		Vector<String> allLevelNames = getAllLevelsFromCourse(userWordListpath); //get all level names first
 
@@ -469,6 +462,11 @@ public class HiddenFilesModel {
 
 			if(set.size() < wordsFromLevel.size()){
 				//duplicates 
+				return false;
+			}
+
+			if(set.size() == 0){
+				//empty level
 				return false;
 			}
 
@@ -511,7 +509,7 @@ public class HiddenFilesModel {
 		try {
 			//delete course file
 			Files.deleteIfExists(Paths.get("./.course/"+courseName));
-			
+
 			//delete .review file
 			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
 
@@ -535,11 +533,16 @@ public class HiddenFilesModel {
 
 		return true;
 	}
-	
+
+	/**
+	 * Delete the test history of a course, returns true indicating success, false for error
+	 * @param courseName
+	 * @return
+	 */
 	public boolean deleteCourseStats(String courseName) {
 
 		try {
-			
+
 			//delete .review file
 			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
 
@@ -560,7 +563,7 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		setUpHiddenFiles(); //reset files, i.e. .highscore to 0, testhistory to empty
 
 		return true;
@@ -571,11 +574,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Read the contents of a file according to quizMode, into a list of strings
-	 * array structure
-	 * 
-	 * CODE REUSED FROM CHEN LI'S ASSIGNMENT 2 SUBMISSION
-	 * @param quizMode
+	 * Read the contents of a file according to quizMode, into a list of strings array structure
+	 * @param coursePath
 	 * @return
 	 */
 	public ArrayList<String> readFileToArray(String coursePath){ 
@@ -590,9 +590,10 @@ public class HiddenFilesModel {
 			String line = reader.readLine();
 
 			while (line != null) {
-
-				allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
-
+				if (!line.equals("") &&  !line.trim().equals("")){//ignore empty lines
+					
+					allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
+				}
 				line = reader.readLine();
 			}
 
@@ -608,6 +609,11 @@ public class HiddenFilesModel {
 		return allWords;
 	}
 
+	/**
+	 * Returns a list of strings presenting all level names of a given course
+	 * @param _coursePath
+	 * @return
+	 */
 	public Vector<String> getAllLevelsFromCourse(String _coursePath){
 		Vector<String>_allLevelsFromCourse = new Vector<String>();
 
@@ -622,6 +628,12 @@ public class HiddenFilesModel {
 		return _allLevelsFromCourse;
 	}
 
+	/**
+	 * Get all words from a subgroup given the course and the subgroup
+	 * @param _coursePath
+	 * @param level
+	 * @return
+	 */
 	public ArrayList<String> getLevelWordsFromCourse(String _coursePath,String level) {
 		ArrayList<String> allWords = readFileToArray( _coursePath);
 		ArrayList<String> levelWords = new ArrayList<String>();

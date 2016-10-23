@@ -3,10 +3,18 @@ package voxSpell.models.resultModels;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-import voxSpell.guiViews.VoxSpellGui;
+import voxSpell.views.VoxSpellGui;
+import voxSpell.views.resultViews.ResultView;
+import voxSpell.views.resultViews.ReviewResultView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
+import voxSpell.status.QuizStatus;
 
-
+/**
+ * The model/logic for practice and review results, which the result views use to handle user events,
+ * it is a table model for the JTable shown on its view
+ * @author chen
+ *
+ */
 public class ResultModel extends AbstractTableModel {
 	private HiddenFilesModel _hiddenFilesModel;
 	protected ArrayList<ArrayList<Object>> _database;
@@ -20,6 +28,7 @@ public class ResultModel extends AbstractTableModel {
 	private String[] _databaseHeaderNames = { "Revise Later", "Word", "Attempts" };
 	private String[] _reviewDatabaseHeaderNames = { "Remembered", "Word", "Attempts" };
 
+	private ResultView _view;
 
 	public ResultModel(ArrayList<String> listOfWords, ArrayList<String> attemptCounts, String level,String courseName) {
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
@@ -38,11 +47,19 @@ public class ResultModel extends AbstractTableModel {
 	}
 
 	/**
-	 * For each word quizzed so far, get number of attempts
+	 * Register a result view with this model
+	 * @param view
+	 */
+	public void setView(ResultView view){
+		_view = view;
+	}
+
+	/**
+	 * Create the entire data for the table row by row
 	 */
 	protected void createDatabase() {
 
-		//set boolean values according to attempty counts
+		//set boolean values according to attempt counts
 		for (int i = 0; i < _listOfWords.size();i++){
 			_listOfButtons.add(selectCheckBox(i));
 		}
@@ -51,7 +68,7 @@ public class ResultModel extends AbstractTableModel {
 		for (int i = 0; i < _listOfWords.size(); i++) {
 			ArrayList<Object> row = new ArrayList<Object>();
 
-			//add JCheckBox button
+			//add boolean values
 			row.add(_listOfButtons.get(i));
 			//add word
 			row.add(_listOfWords.get(i));
@@ -70,13 +87,13 @@ public class ResultModel extends AbstractTableModel {
 	 */
 	private boolean selectCheckBox(int index) {
 
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
 			//if practice mode, automatically select items that are likely to be added to review
 			if (Integer.parseInt(_attemptCounts.get(index)) > 1){
 				return true;
 			}
 			return false;
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 			//if review mode, automatically select items that are likely to be removed from review
 			if (Integer.parseInt(_attemptCounts.get(index)) <= 1){
 				return true;
@@ -87,12 +104,13 @@ public class ResultModel extends AbstractTableModel {
 		return false;
 	}
 
+	//============== Methods override for Java to create the table model ===============
 	@Override
 	public String getColumnName(int col) {
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW)){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
 
 			return _databaseHeaderNames[col];
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 
 			return _reviewDatabaseHeaderNames[col];
 		}
@@ -137,12 +155,41 @@ public class ResultModel extends AbstractTableModel {
 		//update boolean value in both database and listOfButtons when user changes the cells
 		_database.get(row).set(col, value); 
 		_listOfButtons.set(row, (Boolean) value);
+
+		if(VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
+			int count = 0;
+			for (int i = 0; i < _listOfButtons.size(); i ++){
+				if (_listOfButtons.get(i)){
+					//item is selected
+					count ++;
+				}
+			}
+			((ReviewResultView) _view).ifDisableRetry(count);
+		}
 	}
 
-	//method that writes all selected words into review file using hidden files manager
+	//=============================================================================
+	/**
+	 * This method is for views to get currently selected words
+	 * @return
+	 */
+	public int getNumSelectedWords(){
+		int count = 0;
+		for (int i = 0; i < _listOfButtons.size(); i ++){
+			if (_listOfButtons.get(i)){
+				//item is selected
+				count ++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * method that writes all selected words into review file using hidden files manager
+	 */
 	public void keepRecordOfSelectedWords(){
 
-		if (VoxSpellGui.STATUS.equals(VoxSpellGui.NEW ) ){
+		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW ) ){
 			//if practice mode, add selected items to review list
 			for (int i = 0; i < _listOfButtons.size(); i ++){
 
@@ -151,7 +198,7 @@ public class ResultModel extends AbstractTableModel {
 					_hiddenFilesModel.addWordToReviewWordsFile(_listOfWords.get(i), _level, _courseName);
 				}
 			}
-		}else if (VoxSpellGui.STATUS.equals(VoxSpellGui.REVIEW)){
+		}else if (VoxSpellGui.STATUS.equals(QuizStatus.REVIEW)){
 			//if review mode, delete selected items from review list
 			for (int i = 0; i < _listOfButtons.size(); i ++){
 
