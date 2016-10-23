@@ -1,6 +1,5 @@
 package voxSpell.views;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.ButtonModel;
@@ -8,6 +7,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+/**
+ * A factory class that generates a button with an image in media folder as its icon
+ * @author chen
+ *
+ */
 
 public class ButtonFactory {
 

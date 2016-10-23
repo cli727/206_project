@@ -24,6 +24,13 @@ import voxSpell.views.courseViews.ChooseCourseView;
 import voxSpell.views.courseViews.ImportWordListView;
 import voxSpell.views.levelViews.ChooseLevelReviewView;
 
+/**
+ * The main menu view, it is a Card object. 
+ * It contains the main frame and the main() method
+ * @author chen
+ *
+ */
+
 public class VoxSpellGui implements Card,ActionListener{
 
 	private static VoxSpellGui _voxSpellGui;

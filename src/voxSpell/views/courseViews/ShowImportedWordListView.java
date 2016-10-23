@@ -1,7 +1,6 @@
 package voxSpell.views.courseViews;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +33,12 @@ import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 import voxSpell.models.quizModels.QuizModel;
 
+/**
+ * Shows the screen to view all user-imported courses. It contains a JList of all imported course names.
+ * It is a Card object.
+ * @author chen
+ *
+ */
 public class ShowImportedWordListView implements Card, ActionListener, ListSelectionListener{
 
 
@@ -291,6 +296,9 @@ public class ShowImportedWordListView implements Card, ActionListener, ListSelec
 		}
 	}
 
+	/**
+	 * Disable the set and delete course buttons if no course is selected
+	 */
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		//enable buttons

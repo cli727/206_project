@@ -364,7 +364,7 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * add a word to review list
+	 * Add a word to review list of a course
 	 * ASSUMES NO DUPLICATION OF WORDS (INTER AND INTRO LEVELS), OTHERWISE ONLY ADDED ONCE
 	 * @param word
 	 * @param level
@@ -534,6 +534,11 @@ public class HiddenFilesModel {
 		return true;
 	}
 
+	/**
+	 * Delete the test history of a course, returns true indicating success, false for error
+	 * @param courseName
+	 * @return
+	 */
 	public boolean deleteCourseStats(String courseName) {
 
 		try {
@@ -569,11 +574,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Read the contents of a file according to quizMode, into a list of strings
-	 * array structure
-	 * 
-	 * CODE REUSED FROM CHEN LI'S ASSIGNMENT 2 SUBMISSION
-	 * @param quizMode
+	 * Read the contents of a file according to quizMode, into a list of strings array structure
+	 * @param coursePath
 	 * @return
 	 */
 	public ArrayList<String> readFileToArray(String coursePath){ 
@@ -607,6 +609,11 @@ public class HiddenFilesModel {
 		return allWords;
 	}
 
+	/**
+	 * Returns a list of strings presenting all level names of a given course
+	 * @param _coursePath
+	 * @return
+	 */
 	public Vector<String> getAllLevelsFromCourse(String _coursePath){
 		Vector<String>_allLevelsFromCourse = new Vector<String>();
 
@@ -621,6 +628,12 @@ public class HiddenFilesModel {
 		return _allLevelsFromCourse;
 	}
 
+	/**
+	 * Get all words from a subgroup given the course and the subgroup
+	 * @param _coursePath
+	 * @param level
+	 * @return
+	 */
 	public ArrayList<String> getLevelWordsFromCourse(String _coursePath,String level) {
 		ArrayList<String> allWords = readFileToArray( _coursePath);
 		ArrayList<String> levelWords = new ArrayList<String>();

@@ -9,7 +9,12 @@ import voxSpell.views.resultViews.ReviewResultView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 import voxSpell.status.QuizStatus;
 
-
+/**
+ * The model/logic for practice and review results, which the result views use to handle user events,
+ * it is a table model for the JTable shown on its view
+ * @author chen
+ *
+ */
 public class ResultModel extends AbstractTableModel {
 	private HiddenFilesModel _hiddenFilesModel;
 	protected ArrayList<ArrayList<Object>> _database;
@@ -41,16 +46,20 @@ public class ResultModel extends AbstractTableModel {
 		createDatabase();
 	}
 
+	/**
+	 * Register a result view with this model
+	 * @param view
+	 */
 	public void setView(ResultView view){
 		_view = view;
 	}
 
 	/**
-	 * For each word quizzed so far, get number of attempts
+	 * Create the entire data for the table row by row
 	 */
 	protected void createDatabase() {
 
-		//set boolean values according to attempty counts
+		//set boolean values according to attempt counts
 		for (int i = 0; i < _listOfWords.size();i++){
 			_listOfButtons.add(selectCheckBox(i));
 		}
@@ -59,7 +68,7 @@ public class ResultModel extends AbstractTableModel {
 		for (int i = 0; i < _listOfWords.size(); i++) {
 			ArrayList<Object> row = new ArrayList<Object>();
 
-			//add JCheckBox button
+			//add boolean values
 			row.add(_listOfButtons.get(i));
 			//add word
 			row.add(_listOfWords.get(i));
@@ -95,6 +104,7 @@ public class ResultModel extends AbstractTableModel {
 		return false;
 	}
 
+	//============== Methods override for Java to create the table model ===============
 	@Override
 	public String getColumnName(int col) {
 		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW)){
@@ -157,7 +167,8 @@ public class ResultModel extends AbstractTableModel {
 			((ReviewResultView) _view).ifDisableRetry(count);
 		}
 	}
-	
+
+	//=============================================================================
 	/**
 	 * This method is for views to get currently selected words
 	 * @return
@@ -173,7 +184,9 @@ public class ResultModel extends AbstractTableModel {
 		return count;
 	}
 
-	//method that writes all selected words into review file using hidden files manager
+	/**
+	 * method that writes all selected words into review file using hidden files manager
+	 */
 	public void keepRecordOfSelectedWords(){
 
 		if (VoxSpellGui.STATUS.equals(QuizStatus.NEW ) ){

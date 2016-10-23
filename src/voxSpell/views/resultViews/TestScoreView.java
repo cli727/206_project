@@ -22,6 +22,11 @@ import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 import voxSpell.models.resultModels.TestScoreModel;
 
+/**
+ * View that shows the test history of a given course. It contains a JTable component. It is a Card Object.
+ * @author chen
+ *
+ */
 public class TestScoreView extends JTableView implements Card, ActionListener{
 	
 	private HiddenFilesModel _hiddenFilesModel;

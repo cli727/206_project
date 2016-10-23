@@ -10,6 +10,11 @@ import voxSpell.views.VoxSpellGui;
 import voxSpell.views.quizViews.TestQuizView;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 
+/**
+ * A child class of QuizModel that manages the logic for test quizzes specifically
+ * @author chen
+ *
+ */
 public class TestQuizModel extends QuizModel{
 	private HiddenFilesModel _hiddenFilesModel;
 
@@ -20,7 +25,7 @@ public class TestQuizModel extends QuizModel{
 	}
 
 	/**
-	 * Check spelling needs the functionality to write stats when checking spelling
+	 * Check spelling needs the functionality to write stats when checking spelling for test mode
 	 */
 	@Override
 	public void checkSpelling(String userInput) {

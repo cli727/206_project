@@ -23,6 +23,11 @@ import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 
+/**
+ * A Singleton class that shows the screen for user to upload courses. It is a Card object.
+ * @author chen
+ *
+ */
 public class ImportWordListView implements Card , ActionListener{
 
 	private JLabel _labelHeading;

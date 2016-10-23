@@ -28,6 +28,11 @@ import voxSpell.models.quizModels.QuizModel;
 import voxSpell.models.resultModels.ResultModel;
 import voxSpell.status.NumWordStatus;
 
+/**
+ * View that shows the result at the end of a practice quiz. It contains a JTable component. It is a Card Object.
+ * @author chen
+ *
+ */
 public class ResultView extends JTableView implements Card, ActionListener {
 	protected HiddenFilesModel _hiddenFilesModel;
 
@@ -312,6 +317,11 @@ public class ResultView extends JTableView implements Card, ActionListener {
 		}
 	}
 
+	/**
+	 * Decides whether to disable the "Next" button.
+	 * Button should be disabled if current subgroup is the last subgroup
+	 * @return
+	 */
 	protected boolean ifDisableNextLevel(){
 
 		if (_allLevelNames.indexOf(_thisLevelName) != (_allLevelNames.size()-1) ){

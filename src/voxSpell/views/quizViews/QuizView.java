@@ -26,8 +26,8 @@ import voxSpell.models.quizModels.QuizModel;
 import voxSpell.status.QuizStatus;
 
 /**
- * QuizView that is registered for a new or review quiz; offers methods that updates the GUI accoridng
- * to back stage logic results i.e. the model
+ * QuizView that is registered for a practice or review quiz; offers methods that updates the GUI according
+ * to back stage logic results i.e. the model. It is a Card object.
  * @author chen
  *
  */
@@ -119,16 +119,16 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		ButtonFactory btnFactory = new ButtonFactory();
 		_btnRelisten = btnFactory.getButton("./media/relisten.jpg","./media/relisten_hover.jpg");
 		_btnRelisten.setBackground(Color.white);
-		
+
 		_btnCheckWord = btnFactory.getButton("./media/check_spelling.png","./media/check_spelling_hover.png");
 		_btnCheckWord.setBackground(Color.white);
-	
+
 		_btnSkipWord = btnFactory.getButton("./media/skip.png","./media/skip_hover.png");
 		_btnSkipWord.setBackground(Color.white);
-		
+
 		_btnShowAnswer = btnFactory.getButton("./media/answer.png","./media/answer_hover.png");
 		_btnShowAnswer.setBackground(Color.white);
-		
+
 		_btnBack = btnFactory.getButton("./media/back_whitebg.png", "./media/back_hover.png");
 		_btnBack.setBackground(Color.white);
 
@@ -151,9 +151,9 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		_tipsPanel.add(_specialCharLabel, c);
-		
+
 		//=======================================================
-		
+
 		_cb = new JComboBox<String>(_comboBoxItems);
 
 		//change main menu footer/header background color so that it is consistent with this background color
@@ -210,7 +210,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		//c.weightx = 0.3;
 		c.insets = new Insets(25,0,20,0);
 		add(_updateWordPanel, c);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.weightx = 0.33;
 		c.gridx = 1;
@@ -244,7 +244,7 @@ public class QuizView extends JPanel implements Card, ActionListener {
 		c.gridy = 4;
 		c.gridwidth = 3;
 		c.gridheight = 1;
-		
+
 		c.insets = new Insets(0,5,10,0);
 		add(_inputArea, c);
 		_inputArea.addActionListener(this);
@@ -330,9 +330,12 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	}
 
+	/**
+	 *Make text disappear by changing font color to white. Otherwise the GUI would resize everytime the text is shown.
+	 */
 	public void disableAnswer() {
 
-		//make text 'disappear by changing font color to white
+
 		_labelCorrectSpelling.setText(("<html> <p style='text-align:center;'>"
 				+ "<font color='white'>Correct Spelling: </font></html>"));
 
@@ -341,18 +344,29 @@ public class QuizView extends JPanel implements Card, ActionListener {
 				+ _quizModel.getCorrectSpelling() + "</font></html>"));
 	}
 
+	/**
+	 * Register this view with its model.
+	 * @param quiz
+	 */
 	public void setModel(QuizModel quiz){
 		_quizModel = quiz;
 	}
 
+	/**
+	 * A pop up warns user of invalid characters when the quizzed word does not contain any special characters
+	 */
 	public void showInvalidInputPopUp(){
-		
+
 		JOptionPane.showMessageDialog(this, "Non alphabetical character(s) detected! \n"
 				+ "Make sure you do not have unintended white spaces.", 
 				"Warning: Invalid Input", JOptionPane.INFORMATION_MESSAGE);
-		
+
 	}
 
+	/**
+	 * Update word progress on GUI
+	 * @param currentWord
+	 */
 	public void updateWordLabel(int currentWord){
 
 		_labelToUpdateWordNum.setText("<html> <font color='orange'>"
@@ -363,7 +377,8 @@ public class QuizView extends JPanel implements Card, ActionListener {
 	}
 
 
-	/** shows a pop up window if the user leaves in the middle of a game
+	/** 
+	 * Shows a pop up window if the user leaves in the middle of a game
 	 */
 	protected void gameInProgressPopUp(){
 
@@ -395,13 +410,19 @@ public class QuizView extends JPanel implements Card, ActionListener {
 
 	}
 
+	/**
+	 * Decides whether to show the hints for case sensitivity or special characters.
+	 * This method is called by the model.
+	 * @param caseSensitive
+	 * @param specialChar
+	 */
 	public void updateTipsLabel(boolean caseSensitive, boolean specialChar){
 		if (caseSensitive){
 			_caseLabel.setText("<html><font color='gray'>( Hint: this word is case sensitive! )</font></html>");
 		}else{
 			_caseLabel.setText("<html><font color='white'>( Hint: this word is case sensitive! )</font></html>");
 		}
-			
+
 		if(specialChar){
 			_specialCharLabel.setText("<html><font color='gray'>( Hint: this word has special character(s)! )</font></html>");
 		}else{

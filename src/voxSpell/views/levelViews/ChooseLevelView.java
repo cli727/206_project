@@ -26,6 +26,11 @@ import voxSpell.models.quizModels.QuizModel;
 import voxSpell.status.NumWordStatus;
 import voxSpell.status.QuizStatus;
 
+/**
+ * A view that shows the practice set up screen. It is a Card object.
+ * @author chen
+ *
+ */
 public class ChooseLevelView implements Card, ActionListener{
 	protected HiddenFilesModel _hiddenFilesModel; 
 
@@ -377,6 +382,9 @@ public class ChooseLevelView implements Card, ActionListener{
 
 	}
 
+	/**
+	 * Disable some "number of word to quiz" options based on how many words the currently selected subgroup has
+	 */
 	protected void disableNumWordsButtons() {
 
 		_numWordsToQuiz=_hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,(String) _comboBox.getSelectedItem()).size();

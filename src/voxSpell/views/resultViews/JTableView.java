@@ -5,7 +5,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Panels that show a JTable should all extend this class, to set their tabel model
+ * Cards that show a JTable should extend this class, as their registered table model
  * @author chen
  *
  */

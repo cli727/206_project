@@ -1,6 +1,7 @@
 package voxSpell.views.levelViews;
 
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,12 @@ import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.quizModels.QuizModel;
 import voxSpell.status.NumWordStatus;
 
+/**
+ * A child class of ChooseLevelView, it shows the review set up screen. The buttons on a review set up would need
+ *  different functionalities from the practice setup screen.
+ * @author chen
+ *
+ */
 public class ChooseLevelReviewView extends ChooseLevelView implements ActionListener {
 
 	boolean _noReviewWords;
@@ -65,7 +72,6 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 
 	}
 
-	//review mode will need to set the coursePath differently when buttons are clicked
 	@Override
 	public void actionPerformed(ActionEvent e) {
 

@@ -117,6 +117,9 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		addButtons();
 	}
 
+	/**
+	 * Add player buttons for user to interact with the video
+	 */
 	public void addButtons(){
 
 		// add play button

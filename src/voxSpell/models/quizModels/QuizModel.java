@@ -13,7 +13,7 @@ import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.festivalManager.FestivalModel;
 
 /**
- * Parent class for new and review quizzes, offers methods that are used for both mode of games
+ * The model/logic for practice and review quizzes, which the quiz views use to handle user events
  * @author chen
  *
  */
@@ -75,19 +75,27 @@ public class QuizModel {
 		_countChecks = 0;
 	}
 
+	/**
+	 * Register a view with this model
+	 * @param view
+	 */
 	public void setView(QuizView view){
 		_quizView = view;
 	}
-
+	
+	/**
+	 * Set the words to quiz from for the current quiz, as well as the number of words to quiz
+	 * @param allWords
+	 * @param numWordsToQuiz
+	 */
 	public void setAllWords(ArrayList<String> allWords, int numWordsToQuiz){
 		_allWords = allWords;
 		_numWordsToQuiz = numWordsToQuiz;
 	}
 
 	/**
-	 * CheckSpelling for Practice mode. No such concept as mastered/faulted/failed
+	 * CheckSpelling for Practice mode. 
 	 * The quiz moves on only if the user gets a word right / skip the word
-	 * Words written to history (not review)
 	 */
 	public void checkSpelling(String userInput) {
 
@@ -191,11 +199,6 @@ public class QuizModel {
 		VoxSpellGui.getInstance().showCard(resultView.createAndGetPanel(), "Result");
 	}
 	
-	/**
-	 * REUSED CODE FROM ASSIGNMENT 2
-	 * MOFIDIED TO SUIT ASSIGENMENT 3
-	 * AUTHOR: CHEN LI
-	 */
 
 	/**
 	 * Get appropriate number of random words from current level, given the allWordsList
@@ -208,11 +211,8 @@ public class QuizModel {
 		//chooses _numWordsToQuiz number of random words from allWords
 	   
 		while (_randomWords.size() < _numWordsToQuiz){
-			//System.out.println("1");
 			Random r = new Random();
 			String randomWord = _allWords.get(r.nextInt(_allWords.size()));//generate a random word
-
-			//System.out.println("randomWords: " + randomWord + "randome size: " + _randomWords.size());
 
 			if (! _randomWords.contains(randomWord)){
 				
@@ -289,8 +289,8 @@ public class QuizModel {
 	}
 
 	/**
-	 * If word contains apostrophe, does not detect it as invalid
-	 * If word does not apostrophe and user gives an apostrophe in the input, it is invalid input
+	 * If word contains special character, does not detect user input as invalid
+	 * If word does not special character and user gives special characters in the input, it is invalid input
 	 * @return
 	 */
 	protected boolean isValidUserInput(){
@@ -337,6 +337,9 @@ public class QuizModel {
 		
 	}
 
+	/**
+	 * Redirects the call for FestivalModel to manage relisten
+	 */
 	public void relisten() {
 		_festivalModel.relistenWord(_currentWord);
 	}

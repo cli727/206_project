@@ -7,6 +7,12 @@ import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.quizModels.QuizModel;
 import voxSpell.models.resultModels.ResultModel;
 
+/**
+ * View that shows the result at the end of a review quiz. It contains a JTable component. It is a Card Object.
+ * It is a child of parent result view. 
+ * @author chen
+ *
+ */
 public class ReviewResultView extends ResultView{
 	
 	public ReviewResultView(String levelName, String courseName, Vector<String> allLevelNames) {
@@ -86,6 +92,9 @@ public class ReviewResultView extends ResultView{
 		}
 	}
 	
+	/**
+	 * Called by its model to disable the "Retry" button, which is when all rows of the JTable are selected
+	 */
 	@Override
 	public void ifDisableRetry(int count){
 		if (count == _model.getRowCount()){

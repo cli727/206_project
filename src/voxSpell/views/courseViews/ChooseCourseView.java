@@ -32,7 +32,7 @@ import voxSpell.views.Card;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 /**
- * Singleton class. Showing the window for choosing vocabulary course/wordlists
+ * Singleton class. Showing the window for choosing vocabulary courses. It is a Card object.
  * @author chen
  *
  */

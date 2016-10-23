@@ -1,6 +1,5 @@
 package voxSpell.views.quizViews;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -17,6 +16,13 @@ import voxSpell.audioPlayer.AudioPlayer;
 import voxSpell.views.VoxSpellGui;
 import voxSpell.models.festivalManager.FestivalModel;
 import voxSpell.models.festivalManager.FestivalModel.Voice;
+
+/**
+ * A child of QuizView that deals specifically with the test quiz view.
+ * It is different from practice/review because it has an additional timer and score labels
+ * @author chen
+ *
+ */
 
 public class TestQuizView extends QuizView{
 
@@ -68,6 +74,9 @@ public class TestQuizView extends QuizView{
 
 	}
 
+	/**
+	 * Redrawn GUI with timer and score labels.
+	 */
 	@Override
 	public JPanel createAndGetPanel() {
 
@@ -267,7 +276,9 @@ public class TestQuizView extends QuizView{
 	}
 
 
-	//need to pause timer when this shows up
+	/**
+	 * Shows pop up, also pauses timer when user leaves in the middle of a quiz
+	 */
 	@Override
 	protected void gameInProgressPopUp(){
 		_timer.stop();
@@ -297,7 +308,9 @@ public class TestQuizView extends QuizView{
 
 	}
 
-	//need to stop timer
+	/**
+	 * Shows pop up and pauses timer when user enters invalid characters
+	 */
 	@Override
 	public void showInvalidInputPopUp(){
 		_timer.stop();
@@ -307,6 +320,10 @@ public class TestQuizView extends QuizView{
 		_timer.start();
 	}
 
+	/**
+	 * Reset the timer to initial value.
+	 * RESET MAXIMUM VALUE IS A BIT LONGER THAN PROGRESS BAR, TO GIVE FESTIVAL TIME TO SPEAK
+	 */
 	public void resetTimer() {
 		_timer.stop();
 		_timerBar.setValue(20);
@@ -315,18 +332,22 @@ public class TestQuizView extends QuizView{
 	}
 
 	/**
-	 * view does not know when quiz has ended so model will help stop the timer
+	 * View does not know when quiz has ended so model will help stop the timer
 	 */
 	public void stopTimer(){
 		_finished  = true;
 	}
 	/**
-	 * method for its model to get timer's value, so that model can allocate a score
+	 * Method for its model to get timer's value, so that model can allocate a score
 	 */
 	public int getTimerValue(){
 		return _counter;
 	}
 
+	/**
+	 * Called by model to update the score on GUI
+	 * @param addMarks
+	 */
 	public void updateScore(int addMarks){
 		int score = Integer.parseInt(_updateScore.getText()); //get current score
 
@@ -336,6 +357,10 @@ public class TestQuizView extends QuizView{
 		_incrementScore.setText("<html><font><font color='orange'>+ " +addMarks+"</font></html>");
 	}
 
+	/**
+	 * Shows textual feedback of a word's spelling
+	 * @param correct
+	 */
 	public void updateFeedback(boolean correct){
 		if (correct){
 			_labelFeedBack.setText(("<html> <p style='text-align:center;'>"

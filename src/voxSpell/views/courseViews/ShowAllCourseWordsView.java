@@ -10,21 +10,20 @@ import voxSpell.views.VoxSpellGui;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
 
+/**
+ * A class that shows a new window when user selects to "View Words" of a course
+ * @author chen
+ *
+ */
 public class ShowAllCourseWordsView extends JFrame {
 
 	private JPanel contentPane;

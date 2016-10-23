@@ -27,6 +27,11 @@ import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 import voxSpell.models.quizModels.QuizModel;
 import voxSpell.models.quizModels.TestQuizModel;
 
+/**
+ * View that shows the result at the end of a test quiz. It contains a JTable component. It is a Card Object.
+ * @author chen
+ *
+ */
 public class TestResultView extends JTableView implements ActionListener , Card{
 
 	private HiddenFilesModel _hiddenFilesModel;
@@ -313,6 +318,10 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 		}
 	}
 
+	/**
+	 * "Continue" button is disabled if the user has failed the test
+	 * @return
+	 */
 	protected boolean ifDisableNextLevel(){
 		//next 'level' is enabled if the user has gotten 8/10 words correct
 		if (((TestResultModel) _model).getCorrectNumber() >= 8){
