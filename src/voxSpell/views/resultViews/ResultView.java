@@ -128,11 +128,11 @@ public class ResultView extends JTableView implements Card, ActionListener {
 					_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.course/"+_courseName,_allLevelNames.get(i));
 					_nextNonEmptyLevel = _allLevelNames.get(i);
 					break;
+				}else {
+					_nextNonEmptyLevel = null;
 				}
 			}
-			
-			//if the loop did not break, no non empty level found
-			_nextNonEmptyLevel = null;
+	
 		}
 		
 		_numWordsToQuiz = 0;

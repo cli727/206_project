@@ -256,14 +256,14 @@ public class HiddenFilesModel {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public ArrayList<String> getHistroyWords(String _courseName) {
 		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
-		
+
 		Collections.sort(allWords); //sort in alphabetical order;
 		return allWords;
 	}
-	
+
 	/**
 	 * Get correct/incorrect counts of all words in a history file 
 	 * @param _courseName
@@ -272,9 +272,9 @@ public class HiddenFilesModel {
 	 */
 	public ArrayList<Integer> getCorrectIncorrectCount (String _courseName, boolean getCorrect){
 		ArrayList<String> histWords = getHistroyWords(_courseName);
-		
+
 		ArrayList<String> countFile;
-		
+
 		if(getCorrect){
 			//get correct counts
 			countFile = readFileToArray(_testCorrectFolderPath+_courseName);
@@ -282,24 +282,24 @@ public class HiddenFilesModel {
 			//get incorrect counts
 			countFile = readFileToArray(_testIncorrectFolderPath+_courseName);
 		}
-		
+
 		ArrayList<Integer> totalCount = new ArrayList<Integer>();
-		
-		
+
+
 		for (int i = 0; i < histWords.size(); i ++){
 			int count = 0;
-			
+
 			//count appearance of each history word in the count hidden file
 			for(int j = 0; j <countFile.size(); j ++){
-				
+
 				if (countFile.get(j).equals(histWords.get(i))){
 					count ++;
 				}
 			}
-			
+
 			totalCount.add(count);
 		}
-		
+
 		return totalCount;
 	}
 
@@ -471,7 +471,7 @@ public class HiddenFilesModel {
 				//duplicates 
 				return false;
 			}
-			
+
 			if(set.size() == 0){
 				//empty level
 				return false;
@@ -516,7 +516,7 @@ public class HiddenFilesModel {
 		try {
 			//delete course file
 			Files.deleteIfExists(Paths.get("./.course/"+courseName));
-			
+
 			//delete .review file
 			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
 
@@ -540,11 +540,11 @@ public class HiddenFilesModel {
 
 		return true;
 	}
-	
+
 	public boolean deleteCourseStats(String courseName) {
 
 		try {
-			
+
 			//delete .review file
 			Files.deleteIfExists(Paths.get(_reviewFolderPath + courseName + "Review"));
 
@@ -565,7 +565,7 @@ public class HiddenFilesModel {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		setUpHiddenFiles(); //reset files, i.e. .highscore to 0, testhistory to empty
 
 		return true;
@@ -595,9 +595,10 @@ public class HiddenFilesModel {
 			String line = reader.readLine();
 
 			while (line != null) {
-
-				allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
-
+				if (!line.equals("") &&  !line.trim().equals("")){//ignore empty lines
+					
+					allWords.add(line.trim()); //trims all leading and trailing white spaces in a word, i.e. "this"
+				}
 				line = reader.readLine();
 			}
 

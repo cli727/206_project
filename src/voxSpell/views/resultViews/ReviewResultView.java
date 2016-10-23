@@ -27,6 +27,8 @@ public class ReviewResultView extends ResultView{
 					_nextLevelWords = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",_allLevelNames.get(i));
 					_nextNonEmptyLevel = _allLevelNames.get(i);
 					break;
+				}else {
+					_nextNonEmptyLevel = null;
 				}
 			}
 		}

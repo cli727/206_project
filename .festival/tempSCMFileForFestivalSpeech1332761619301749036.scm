@@ -1,0 +1,1 @@
+(SayText "ruler")
