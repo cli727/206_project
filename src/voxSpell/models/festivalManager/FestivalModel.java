@@ -16,6 +16,13 @@ import javax.swing.JComboBox;
 
 import voxSpell.models.hiddenFilesManager.HiddenFilesModel;
 
+/**
+ * A singleton class dedicated to all speech synthesis related to Festival. 
+ * 
+ * IMPORTANT: 
+ * Majority of the code in this class belongs to Emily Chan, who was my partner for assignment 3.
+ *
+ */
 public class FestivalModel implements ItemListener {
 
 	public enum Voice {

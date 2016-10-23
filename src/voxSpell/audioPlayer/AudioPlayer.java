@@ -10,6 +10,11 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
+/**
+ * A audio player that plays any audio file of a given path
+ * @author chen
+ *
+ */
 public class AudioPlayer {
 	public void playAudio(String filePath){
 		
@@ -18,10 +23,6 @@ public class AudioPlayer {
 		 * http://stackoverflow.com/questions/2416935/how-to-play-wav-files-with-java
 		 */
 		
-		/**
-		 * correct : https://www.freesound.org/people/ertfelda/sounds/243701/
-		 * incorrect: https://www.freesound.org/people/rhodesmas/sounds/342756/
-		 */
 		try {
 		    File feedback = new File(filePath);
 		    AudioInputStream stream;

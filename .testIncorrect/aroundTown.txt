@@ -1,3 +1,10 @@
-Road
 Theatre
-University
+Suburb
+Road
+Cafe
+Footpath
+Tram
+School
+Kindergarten
+Car
+Highway

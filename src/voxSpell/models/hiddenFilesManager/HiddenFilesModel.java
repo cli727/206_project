@@ -20,9 +20,11 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * A Singleton class that manages reading/writing actions to the hidden files
- * necessary for running the SpellingAidApp.
- * @author echa232
+ * A singleton class dedicated to all hidden files management.
+ * 
+ * IMPORTANT: 
+ * The original code belongs to Emily Chan, who was my partner for assignment 3.
+ * The current class has been modified by Chen Li, therefore some lines would still be similar to Emily's.
  *
  */
 public class HiddenFilesModel {
@@ -62,8 +64,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Create the necessary hidden files/folders for running the SpellingAidApp
-	 * These hidden files/folders are created in the same directory where the SpellingAidApp is executed.
+	 * Create the necessary hidden files/folders for running VOXSPELL
+	 * These hidden files/folders are created in the same directory where VOXSPELL is executed.
 	 */
 	private void setUpHiddenFiles() {
 		try {
@@ -209,8 +211,8 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * searches through ./.course directory and finds course names that are not "KET" or "IELTS"
-	 * @return
+	 * Searches through ./.course directory and finds course names that are not "KET" or "IELTS"
+	 * @return A list of imported course names. 
 	 */
 	public ArrayList<String> getImportedCourseNames() {
 		ArrayList<String> importedCourse = new ArrayList<String>();
@@ -232,7 +234,7 @@ public class HiddenFilesModel {
 
 
 	/**
-	 * append a word to end of its course history, avoid duplicates	
+	 * Append a word to end of its course history, avoiding duplicates	
 	 * @param courseName
 	 * @param word
 	 */
@@ -257,6 +259,11 @@ public class HiddenFilesModel {
 		}
 	}
 
+	/**
+	 * Returns the history of attempted words of a given course in alphabetical order.
+	 * @param _courseName
+	 * @return
+	 */
 	public ArrayList<String> getHistroyWords(String _courseName) {
 		ArrayList<String> allWords = readFileToArray(_testHistoryFolderPath+_courseName);
 
@@ -267,8 +274,8 @@ public class HiddenFilesModel {
 	/**
 	 * Get correct/incorrect counts of all words in a history file 
 	 * @param _courseName
-	 * @param getCorrect
-	 * @return
+	 * @param getCorrect If true, get correct counts, otherwise get incorrect counts
+	 * @return A list of integers representing the correct/incorrect of all attempted words
 	 */
 	public ArrayList<Integer> getCorrectIncorrectCount (String _courseName, boolean getCorrect){
 		ArrayList<String> histWords = getHistroyWords(_courseName);
@@ -304,8 +311,7 @@ public class HiddenFilesModel {
 	}
 
 	/**
-	 * Adding to correct / incorrect allows duplications, therefore count number of times a word is correct/incorrect
-	 * during a test
+	 * Adding given word to correct / incorrect allows duplications
 	 * @param filePath
 	 * @param word
 	 */
@@ -322,19 +328,6 @@ public class HiddenFilesModel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	}
-
-	protected void clearStats() {
-		//First delete all files hidden files, then recreate them as blank files.
-		try {
-			Files.deleteIfExists(_historyFilePath);
-			Files.deleteIfExists(_reviewFilePath);		
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		setUpHiddenFiles();		
 	}
 
 	/**
