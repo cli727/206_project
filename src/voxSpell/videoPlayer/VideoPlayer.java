@@ -62,7 +62,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	private JButton invertBtn;
 
 	public VideoPlayer() {
-		videoOutput = ".output.mpg";
+		videoOutput = "./media/output.mpg";
 		_hiddenFilesModel = HiddenFilesModel.getInstance();
 
 		NativeLibrary.addSearchPath(
@@ -214,7 +214,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		normalBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				playVideo("big_buck_bunny_1_minute.avi");
+				playVideo("./media/big_buck_bunny_1_minute.avi");
 			}
 		});
 		ffmpegButtons.add(normalBtn);
@@ -286,18 +286,18 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		if (e.getSource() == fasterBtn){
 
-			command = "ffmpeg -i big_buck_bunny_1_minute.avi "
+			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
 
 		}else if (e.getSource() == slowerBtn){
 
-			command = "ffmpeg -i big_buck_bunny_1_minute.avi "
+			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
 
 		}else if (e.getSource() == invertBtn){
-			command = "ffmpeg -i big_buck_bunny_1_minute.avi -vf lutrgb=\"r=negval:g=negval:b=negval\" "
+			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi -vf lutrgb=\"r=negval:g=negval:b=negval\" "
 					+ videoOutput;
 		}
 

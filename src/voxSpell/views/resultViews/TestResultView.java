@@ -308,7 +308,7 @@ public class TestResultView extends JTableView implements ActionListener , Card{
 
 			//play special bonus mark video with ffmpeg manipulations
 			mediaPlayer = new VideoPlayer();	
-			mediaPlayer.playVideo("big_buck_bunny_1_minute.avi");
+			mediaPlayer.playVideo("./media/big_buck_bunny_1_minute.avi");
 
 			//disable main GUI
 			VoxSpellGui.getFrame().setEnabled(false);
