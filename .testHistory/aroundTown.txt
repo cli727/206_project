@@ -1,0 +1,10 @@
+Road
+Theatre
+School
+Taxi
+Tower
+Cafe
+University
+Park
+Bus
+Restaurant

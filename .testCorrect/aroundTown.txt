@@ -1,0 +1,7 @@
+School
+Taxi
+Tower
+Cafe
+Park
+Bus
+Restaurant

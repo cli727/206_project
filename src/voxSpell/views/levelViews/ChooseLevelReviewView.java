@@ -13,6 +13,7 @@ import voxSpell.views.VoxSpellGui;
 import voxSpell.views.courseViews.ShowAllCourseWordsView;
 import voxSpell.views.quizViews.QuizView;
 import voxSpell.models.quizModels.QuizModel;
+import voxSpell.status.NumWordStatus;
 
 public class ChooseLevelReviewView extends ChooseLevelView implements ActionListener {
 
@@ -88,6 +89,10 @@ public class ChooseLevelReviewView extends ChooseLevelView implements ActionList
 			//get number of words in selected level
 
 			disableNumWordsButtons();
+			_btnAllWords.setSelected(true); //all words is the default option when a new subgroup is selected
+			_numWordStatus = NumWordStatus.ALL;
+			_numWordsToQuiz = _hiddenFilesModel.getLevelWordsFromCourse("./.review/"+_courseName+"Review",(String) _comboBox.getSelectedItem()).size();
+
 
 		}else if (e.getSource() == _btnTenWords){
 
