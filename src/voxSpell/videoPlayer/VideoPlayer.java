@@ -1,6 +1,7 @@
 package voxSpell.videoPlayer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,8 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	 * Example downloaded from the ACP exercise that Nasser gave
 	 */
 	private JButton pauseBtn;
+	private JButton stopBtn;
+	private JButton playBtn;
 	private JButton btnMute;
 	private JButton btnSkip;
 	private JButton btnSkipBack;
@@ -107,6 +110,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		flowLayout.setAlignment(FlowLayout.CENTER); 
 
 		vlcButtons = new JPanel();
+		vlcButtons.setBackground(Color.white);
 		vlcButtons.setLayout(flowLayout);
 		vlcButtons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
@@ -123,8 +127,10 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	public void addButtons(){
 
 		// add play button
-		pauseBtn = new JButton("Play");
-		pauseBtn.addActionListener(new ActionListener(){
+		playBtn = new JButton("Play");
+		playBtn.setBackground(new Color(0,137,249));
+		playBtn.setForeground(Color.white);
+		playBtn.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -132,11 +138,13 @@ public class VideoPlayer implements ActionListener,MouseListener{
 			}
 
 		});
-		vlcButtons.add(pauseBtn);
+		vlcButtons.add(playBtn);
 
 		// add stop button
-		pauseBtn = new JButton("Stop");
-		pauseBtn.addActionListener(new ActionListener(){
+		stopBtn = new JButton("Stop");
+		stopBtn.setBackground(new Color(0,137,249));
+		stopBtn.setForeground(Color.white);
+		stopBtn.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -144,10 +152,12 @@ public class VideoPlayer implements ActionListener,MouseListener{
 			}
 
 		});
-		vlcButtons.add(pauseBtn);
+		vlcButtons.add(stopBtn);
 
 		// add pause button
 		pauseBtn = new JButton("Pause");
+		pauseBtn.setBackground(new Color(0,137,249));
+		pauseBtn.setForeground(Color.white);
 		pauseBtn.addActionListener(new ActionListener(){
 
 			@Override
@@ -160,6 +170,8 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		//add mute button
 		btnMute = new JButton("Mute");
+		btnMute.setBackground(new Color(0,137,249));
+		btnMute.setForeground(Color.white);
 		btnMute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -170,6 +182,8 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		//add skip backward button
 		btnSkipBack = new JButton("<<Backward");
+		btnSkipBack.setBackground(new Color(0,137,249));
+		btnSkipBack.setForeground(Color.white);
 		btnSkipBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -181,6 +195,8 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		// add skip forward button
 		btnSkip = new JButton("Forward>>");
+		btnSkip.setBackground(new Color(0,137,249));
+		btnSkip.setForeground(Color.white);
 		btnSkip.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -211,6 +227,8 @@ public class VideoPlayer implements ActionListener,MouseListener{
 		ffmpegButtons.add(versionLabel);
 
 		normalBtn = new JButton("Original");
+		normalBtn.setBackground(new Color(0,137,249));
+		normalBtn.setForeground(Color.white);
 		normalBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -221,13 +239,19 @@ public class VideoPlayer implements ActionListener,MouseListener{
 
 		fasterBtn = new JButton("X2 Faster");
 		fasterBtn.addActionListener(this);
+		fasterBtn.setBackground(new Color(0,137,249));
+		fasterBtn.setForeground(Color.white);
 		ffmpegButtons.add(fasterBtn);
 
 		slowerBtn = new JButton("X2 Slower");
 		slowerBtn.addActionListener(this);
+		slowerBtn.setBackground(new Color(0,137,249));
+		slowerBtn.setForeground(Color.white);
 		ffmpegButtons.add(slowerBtn);
 
 		invertBtn = new JButton("Inverted Colour");
+		invertBtn.setBackground(new Color(0,137,249));
+		invertBtn.setForeground(Color.white);
 		invertBtn.addActionListener(this);
 		ffmpegButtons.add(invertBtn);
 
