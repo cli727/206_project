@@ -82,7 +82,7 @@ public class VideoPlayer implements ActionListener,MouseListener{
 				new MediaPlayerEventAdapter() {
 					@Override
 					public void finished (MediaPlayer mediaPlayer) {
-						_hiddenFilesModel.deleteVideoFile(videoOutput);
+						//_hiddenFilesModel.deleteVideoFile(videoOutput);
 					}
 				});
 
@@ -279,24 +279,27 @@ public class VideoPlayer implements ActionListener,MouseListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = null;
-		_hiddenFilesModel.deleteVideoFile(videoOutput);
+		
 
 		//Reference source:
 		//https://trac.ffmpeg.org/wiki/How%20to%20speed%20up%20/%20slow%20down%20a%20video
 
 		if (e.getSource() == fasterBtn){
+			_hiddenFilesModel.deleteVideoFile(videoOutput);
 
 			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
 
 		}else if (e.getSource() == slowerBtn){
+			_hiddenFilesModel.deleteVideoFile(videoOutput);
 
 			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi "
 					+ "-filter_complex \"[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]\" -map \"[v]\" -map \"[a]\" "
 					+ videoOutput;
 
 		}else if (e.getSource() == invertBtn){
+			_hiddenFilesModel.deleteVideoFile(videoOutput);
 			command = "ffmpeg -i ./media/big_buck_bunny_1_minute.avi -vf lutrgb=\"r=negval:g=negval:b=negval\" "
 					+ videoOutput;
 		}

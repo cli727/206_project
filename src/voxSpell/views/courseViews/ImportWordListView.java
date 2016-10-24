@@ -49,7 +49,7 @@ public class ImportWordListView implements Card , ActionListener{
 		//constructor, read example word list image
 
 		try {
-			_example = ImageIO.read(new File("./.wordlistExample.png"));
+			_example = ImageIO.read(new File("./media/wordlistExample.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
